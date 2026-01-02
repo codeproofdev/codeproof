@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - CodeProof</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/styles-minimal-dark.css">
+  <style>
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .stat-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-lg);
+    }
+
+    .stat-card-label {
+      font-size: var(--fs-xs);
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .stat-card-value {
+      font-size: 2em;
+      font-weight: 700;
+      color: var(--accent-orange);
+      font-family: var(--font-mono);
+    }
+
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .quick-link {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: var(--transition-fast);
+      text-decoration: none;
+    }
+
+    .quick-link:hover {
+      border-color: var(--accent-orange);
+      transform: translateY(-2px);
+    }
+
+    .quick-link-icon {
+      font-size: 2em;
+    }
+
+    .quick-link-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .quick-link-desc {
+      font-size: var(--fs-sm);
+      color: var(--text-secondary);
+    }
+
+    .activity-list {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-lg);
+    }
+
+    .activity-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-time {
+      font-size: var(--fs-xs);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+
+    .activity-text {
+      color: var(--text-primary);
+      margin-top: 4px;
+    }
+
+    .quick-link-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+    }
+
+    .quick-link-icon svg {
+      width: 32px;
+      height: 32px;
+      stroke-width: 1.5;
+      color: var(--text-secondary);
+      transition: var(--transition-fast);
+    }
+
+    .quick-link:hover .quick-link-icon svg {
+      color: var(--accent-orange);
+    }
+
+    .quick-link:hover .quick-link-icon span {
+      color: var(--accent-orange);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="notification-container" class="notification-container"></div>
+
+  <div class="ide-container">
+    <main class="main-content">
+      <header class="header">
+        <div class="logo">
+          <span>₿</span>
+          <span>CodeProof</span>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="nav-links">
+          <a href="/user/dashboard.html" class="nav-link active">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+          <a href="/problems/list.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="4"/>
+            </svg>
+            <span>Problems</span>
+          </a>
+          <a href="/submissions/list.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <span>Submissions</span>
+          </a>
+          <a href="/ranking/leaderboard.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+              <path d="M4 22h16"/>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+            </svg>
+            <span>Ranking</span>
+          </a>
+          <a href="/blocks/explorer.html" class="nav-link">
+            <span>₿</span>
+            <span>Blockchain</span>
+          </a>
+          <a href="/problemsetter/dashboard.html" class="nav-link" id="problemsetter-nav" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+            </svg>
+            <span>Problemsetter</span>
+          </a>
+          <a href="/admin/panel.html" class="nav-link" id="admin-nav" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span>Admin</span>
+          </a>
+        </nav>
+
+        <div class="user-info">
+          <select id="language-selector" class="select select-sm">
+            <option value="en">🇬🇧 EN</option>
+            <option value="es">🇪🇸 ES</option>
+          </select>
+          <div class="user-menu">
+            <div class="user-menu-trigger" id="user-menu-trigger">
+              <span id="username-display">Loading...</span>
+              <div class="user-avatar" id="user-avatar">?</div>
+            </div>
+            <div class="user-dropdown" id="user-dropdown">
+              <a href="/user/profile.html" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>My Profile</span>
+              </a>
+              <a href="/user/settings.html" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <span>Settings</span>
+              </a>
+              <div class="user-dropdown-item" id="logout-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" x2="9" y1="12" y2="12"/>
+                </svg>
+                <span>Logout</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="tabs-bar">
+        <div class="tab active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          <span>Dashboard</span>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <section class="editor-area">
+          <h1 class="problem-title"><span data-i18n="dashboard.welcome">Welcome</span>, <span id="username-title">User</span>!</h1>
+          <p class="text-muted mb-3" data-i18n="dashboard.subtitle">Track your progress, solve problems, and climb the leaderboard</p>
+
+          <!-- Stats Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-card-label" data-i18n="dashboard.totalScore">Total Score</div>
+              <div class="stat-card-value" id="total-score">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-label" data-i18n="dashboard.problemsSolved">Problems Solved</div>
+              <div class="stat-card-value" id="problems-solved" style="color: var(--success-green);">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-label" data-i18n="dashboard.rank">Global Rank</div>
+              <div class="stat-card-value" id="global-rank" style="color: var(--text-primary);">#-</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-label" data-i18n="dashboard.submissions">Submissions</div>
+              <div class="stat-card-value" id="total-submissions" style="color: var(--text-primary);">0</div>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <h2 class="section-title" data-i18n="dashboard.quickLinks">Quick Actions</h2>
+          <div class="quick-links">
+            <a href="/problems/list.html" class="quick-link">
+              <div class="quick-link-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <circle cx="12" cy="12" r="4"/>
+                </svg>
+              </div>
+              <div>
+                <div class="quick-link-title" data-i18n="quickLinks.problems.title">Solve Problems</div>
+                <div class="quick-link-desc" data-i18n="quickLinks.problems.desc">Browse coding challenges</div>
+              </div>
+            </a>
+            <a href="/submissions/list.html" class="quick-link">
+              <div class="quick-link-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </div>
+              <div>
+                <div class="quick-link-title" data-i18n="quickLinks.submissions.title">My Submissions</div>
+                <div class="quick-link-desc" data-i18n="quickLinks.submissions.desc">View submission history</div>
+              </div>
+            </a>
+            <a href="/ranking/leaderboard.html" class="quick-link">
+              <div class="quick-link-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                  <path d="M4 22h16"/>
+                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="quick-link-title" data-i18n="quickLinks.ranking.title">Leaderboard</div>
+                <div class="quick-link-desc" data-i18n="quickLinks.ranking.desc">See your ranking</div>
+              </div>
+            </a>
+            <a href="/blocks/explorer.html" class="quick-link">
+              <div class="quick-link-icon">
+                <span style="font-size: 32px; color: var(--text-secondary); transition: var(--transition-fast);">₿</span>
+              </div>
+              <div>
+                <div class="quick-link-title" data-i18n="quickLinks.blocks.title">Blockchain</div>
+                <div class="quick-link-desc" data-i18n="quickLinks.blocks.desc">Explore mined blocks</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Recent Activity -->
+          <h2 class="section-title" data-i18n="dashboard.recentActivity">Recent Activity</h2>
+          <div class="activity-list">
+            <div id="activity-container">
+              <p class="text-muted">No recent activity</p>
+            </div>
+          </div>
+        </section>
+
+        <aside class="stats-sidebar">
+          <div class="stats-header">Your Progress</div>
+
+          <div class="stat-block">
+            <div class="stat-label">Acceptance Rate</div>
+            <div class="stat-value" style="font-size: 1.5em; color: var(--success-green);" id="acceptance-rate">0%</div>
+          </div>
+
+          <div class="stat-block">
+            <div class="stat-label">Best Streak</div>
+            <div class="stat-value" style="font-size: 1.5em; color: var(--text-primary);" id="best-streak">0</div>
+          </div>
+
+          <div style="margin-top: 30px;">
+            <div class="stats-header">Recent Blocks</div>
+            <div id="recent-blocks" style="font-size: var(--fs-sm); color: var(--text-secondary);">
+              Loading...
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <!-- Submission Detail Modal -->
+  <div id="submission-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; display: none; align-items: center; justify-content: center;">
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px);" onclick="document.getElementById('submission-modal').style.display='none'"></div>
+    <div style="position: relative; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto; z-index: 10000; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-lg); border-bottom: 1px solid var(--border-color); background: var(--bg-secondary);">
+        <h2 style="margin: 0; color: var(--text-primary); font-size: var(--fs-lg);" data-i18n="submissions.submissionDetails">Submission Details</h2>
+        <button id="close-modal" style="background: none; border: none; font-size: 2rem; color: var(--text-secondary); cursor: pointer; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); transition: var(--transition-fast);">&times;</button>
+      </div>
+
+      <div style="padding: var(--spacing-lg);">
+        <!-- Submission Info -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--spacing-md); margin-bottom: var(--spacing-lg);">
+          <div>
+            <div style="font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 4px;" data-i18n="submissions.submissionId">Submission ID</div>
+            <div style="font-size: var(--fs-lg); font-weight: 700; color: var(--text-primary);" id="modal-submission-id">-</div>
+          </div>
+          <div>
+            <div style="font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 4px;" data-i18n="submissions.problem">Problem</div>
+            <div style="font-size: var(--fs-lg); font-weight: 700; color: var(--text-primary);" id="modal-problem">-</div>
+          </div>
+          <div>
+            <div style="font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 4px;" data-i18n="submissions.verdict">Verdict</div>
+            <div id="modal-verdict">-</div>
+          </div>
+          <div>
+            <div style="font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 4px;" data-i18n="submissions.time">Time</div>
+            <div style="font-size: var(--fs-lg); color: var(--text-primary);" id="modal-time">-</div>
+          </div>
+          <div>
+            <div style="font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 4px;" data-i18n="submissions.memory">Memory</div>
+            <div style="font-size: var(--fs-lg); color: var(--text-primary);" id="modal-memory">-</div>
+          </div>
+          <div>
+            <div style="font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 4px;" data-i18n="submissions.submittedAt">Submitted At</div>
+            <div style="font-size: var(--fs-lg); color: var(--text-primary);" id="modal-submitted">-</div>
+          </div>
+        </div>
+
+        <!-- Test Results -->
+        <div style="margin-bottom: var(--spacing-lg);">
+          <h3 style="color: var(--text-primary); margin-bottom: var(--spacing-md);" data-i18n="submissions.testResults">Test Results</h3>
+          <div id="test-results-container">
+            <!-- Test results will be rendered here -->
+          </div>
+        </div>
+
+        <!-- Code -->
+        <div>
+          <h3 style="color: var(--text-primary); margin-bottom: var(--spacing-md);" data-i18n="submissions.sourceCode">Source Code</h3>
+          <div id="modal-code-editor" style="height: 400px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden;"></div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: var(--spacing-md); padding: var(--spacing-lg); border-top: 1px solid var(--border-color); background: var(--bg-secondary);">
+        <button id="close-modal-btn" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); font-size: var(--fs-base); font-weight: 600; cursor: pointer; transition: var(--transition-fast);">
+          <span data-i18n="common.close">Close</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Monaco Editor Loader -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/i18n.js"></script>
+  <script src="/js/components/notifications.js"></script>
+
+  <script>
+    let currentUser = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      currentUser = Auth.getCurrentUser();
+      if (!currentUser) {
+        window.location.href = '/auth/login.html';
+        return;
+      }
+
+      document.getElementById('username-display').textContent = currentUser.username;
+      document.getElementById('username-title').textContent = currentUser.username;
+      document.getElementById('user-avatar').textContent = currentUser.username.substring(0, 2).toUpperCase();
+
+      // Show role-based navigation links
+      if (currentUser.role === 'problemsetter') {
+        document.getElementById('problemsetter-nav').style.display = 'flex';
+      } else if (currentUser.role === 'admin') {
+        document.getElementById('problemsetter-nav').style.display = 'flex';
+        document.getElementById('admin-nav').style.display = 'flex';
+      }
+
+      setupNavigation();
+      setupLanguageSwitcher();
+      setupUserDropdown();
+      await loadDashboardData();
+
+      // Apply i18n translations
+      if (window.i18n && window.i18n.updateElements) {
+        window.i18n.updateElements();
+      }
+    });
+
+    function setupNavigation() {
+      // Navigation is now handled by HTML links
+    }
+
+    function setupLanguageSwitcher() {
+      const currentLang = window.i18n?.currentLang || 'en';
+      const langSelector = document.getElementById('language-selector');
+      if (langSelector) {
+        langSelector.value = currentLang;
+        langSelector.addEventListener('change', (e) => {
+          if (window.i18n && window.i18n.setLanguage) {
+            window.i18n.setLanguage(e.target.value);
+            location.reload();
+          }
+        });
+      }
+    }
+
+    function setupUserDropdown() {
+      const trigger = document.getElementById('user-menu-trigger');
+      const dropdown = document.getElementById('user-dropdown');
+      const logoutBtn = document.getElementById('logout-btn');
+
+      // Toggle dropdown on click
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('active');
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.remove('active');
+        }
+      });
+
+      // Handle logout
+      logoutBtn.addEventListener('click', function() {
+        Auth.logout();
+        window.location.href = '/auth/login.html';
+      });
+    }
+
+    async function loadDashboardData() {
+      try {
+        // Load fresh user stats from ranking API (to get updated scores)
+        const rankings = await API.getRanking();
+        const userInRanking = rankings.find(u => u.username === currentUser.username);
+        const freshScore = userInRanking ? userInRanking.total_score : (currentUser.total_score || 0);
+
+        document.getElementById('total-score').textContent = freshScore.toFixed(2);
+
+        // Load submissions to calculate stats
+        const submissions = await API.getSubmissions();
+        const userSubmissions = submissions.filter(s => s.user_id === currentUser.id);
+
+        const solvedProblems = new Set(
+          userSubmissions.filter(s => s.verdict === 'AC').map(s => s.problem_id)
+        );
+
+        document.getElementById('problems-solved').textContent = solvedProblems.size;
+        document.getElementById('total-submissions').textContent = userSubmissions.length;
+        document.getElementById('global-rank').textContent = currentUser.rank ? `#${currentUser.rank}` : '#-';
+
+        // Acceptance rate
+        const acCount = userSubmissions.filter(s => s.verdict === 'AC').length;
+        const rate = userSubmissions.length > 0 ? Math.round((acCount / userSubmissions.length) * 100) : 0;
+        document.getElementById('acceptance-rate').textContent = `${rate}%`;
+
+        // Recent activity
+        renderRecentActivity(userSubmissions.slice(0, 5));
+
+      } catch (error) {
+        console.error('Error loading dashboard:', error);
+        Notifications.show('Failed to load dashboard data', 'error');
+      }
+    }
+
+    function renderRecentActivity(submissions) {
+      const container = document.getElementById('activity-container');
+
+      if (submissions.length === 0) {
+        container.innerHTML = '<p class="text-muted">No recent activity</p>';
+        return;
+      }
+
+      // Unified verdict colors (same as submissions list)
+      const verdictColors = {
+        AC: 'var(--success-green)',
+        WA: '#ff4444',
+        TLE: '#ffaa00',
+        MLE: '#4488ff',
+        RE: '#ff4444',
+        PENDING: '#ffaa00',
+        CE: '#ff4444',
+        IE: '#9333ea'
+      };
+
+      container.innerHTML = submissions.map(sub => {
+        const timeAgo = getTimeAgo(new Date(sub.submitted_at));
+        const verdictColor = verdictColors[sub.verdict] || 'var(--text-secondary)';
+        const badgeStyle = 'display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.875rem; font-weight: 600;';
+
+        return `
+          <div class="activity-item" onclick="showSubmissionDetail(${sub.id})" style="cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-tertiary)'" onmouseout="this.style.background='transparent'">
+            <div class="activity-time">${timeAgo}</div>
+            <div class="activity-text">
+              <span style="${badgeStyle} background: ${verdictColor}; color: #000;">${sub.verdict}</span>
+              Problem #${sub.problem_id}
+              ${sub.verdict === 'AC' ? `<span style="color: var(--accent-orange);">+${sub.points_earned.toFixed(1)} pts</span>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function getTimeAgo(date) {
+      const seconds = Math.floor((new Date() - date) / 1000);
+      if (seconds < 60) return `${seconds}s ago`;
+      if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+      if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+      return `${Math.floor(seconds / 86400)}d ago`;
+    }
+
+    // Monaco Editor variable
+    let modalEditor = null;
+
+    /**
+     * Show submission detail modal
+     */
+    async function showSubmissionDetail(submissionId) {
+      try {
+        const submission = await API.getSubmission(submissionId);
+
+        // Populate modal data
+        document.getElementById('modal-submission-id').textContent = `#${submission.id}`;
+        document.getElementById('modal-problem').textContent = `Problem #${submission.problem_id}`;
+
+        // Verdict badge
+        const verdictColors = {
+          AC: 'var(--success-green)',
+          WA: '#ff4444',
+          TLE: '#ffaa00',
+          MLE: '#4488ff',
+          RE: '#ff4444',
+          PENDING: '#ffaa00',
+          CE: '#ff4444',
+          IE: '#9333ea'
+        };
+        const badgeStyle = 'display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.875rem; font-weight: 600;';
+        document.getElementById('modal-verdict').innerHTML = `
+          <span style="${badgeStyle} background: ${verdictColors[submission.verdict]}; color: #000;">
+            ${submission.verdict}
+          </span>
+        `;
+
+        document.getElementById('modal-time').textContent = submission.execution_time ? `${submission.execution_time}ms` : '-';
+        document.getElementById('modal-memory').textContent = submission.memory_used ? `${(submission.memory_used / 1024).toFixed(1)} MB` : '-';
+        document.getElementById('modal-submitted').textContent = new Date(submission.submitted_at).toLocaleString();
+
+        // Render test results
+        renderTestResults(submission.test_results || []);
+
+        // Check if user can copy (own submission - in dashboard, all submissions are user's own)
+        const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+        const isAdmin = currentUser.role === 'admin';
+        const canCopy = true; // In dashboard, user always views their own submissions
+
+        // Initialize Monaco Editor for code viewing
+        await initModalEditor(submission.source_code, submission.language, canCopy);
+
+        // Show modal
+        document.getElementById('submission-modal').style.display = 'flex';
+      } catch (error) {
+        console.error('Error loading submission detail:', error);
+        Notifications.error('Failed to load submission details');
+      }
+    }
+
+    /**
+     * Render test results
+     */
+    function renderTestResults(testResults) {
+      const container = document.getElementById('test-results-container');
+
+      // Parse testResults if it's a JSON string
+      if (typeof testResults === 'string') {
+        try {
+          testResults = JSON.parse(testResults);
+        } catch (e) {
+          console.error('Error parsing test_results:', e);
+          testResults = [];
+        }
+      }
+
+      // Ensure testResults is an array
+      if (!Array.isArray(testResults) || testResults.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-secondary);">No test results available</p>';
+        return;
+      }
+
+      container.innerHTML = `
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead style="background: var(--bg-tertiary);">
+              <tr>
+                <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--border-color);">Test Case</th>
+                <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--border-color);">Verdict</th>
+                <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--border-color);">Time</th>
+                <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--border-color);">Memory</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${testResults.map(result => {
+                const verdictColors = {
+                  AC: 'var(--success-green)',
+                  WA: '#ff4444',
+                  TLE: '#ffaa00',
+                  MLE: '#4488ff',
+                  RE: '#ff4444'
+                };
+                const badgeStyle = 'display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.875rem; font-weight: 600;';
+
+                return `
+                  <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid var(--border-color);"><strong>Test ${result.test_case}</strong></td>
+                    <td style="padding: 8px; border-bottom: 1px solid var(--border-color);">
+                      <span style="${badgeStyle} background: ${verdictColors[result.verdict]}; color: #000;">
+                        ${result.verdict}
+                      </span>
+                    </td>
+                    <td style="padding: 8px; border-bottom: 1px solid var(--border-color);">${result.time}ms</td>
+                    <td style="padding: 8px; border-bottom: 1px solid var(--border-color);">${(result.memory / 1024).toFixed(1)} MB</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    /**
+     * Initialize Monaco Editor in modal
+     * @param {string} code - Source code to display
+     * @param {string} language - Programming language
+     * @param {boolean} canCopy - Whether user can copy (always true in dashboard)
+     */
+    async function initModalEditor(code, language, canCopy = true) {
+      return new Promise((resolve) => {
+        require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs' } });
+
+        require(['vs/editor/editor.main'], function () {
+          // Dispose previous editor if exists
+          if (modalEditor) {
+            modalEditor.dispose();
+          }
+
+          const container = document.getElementById('modal-code-editor');
+
+          // Apply CSS based on copy permission
+          if (!canCopy) {
+            container.style.userSelect = 'none';
+            container.style.webkitUserSelect = 'none';
+            container.style.mozUserSelect = 'none';
+            container.style.msUserSelect = 'none';
+          } else {
+            container.style.userSelect = 'text';
+            container.style.webkitUserSelect = 'text';
+            container.style.mozUserSelect = 'text';
+            container.style.msUserSelect = 'text';
+          }
+
+          modalEditor = monaco.editor.create(container, {
+            value: code || '// No code available',
+            language: language || 'python',
+            theme: 'vs-dark',
+            readOnly: true,
+            minimap: { enabled: false },
+            scrollBeyondLastLine: false,
+            fontSize: 14,
+            lineNumbers: 'on',
+            automaticLayout: true,
+            contextmenu: canCopy
+          });
+
+          resolve();
+        });
+      });
+    }
+
+    // Close modal handlers
+    document.getElementById('close-modal').addEventListener('click', () => {
+      document.getElementById('submission-modal').style.display = 'none';
+    });
+
+    document.getElementById('close-modal-btn').addEventListener('click', () => {
+      document.getElementById('submission-modal').style.display = 'none';
+    });
+  </script>
+
+</body>
+</html>

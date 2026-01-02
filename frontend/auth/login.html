@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - CodeProof</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/styles-minimal-dark.css">
+  <style>
+    /* Additional styles for login page - Minimal Dark Theme */
+    body {
+      background: var(--bg-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-lg);
+    }
+
+    .auth-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      max-width: 450px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .auth-header {
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: var(--spacing-2xl) var(--spacing-xl);
+      text-align: center;
+    }
+
+    .auth-header h1 {
+      color: var(--text-primary);
+      font-size: 2rem;
+      margin-bottom: var(--spacing-xs);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .auth-header p {
+      color: var(--text-secondary);
+      font-size: var(--fs-sm);
+    }
+
+    .auth-body {
+      padding: var(--spacing-2xl) var(--spacing-xl);
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: var(--spacing-xl);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: var(--spacing-md);
+      background: none;
+      border: none;
+      font-size: var(--fs-base);
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition-fast);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      font-family: var(--font-mono);
+    }
+
+    .auth-tab.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--accent-orange);
+    }
+
+    .auth-tab:hover {
+      color: var(--text-primary);
+    }
+
+    .auth-form {
+      display: none;
+    }
+
+    .auth-form.active {
+      display: block;
+    }
+
+
+    .lang-selector {
+      position: fixed;
+      top: var(--spacing-lg);
+      right: var(--spacing-lg);
+      z-index: 100;
+    }
+
+    .back-to-home {
+      position: fixed;
+      top: var(--spacing-lg);
+      left: var(--spacing-lg);
+      z-index: 100;
+      text-decoration: none;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      font-size: 1.5em;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      transition: var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .back-to-home:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--accent-orange);
+      color: var(--accent-orange);
+      transform: translateX(-2px);
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: auto;
+      bottom: 0.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+      padding: 4px;
+      transition: color var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Adjust password toggle for fields with help text */
+    .form-group-with-icon:has(.form-help) .password-toggle {
+      bottom: 2rem;
+    }
+
+    /* Better spacing for form groups */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .password-toggle:hover {
+      color: var(--accent-orange);
+    }
+
+    .password-toggle svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 1.5;
+    }
+
+    .form-group-with-icon {
+      position: relative;
+    }
+
+    .form-group-with-icon input {
+      padding-right: 40px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Back to Home -->
+  <a href="/" class="back-to-home" title="Back to Home">
+    <span>←</span>
+  </a>
+
+  <!-- Language Selector -->
+  <div class="lang-selector">
+    <select id="language-selector" class="select select-sm">
+      <option value="en">🇬🇧 EN</option>
+      <option value="es">🇪🇸 ES</option>
+    </select>
+  </div>
+
+  <!-- Notification Container -->
+  <div id="notification-container" class="notification-container"></div>
+
+  <!-- Auth Container -->
+  <div class="auth-container">
+    <!-- Header -->
+    <div class="auth-header">
+      <h1>
+        <span>₿</span>
+        <span>CodeProof</span>
+      </h1>
+      <p data-i18n="auth.subtitle">Bitcoin Online Judge Platform</p>
+    </div>
+
+    <!-- Body -->
+    <div class="auth-body">
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" data-i18n="auth.tabs.login">Login</button>
+        <button class="auth-tab" id="tab-register" data-i18n="auth.tabs.register">Register</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" class="auth-form active">
+        <div class="form-group">
+          <label for="login-username" class="form-label" data-i18n="auth.fields.username">Username</label>
+          <input
+            type="text"
+            id="login-username"
+            class="input"
+            placeholder="Enter your username"
+            data-i18n-placeholder="auth.placeholders.username"
+            required
+            autocomplete="username"
+          >
+        </div>
+
+        <div class="form-group form-group-with-icon">
+          <label for="login-password" class="form-label" data-i18n="auth.fields.password">Password</label>
+          <input
+            type="password"
+            id="login-password"
+            class="input"
+            placeholder="Enter your password"
+            data-i18n-placeholder="auth.placeholders.password"
+            required
+            autocomplete="current-password"
+          >
+          <button type="button" class="password-toggle" data-target="login-password">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg">
+          <span data-i18n="auth.buttons.login">Login</span>
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="register-form" class="auth-form">
+        <div class="form-group">
+          <label for="register-username" class="form-label" data-i18n="auth.fields.username">Username</label>
+          <input
+            type="text"
+            id="register-username"
+            class="input"
+            placeholder="Choose a username"
+            data-i18n-placeholder="auth.placeholders.chooseUsername"
+            required
+            autocomplete="username"
+            minlength="3"
+          >
+          <span class="form-help" data-i18n="auth.help.usernameMin">Minimum 3 characters</span>
+        </div>
+
+        <div class="form-group form-group-with-icon">
+          <label for="register-password" class="form-label" data-i18n="auth.fields.password">Password</label>
+          <input
+            type="password"
+            id="register-password"
+            class="input"
+            placeholder="Choose a password"
+            data-i18n-placeholder="auth.placeholders.choosePassword"
+            required
+            autocomplete="new-password"
+            minlength="8"
+          >
+          <button type="button" class="password-toggle" data-target="register-password">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+          <span class="form-help" style="font-size: 0.85rem; color: var(--text-secondary);">Mínimo 8 caracteres, debe contener letra y número</span>
+        </div>
+
+        <div class="form-group form-group-with-icon">
+          <label for="register-confirm" class="form-label" data-i18n="auth.fields.confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            id="register-confirm"
+            class="input"
+            placeholder="Confirm your password"
+            data-i18n-placeholder="auth.placeholders.confirmPassword"
+            required
+            autocomplete="new-password"
+            minlength="8"
+          >
+          <button type="button" class="password-toggle" data-target="register-confirm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg">
+          <span data-i18n="auth.buttons.register">Register</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/i18n.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/components/notifications.js"></script>
+
+  <script>
+    // Helper function to safely get translations
+    function t(key, params = {}) {
+      if (window.i18n && window.i18n.t) {
+        return window.i18n.t(key, params);
+      }
+      return key; // Fallback to key if i18n not ready
+    }
+
+    // Helper function to safely show notifications
+    function showNotification(type, title, message) {
+      if (window.Notifications && window.Notifications[type]) {
+        window.Notifications[type](title, message);
+      } else {
+        console.log(`[${type.toUpperCase()}] ${title}: ${message}`);
+      }
+    }
+
+    // Page initialization
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check if setup is needed FIRST
+      try {
+        const setupStatus = await API.request('/setup/status');
+        if (setupStatus.needs_setup) {
+          // Redirect to setup page
+          window.location.href = '/setup.html';
+          return;
+        }
+      } catch (error) {
+        console.error('Failed to check setup status:', error);
+        // Continue loading the page on error
+      }
+
+      // Check if already logged in
+      if (Auth.isLoggedIn()) {
+        // Redirect to dashboard
+        window.location.href = '/user/dashboard.html';
+        return;
+      }
+
+      // Language selector
+      const langSelector = document.getElementById('language-selector');
+      if (window.i18n && window.i18n.currentLang) {
+        langSelector.value = window.i18n.currentLang;
+      }
+      langSelector.addEventListener('change', (e) => {
+        if (window.i18n && window.i18n.setLanguage) {
+          window.i18n.setLanguage(e.target.value);
+        }
+      });
+
+      // Tab switching
+      const tabs = document.querySelectorAll('.auth-tab');
+      const forms = document.querySelectorAll('.auth-form');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Remove active class from all tabs and forms
+          tabs.forEach(t => t.classList.remove('active'));
+          forms.forEach(f => f.classList.remove('active'));
+
+          // Add active class to clicked tab
+          tab.classList.add('active');
+
+          // Show corresponding form
+          const formId = tab.id.replace('tab-', '') + '-form';
+          document.getElementById(formId).classList.add('active');
+        });
+      });
+
+      // Password toggle buttons
+      document.querySelectorAll('.password-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.dataset.target;
+          const input = document.getElementById(targetId);
+
+          if (input.type === 'password') {
+            input.type = 'text';
+            // Change to EyeOff icon
+            btn.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                <line x1="2" x2="22" y1="2" y2="22"/>
+              </svg>
+            `;
+          } else {
+            input.type = 'password';
+            // Change to Eye icon
+            btn.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            `;
+          }
+        });
+      });
+
+      // Login form submission
+      const loginForm = document.getElementById('login-form');
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById('login-username').value.trim();
+        const password = document.getElementById('login-password').value;
+
+        try {
+          // Attempt login (async call to backend)
+          const user = await Auth.login(username, password);
+
+          if (user) {
+            const message = t('auth.messages.loginSuccess').replace('{username}', user.username);
+            showNotification('success', 'Success', message);
+
+            // Redirect to dashboard after short delay
+            setTimeout(() => {
+              window.location.href = '/user/dashboard.html';
+            }, 500);
+          }
+        } catch (error) {
+          console.error('Login failed:', error);
+
+          // Show specific error messages
+          let errorMessage = 'Login failed';
+
+          if (error.message) {
+            const errorLower = error.message.toLowerCase();
+
+            // Check for specific error types
+            if (errorLower.includes('user') && errorLower.includes('not found')) {
+              errorMessage = 'Usuario incorrecto';
+            } else if (errorLower.includes('password') || errorLower.includes('incorrect') || errorLower.includes('invalid')) {
+              errorMessage = 'Contraseña incorrecta';
+            } else if (errorLower.includes('credentials')) {
+              errorMessage = 'Usuario o contraseña incorrectos';
+            } else {
+              errorMessage = error.message;
+            }
+          }
+
+          showNotification('error', 'Error', errorMessage);
+        }
+      });
+
+      // Register form submission
+      const registerForm = document.getElementById('register-form');
+      registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById('register-username').value.trim();
+        const password = document.getElementById('register-password').value;
+        const confirm = document.getElementById('register-confirm').value;
+
+        // Validate username length
+        if (username.length < 3) {
+          showNotification('error', 'Error', 'El nombre de usuario debe tener al menos 3 caracteres');
+          return;
+        }
+
+        // Validate password length
+        if (password.length < 8) {
+          showNotification('error', 'Error', 'La contraseña debe tener al menos 8 caracteres');
+          return;
+        }
+
+        // Check if passwords match
+        if (password !== confirm) {
+          showNotification('error', 'Error', 'Las contraseñas no coinciden');
+          return;
+        }
+
+        // Optional: Additional password requirements
+        const hasNumber = /\d/.test(password);
+        const hasLetter = /[a-zA-Z]/.test(password);
+
+        if (!hasNumber || !hasLetter) {
+          showNotification('error', 'Error', 'La contraseña debe contener al menos una letra y un número');
+          return;
+        }
+
+        try {
+          // Attempt registration (async call to backend)
+          const user = await Auth.register(username, password);
+
+          if (user) {
+            const message = t('auth.messages.registerSuccess').replace('{username}', user.username);
+            showNotification('success', 'Éxito', message || `¡Bienvenido ${user.username}!`);
+
+            // Redirect to dashboard after short delay
+            setTimeout(() => {
+              window.location.href = '/user/dashboard.html';
+            }, 500);
+          }
+        } catch (error) {
+          console.error('Registration failed:', error);
+
+          // Show specific error messages
+          let errorMessage = 'Error al registrarse';
+
+          if (error.message) {
+            const errorLower = error.message.toLowerCase();
+
+            if (errorLower.includes('already') || errorLower.includes('exist')) {
+              errorMessage = 'El usuario ya existe';
+            } else if (errorLower.includes('username')) {
+              errorMessage = 'Nombre de usuario inválido';
+            } else if (errorLower.includes('password')) {
+              errorMessage = 'Contraseña inválida';
+            } else {
+              errorMessage = error.message;
+            }
+          }
+
+          showNotification('error', 'Error', errorMessage);
+        }
+      });
+
+      // Auto-focus on username field
+      document.getElementById('login-username').focus();
+    });
+  </script>
+</body>
+</html>

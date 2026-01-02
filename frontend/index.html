@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeProof - Bitcoin Online Judge Platform</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/styles-minimal-dark.css">
+  <style>
+    /* Landing Page - Minimal Dark Theme */
+
+    /* Hero Section */
+    .hero {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 80px 30px;
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      color: var(--text-primary);
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: var(--spacing-lg);
+      line-height: 1.2;
+      font-family: var(--font-mono);
+    }
+
+    .hero p {
+      font-size: var(--fs-lg);
+      color: var(--text-secondary);
+      margin-bottom: var(--spacing-xl);
+      line-height: 1.6;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: var(--spacing-md);
+      justify-content: center;
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+      margin-top: 60px;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat-value {
+      font-size: 2.5em;
+      font-weight: 700;
+      color: var(--accent-orange);
+      font-family: var(--font-mono);
+      line-height: 1;
+    }
+
+    .hero-stat-label {
+      font-size: var(--fs-xs);
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: var(--spacing-sm);
+    }
+
+    /* Sections */
+    .section {
+      padding: 60px 30px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .section-title {
+      font-size: 2em;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-sm);
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+
+    .section-subtitle {
+      font-size: var(--fs-base);
+      color: var(--text-secondary);
+    }
+
+    .section-bg {
+      background: var(--bg-secondary);
+    }
+
+    /* Blockchain Section */
+    .blockchain-section {
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .blocks-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .blocks-scroll {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-md);
+      overflow-x: auto;
+      padding: var(--spacing-xl) var(--spacing-md);
+      scroll-behavior: smooth;
+      min-height: 250px;
+    }
+
+    .blocks-scroll::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .blocks-scroll::-webkit-scrollbar-thumb {
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+    }
+
+    .next-block-banner {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-lg);
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .next-block-timer {
+      font-family: var(--font-mono);
+      font-size: 2em;
+      font-weight: 700;
+      color: var(--accent-orange);
+      margin-top: var(--spacing-sm);
+    }
+
+    /* Problems Section */
+    .problems-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--spacing-md);
+    }
+
+    .problem-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-lg);
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .problem-card:hover {
+      border-color: var(--accent-orange);
+      transform: translateY(-2px);
+    }
+
+    .problem-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .problem-id {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--text-secondary);
+    }
+
+    .problem-title {
+      font-size: var(--fs-md);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .problem-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: var(--spacing-md);
+    }
+
+    .problem-points {
+      font-weight: 700;
+      color: var(--accent-orange);
+      font-size: var(--fs-md);
+      font-family: var(--font-mono);
+    }
+
+    /* Split Section */
+    .split-section {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-lg);
+    }
+
+    .split-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-xl);
+    }
+
+    .split-card h3 {
+      font-size: var(--fs-lg);
+      margin-bottom: var(--spacing-lg);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .leaderboard-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-md);
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition-fast);
+    }
+
+    .leaderboard-item:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .leaderboard-item:last-child {
+      border-bottom: none;
+    }
+
+    .leaderboard-rank {
+      font-weight: 600;
+      color: var(--text-secondary);
+      width: 40px;
+      font-family: var(--font-mono);
+    }
+
+    .leaderboard-user {
+      flex: 1;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .leaderboard-score {
+      font-weight: 700;
+      color: var(--accent-orange);
+      font-family: var(--font-mono);
+    }
+
+    .how-it-works-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .how-it-works-item {
+      display: flex;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .step-number {
+      width: 36px;
+      height: 36px;
+      background: var(--accent-orange);
+      color: var(--text-inverse);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+      font-family: var(--font-mono);
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xs);
+      font-size: var(--fs-base);
+    }
+
+    .step-description {
+      color: var(--text-secondary);
+      font-size: var(--fs-sm);
+      line-height: 1.5;
+    }
+
+    /* Features Section */
+    .features-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-lg);
+    }
+
+    .feature-card {
+      text-align: center;
+      padding: var(--spacing-xl);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      transition: var(--transition-fast);
+    }
+
+    .feature-card:hover {
+      border-color: var(--accent-orange);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .feature-icon-lucide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .feature-icon-lucide svg {
+      width: 48px;
+      height: 48px;
+      stroke-width: 1.5;
+      color: var(--text-secondary);
+      transition: var(--transition-fast);
+    }
+
+    .feature-card:hover .feature-icon-lucide svg {
+      color: var(--accent-orange);
+      transform: translateY(-2px);
+    }
+
+    .feature-title {
+      font-size: var(--fs-md);
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-primary);
+    }
+
+    .feature-description {
+      color: var(--text-secondary);
+      font-size: var(--fs-sm);
+      line-height: 1.5;
+    }
+
+    /* Footer */
+    .main-footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      padding: 60px 30px 30px;
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-2xl);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .footer-section h4 {
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-md);
+      font-size: var(--fs-base);
+      font-weight: 600;
+    }
+
+    .footer-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-links li {
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: var(--transition-fast);
+      font-size: var(--fs-sm);
+    }
+
+    .footer-links a:hover {
+      color: var(--accent-orange);
+    }
+
+    .footer-bottom {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-top: var(--spacing-xl);
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: var(--fs-sm);
+    }
+
+    /* Badge Colors */
+    .badge-easy {
+      background: rgba(0, 255, 65, 0.15);
+      color: var(--diff-easy);
+      border-color: var(--diff-easy);
+    }
+
+    .badge-medium {
+      background: rgba(247, 147, 26, 0.15);
+      color: var(--diff-medium);
+      border-color: var(--diff-medium);
+    }
+
+    .badge-hard {
+      background: rgba(255, 68, 68, 0.15);
+      color: var(--diff-hard);
+      border-color: var(--diff-hard);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero p {
+        font-size: var(--fs-base);
+      }
+
+      .hero-cta {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .hero-stats {
+        gap: 30px;
+      }
+
+      .split-section {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .problems-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section {
+        padding: 40px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Notification Container -->
+  <div id="notification-container" class="notification-container"></div>
+
+  <!-- Header/Navigation -->
+  <header class="header">
+    <div class="logo">
+      <span>₿</span>
+      <span>CodeProof</span>
+    </div>
+
+    <nav class="nav-links">
+      <a href="#problems" class="nav-link" data-i18n="nav.problems">
+        <span>Problems</span>
+      </a>
+      <a href="/blocks/explorer.html" class="nav-link" data-i18n="nav.blocks">
+        <span>₿</span>
+        <span>Blocks</span>
+      </a>
+      <a href="#ranking" class="nav-link" data-i18n="nav.ranking">
+        <span>Ranking</span>
+      </a>
+      <a href="#how-it-works" class="nav-link" data-i18n="nav.howItWorks">
+        <span>How It Works</span>
+      </a>
+    </nav>
+
+    <div class="user-info">
+      <select id="language-selector" class="select select-sm">
+        <option value="en">🇬🇧 EN</option>
+        <option value="es">🇪🇸 ES</option>
+      </select>
+      <a href="/auth/login.html" class="btn btn-secondary btn-sm" data-i18n="nav.login">Login</a>
+      <a href="/auth/login.html#register" class="btn btn-primary btn-sm" data-i18n="nav.register">Register</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 data-i18n="hero.title">🔗 Bitcoin Online Judge Platform</h1>
+      <p data-i18n="hero.subtitle">Learn Bitcoin through code challenges. Solve problems, earn points, and see your solutions mined into blocks.</p>
+
+      <div class="hero-cta">
+        <a href="/auth/login.html#register" class="btn btn-primary">
+          <span data-i18n="hero.cta.start">Start Solving →</span>
+        </a>
+        <a href="#problems" class="btn btn-secondary">
+          <span data-i18n="hero.cta.browse">Browse Problems</span>
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-value" id="stat-submissions">12,456</div>
+          <div class="hero-stat-label" data-i18n="hero.stats.submissions">Submissions</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value" id="stat-users">1,234</div>
+          <div class="hero-stat-label" data-i18n="hero.stats.users">Users</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value" id="stat-problems">45</div>
+          <div class="hero-stat-label" data-i18n="hero.stats.problems">Problems</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blockchain Section -->
+  <section class="section blockchain-section" id="blockchain">
+    <div class="blocks-container">
+      <div class="section-header">
+        <h2 class="section-title" data-i18n="blockchain.title">Latest Blocks</h2>
+        <p class="section-subtitle" data-i18n="blockchain.subtitle">New blocks mined every 10 minutes containing all accepted submissions</p>
+      </div>
+
+      <div class="blocks-scroll" id="landing-blocks">
+        <!-- Blocks will be rendered here by JavaScript -->
+        <div class="flex items-center justify-center" style="width: 100%; padding: 2rem;">
+          <div class="spinner"></div>
+        </div>
+      </div>
+
+      <div class="text-center mt-lg">
+        <a href="/blocks/explorer.html" class="btn btn-primary">
+          <span data-i18n="blockchain.viewAll">View All Blocks →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problems Section -->
+  <section class="section section-bg" id="problems">
+    <div class="section-header">
+      <h2 class="section-title" data-i18n="problems.title">Problems</h2>
+      <p class="section-subtitle" data-i18n="problems.subtitle">Solve Bitcoin-themed coding challenges and earn points</p>
+    </div>
+
+    <div class="problems-grid" id="problems-grid">
+      <!-- Problems will be rendered here -->
+    </div>
+
+    <div class="text-center mt-xl">
+      <a href="/problems/list.html" class="btn btn-primary btn-lg">
+        <span data-i18n="problems.viewAll">View All Problems →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Split Section: Leaderboard + How It Works -->
+  <section class="section" id="ranking">
+    <div class="split-section">
+      <!-- Leaderboard -->
+      <div class="split-card">
+        <h3 style="display: flex; align-items: center; gap: 12px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-orange);">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+            <path d="M4 22h16"></path>
+            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+          </svg>
+          <span data-i18n="leaderboard.title">Top Users</span>
+        </h3>
+        <ul class="leaderboard-list" id="leaderboard-list">
+          <!-- Leaderboard items will be rendered here -->
+        </ul>
+        <div class="text-center mt-lg">
+          <a href="/ranking/leaderboard.html" class="btn btn-secondary">
+            <span data-i18n="leaderboard.viewAll">Full Ranking →</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- How It Works -->
+      <div class="split-card" id="how-it-works">
+        <h3 style="display: flex; align-items: center; gap: 12px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-orange);">
+            <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path>
+            <path d="M9 18h6"></path>
+            <path d="M10 22h4"></path>
+          </svg>
+          <span data-i18n="howItWorks.title">How It Works</span>
+        </h3>
+        <ol class="how-it-works-list">
+          <li class="how-it-works-item">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title" data-i18n="howItWorks.step1.title">Solve Bitcoin Problems</div>
+              <div class="step-description" data-i18n="howItWorks.step1.desc">Choose from our collection of Bitcoin-themed coding challenges</div>
+            </div>
+          </li>
+          <li class="how-it-works-item">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title" data-i18n="howItWorks.step2.title">Submit Your Code</div>
+              <div class="step-description" data-i18n="howItWorks.step2.desc">Write your solution in Python and submit for evaluation</div>
+            </div>
+          </li>
+          <li class="how-it-works-item">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title" data-i18n="howItWorks.step3.title">Get Accepted (AC)</div>
+              <div class="step-description" data-i18n="howItWorks.step3.desc">Our judge evaluates your code against test cases</div>
+            </div>
+          </li>
+          <li class="how-it-works-item">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title" data-i18n="howItWorks.step4.title">Mined Into a Block</div>
+              <div class="step-description" data-i18n="howItWorks.step4.desc">Your solution goes into the mempool and gets included in the next block</div>
+            </div>
+          </li>
+          <li class="how-it-works-item">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <div class="step-title" data-i18n="howItWorks.step5.title">Earn Points & Compete</div>
+              <div class="step-description" data-i18n="howItWorks.step5.desc">Gain points dynamically based on problem difficulty and compete globally</div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section section-bg">
+    <div class="section-header">
+      <h2 class="section-title" data-i18n="features.title">Why CodeProof?</h2>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon feature-icon-lucide">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline>
+            <polyline points="16 17 22 17 22 11"></polyline>
+          </svg>
+        </div>
+        <h4 class="feature-title" data-i18n="features.dynamic.title">Dynamic Scoring</h4>
+        <p class="feature-description" data-i18n="features.dynamic.desc">Problem points decrease as more users solve them, rewarding early solvers</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon feature-icon-lucide">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4 17 10 11 4 5"></polyline>
+            <line x1="12" x2="20" y1="19" y2="19"></line>
+          </svg>
+        </div>
+        <h4 class="feature-title" data-i18n="features.learn.title">Learn Bitcoin</h4>
+        <p class="feature-description" data-i18n="features.learn.desc">Master Bitcoin concepts through hands-on coding challenges</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon feature-icon-lucide">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+            <path d="M4 22h16"></path>
+            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+          </svg>
+        </div>
+        <h4 class="feature-title" data-i18n="features.compete.title">Compete Globally</h4>
+        <p class="feature-description" data-i18n="features.compete.desc">Climb the leaderboard and prove your skills against developers worldwide</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>CodeProof</h4>
+        <p style="color: rgba(255, 255, 255, 0.7); font-size: 14px;">
+          Bitcoin Online Judge Platform<br>
+          Learn Bitcoin through code
+        </p>
+      </div>
+
+      <div class="footer-section">
+        <h4 data-i18n="footer.platform">Platform</h4>
+        <ul class="footer-links">
+          <li><a href="/problems/list.html" data-i18n="footer.problems">Problems</a></li>
+          <li><a href="/blocks/explorer.html" data-i18n="footer.blocks">Blocks</a></li>
+          <li><a href="/ranking/leaderboard.html" data-i18n="footer.ranking">Ranking</a></li>
+          <li><a href="/auth/login.html" data-i18n="footer.login">Login</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 data-i18n="footer.resources">Resources</h4>
+        <ul class="footer-links">
+          <li><a href="#" data-i18n="footer.docs">Documentation</a></li>
+          <li><a href="#" id="api-docs-link" data-i18n="footer.api">API</a></li>
+          <li><a href="#" data-i18n="footer.github">GitHub</a></li>
+          <li><a href="#how-it-works" data-i18n="footer.howItWorks">How It Works</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 data-i18n="footer.legal">Legal</h4>
+        <ul class="footer-links">
+          <li><a href="#" data-i18n="footer.about">About</a></li>
+          <li><a href="https://t.me/forte11" target="_blank" rel="noopener noreferrer" data-i18n="footer.contact">Contact</a></li>
+          <li><a href="#" data-i18n="footer.terms">Terms</a></li>
+          <li><a href="#" data-i18n="footer.privacy">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>2026 CodeProof. MIT License.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/i18n.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/components/notifications.js"></script>
+  <script src="/js/components/blocks.js"></script>
+
+  <script>
+    // Translations
+    const landingTranslations = {
+      en: {
+        nav: {
+          problems: 'Problems',
+          blocks: 'Blocks',
+          ranking: 'Ranking',
+          howItWorks: 'How It Works',
+          login: 'Login',
+          register: 'Register'
+        },
+        hero: {
+          title: 'Bitcoin Online Judge Platform',
+          subtitle: 'Learn Bitcoin through code challenges. Solve problems, earn points, and see your solutions mined into blocks.',
+          cta: {
+            start: 'Start Solving →',
+            browse: 'Browse Problems'
+          },
+          stats: {
+            submissions: 'Submissions',
+            users: 'Users',
+            blocks: 'Blocks Mined',
+            problems: 'Problems'
+          }
+        },
+        blockchain: {
+          title: 'Latest Blocks',
+          subtitle: 'New blocks mined every 10 minutes containing all accepted submissions',
+          nextBlock: 'Next block in',
+          viewAll: 'View All Blocks →'
+        },
+        problems: {
+          title: 'Featured Problems',
+          subtitle: 'Start with these beginner-friendly Bitcoin challenges',
+          viewAll: 'View All Problems →'
+        },
+        leaderboard: {
+          title: 'Top Users',
+          viewAll: 'Full Ranking →'
+        },
+        howItWorks: {
+          title: 'How It Works',
+          step1: {
+            title: 'Solve Bitcoin Problems',
+            desc: 'Choose from our collection of Bitcoin-themed coding challenges'
+          },
+          step2: {
+            title: 'Submit Your Code',
+            desc: 'Write your solution in Python and submit for evaluation'
+          },
+          step3: {
+            title: 'Get Accepted (AC)',
+            desc: 'Our judge evaluates your code against test cases'
+          },
+          step4: {
+            title: 'Mined Into a Block',
+            desc: 'Your solution goes into the mempool and gets included in the next block'
+          },
+          step5: {
+            title: 'Earn Points & Compete',
+            desc: 'Gain points dynamically based on problem difficulty and compete globally'
+          }
+        },
+        features: {
+          title: 'Why CodeProof?',
+          blockchain: {
+            title: 'Blockchain-Anchored',
+            desc: 'Your solutions are mined into blocks every 10 minutes, creating a permanent record of your achievements'
+          },
+          dynamic: {
+            title: 'Dynamic Scoring',
+            desc: 'Problem points decrease as more users solve them, encouraging you to tackle harder challenges'
+          },
+          learn: {
+            title: 'Learn Bitcoin',
+            desc: 'Master Bitcoin concepts through practical coding exercises and real-world scenarios'
+          },
+          compete: {
+            title: 'Global Competition',
+            desc: 'Compete with programmers worldwide and climb the leaderboard'
+          }
+        },
+        footer: {
+          platform: 'Platform',
+          problems: 'Problems',
+          blocks: 'Blocks',
+          ranking: 'Ranking',
+          login: 'Login',
+          resources: 'Resources',
+          docs: 'Documentation',
+          api: 'API',
+          github: 'GitHub',
+          howItWorks: 'How It Works',
+          legal: 'Legal',
+          about: 'About',
+          contact: 'Contact',
+          terms: 'Terms',
+          privacy: 'Privacy',
+          copyright: 'All rights reserved.'
+        }
+      },
+      es: {
+        nav: {
+          problems: 'Problemas',
+          blocks: 'Bloques',
+          ranking: 'Ranking',
+          howItWorks: 'Cómo Funciona',
+          login: 'Iniciar Sesión',
+          register: 'Registrarse'
+        },
+        hero: {
+          title: 'Plataforma de Juez Online Bitcoin',
+          subtitle: 'Aprende Bitcoin a través de desafíos de código. Resuelve problemas, gana puntos y ve tus soluciones minadas en bloques.',
+          cta: {
+            start: 'Comenzar a Resolver →',
+            browse: 'Ver Problemas'
+          },
+          stats: {
+            submissions: 'Envíos',
+            users: 'Usuarios',
+            blocks: 'Bloques Minados',
+            problems: 'Problemas'
+          }
+        },
+        blockchain: {
+          title: 'Últimos Bloques',
+          subtitle: 'Nuevos bloques minados cada 10 minutos conteniendo todas las soluciones aceptadas',
+          nextBlock: 'Próximo bloque en',
+          viewAll: 'Ver Todos los Bloques →'
+        },
+        problems: {
+          title: 'Problemas Destacados',
+          subtitle: 'Comienza con estos desafíos Bitcoin para principiantes',
+          viewAll: 'Ver Todos los Problemas →'
+        },
+        leaderboard: {
+          title: 'Mejores Usuarios',
+          viewAll: 'Ranking Completo →'
+        },
+        howItWorks: {
+          title: 'Cómo Funciona',
+          step1: {
+            title: 'Resuelve Problemas Bitcoin',
+            desc: 'Elige de nuestra colección de desafíos de código con temática Bitcoin'
+          },
+          step2: {
+            title: 'Envía Tu Código',
+            desc: 'Escribe tu solución en Python y envíala para evaluación'
+          },
+          step3: {
+            title: 'Obtén Aceptado (AC)',
+            desc: 'Nuestro juez evalúa tu código contra casos de prueba'
+          },
+          step4: {
+            title: 'Minado en un Bloque',
+            desc: 'Tu solución va al mempool y se incluye en el próximo bloque'
+          },
+          step5: {
+            title: 'Gana Puntos y Compite',
+            desc: 'Obtén puntos dinámicamente según la dificultad del problema y compite globalmente'
+          }
+        },
+        features: {
+          title: '¿Por Qué CodeProof?',
+          blockchain: {
+            title: 'Anclado a Blockchain',
+            desc: 'Tus soluciones se minan en bloques cada 10 minutos, creando un registro permanente de tus logros'
+          },
+          dynamic: {
+            title: 'Puntuación Dinámica',
+            desc: 'Los puntos del problema disminuyen a medida que más usuarios los resuelven, animándote a enfrentar desafíos más difíciles'
+          },
+          learn: {
+            title: 'Aprende Bitcoin',
+            desc: 'Domina conceptos de Bitcoin a través de ejercicios de código prácticos y escenarios del mundo real'
+          },
+          compete: {
+            title: 'Competencia Global',
+            desc: 'Compite con programadores de todo el mundo y sube en el ranking'
+          }
+        },
+        footer: {
+          platform: 'Plataforma',
+          problems: 'Problemas',
+          blocks: 'Bloques',
+          ranking: 'Ranking',
+          login: 'Iniciar Sesión',
+          resources: 'Recursos',
+          docs: 'Documentación',
+          api: 'API',
+          github: 'GitHub',
+          howItWorks: 'Cómo Funciona',
+          legal: 'Legal',
+          about: 'Acerca de',
+          contact: 'Contacto',
+          terms: 'Términos',
+          privacy: 'Privacidad',
+          copyright: 'Todos los derechos reservados.'
+        }
+      }
+    };
+
+    // Initialize i18n - Moved inside DOMContentLoaded
+    // window.i18n.addTranslations(landingTranslations);
+
+    // Initialize notifications
+    window.notifications = Notifications;
+
+    // Store latest blocks for timer calculation
+    let latestBlocks = [];
+
+    // Store live problems from API
+    let liveProblems = [];
+
+    // Store leaderboard data
+    let leaderboardData = [];
+
+    // Load live statistics from API
+    async function loadLiveStats() {
+      try {
+        // Fetch ranking stats (public endpoint with aggregated data)
+        const [rankingStats, problems] = await Promise.all([
+          API.request('/ranking/stats'),
+          API.request('/problems?limit=100')
+        ]);
+
+        // Update stat values
+        document.getElementById('stat-users').textContent = rankingStats.total_users || 0;
+        document.getElementById('stat-problems').textContent = problems.length || 0;
+        document.getElementById('stat-submissions').textContent = rankingStats.total_problems_solved || 0;
+
+        console.log('✅ Live stats loaded:', {
+          users: rankingStats.total_users,
+          problems: problems.length,
+          submissions: rankingStats.total_problems_solved
+        });
+      } catch (error) {
+        console.error('❌ Error loading live stats:', error);
+        // Keep default values on error
+      }
+    }
+
+    // Load real blocks from API
+    async function loadLiveBlocks() {
+      try {
+        const blocks = await API.request('/blocks?limit=5');
+        latestBlocks = blocks;
+
+        // Render blocks timeline
+        BlocksComponent.renderTimeline(blocks, 'landing-blocks');
+
+        console.log('✅ Live blocks loaded:', blocks.length);
+      } catch (error) {
+        console.error('❌ Error loading blocks:', error);
+        // Show empty state or keep loading spinner
+      }
+    }
+
+    // Load real leaderboard from API
+    async function loadLiveLeaderboard() {
+      try {
+        const ranking = await API.request('/ranking');
+        leaderboardData = ranking.slice(0, 10); // Top 10 users
+
+        // Render leaderboard
+        renderLeaderboard();
+
+        console.log('✅ Live leaderboard loaded:', leaderboardData.length, 'users');
+      } catch (error) {
+        console.error('❌ Error loading leaderboard:', error);
+        // Show empty state or keep default
+      }
+    }
+
+    // Load real problems from API
+    async function loadLiveProblems() {
+      try {
+        const problems = await API.request('/problems?limit=6');
+        liveProblems = problems;
+
+        // Render problems
+        renderProblems();
+
+        console.log('✅ Live problems loaded:', liveProblems.length, 'problems');
+      } catch (error) {
+        console.error('❌ Error loading problems:', error);
+        // Show empty state or keep default
+      }
+    }
+
+    // Page initialization
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check if setup is needed FIRST
+      try {
+        const setupStatus = await API.request('/setup/status');
+        if (setupStatus.needs_setup) {
+          // Redirect to setup page
+          window.location.href = '/setup.html';
+          return;
+        }
+      } catch (error) {
+        console.error('Failed to check setup status:', error);
+        // Continue loading the page on error
+      }
+
+      // Initialize i18n with landing translations
+      if (window.i18n && window.i18n.addTranslations) {
+        window.i18n.addTranslations(landingTranslations);
+      }
+      // Language selector
+      const langSelector = document.getElementById('language-selector');
+      langSelector.value = window.i18n.currentLang;
+      langSelector.addEventListener('change', (e) => {
+        window.i18n.setLanguage(e.target.value);
+      });
+
+      // Load live statistics
+      loadLiveStats();
+
+      // Load and render real blocks
+      loadLiveBlocks();
+
+      // Load and render real leaderboard
+      loadLiveLeaderboard();
+
+      // Load and render real problems
+      loadLiveProblems();
+
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          const href = this.getAttribute('href');
+          if (href !== '#') {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth' });
+            }
+          }
+        });
+      });
+
+      // Configure API documentation link based on environment
+      const apiDocsLink = document.getElementById('api-docs-link');
+      if (apiDocsLink) {
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const apiDocsUrl = isLocalhost ? 'http://localhost:8000/docs' : '/docs';
+        apiDocsLink.href = apiDocsUrl;
+        apiDocsLink.target = '_blank'; // Open in new tab
+        apiDocsLink.rel = 'noopener noreferrer'; // Security best practice
+      }
+    });
+
+    function renderProblems() {
+      const container = document.getElementById('problems-grid');
+      const lang = window.i18n.currentLang;
+
+      if (liveProblems.length === 0) {
+        container.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">No problems available yet</div>';
+        return;
+      }
+
+      container.innerHTML = liveProblems.map(problem => {
+        const title = lang === 'es' ? problem.title_es : problem.title_en;
+        const points = problem.current_points || 0;
+        const solvedCount = problem.solved_count || 0;
+
+        return `
+          <div class="problem-card" onclick="window.location.href='/auth/login.html'">
+            <div class="problem-header">
+              <div>
+                <div class="problem-id">${problem.id}</div>
+                <h3 class="problem-title">${title}</h3>
+              </div>
+            </div>
+            <p class="text-sm text-secondary">
+              ${solvedCount} ${lang === 'es' ? 'usuarios lo resolvieron' : 'users solved this'}
+            </p>
+            <div class="problem-footer">
+              <span class="problem-points">${points.toFixed(1)} ${lang === 'es' ? 'puntos' : 'points'}</span>
+              <span class="text-sm text-muted">${lang === 'es' ? 'Resolver →' : 'Solve →'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderLeaderboard() {
+      const container = document.getElementById('leaderboard-list');
+      const lang = window.i18n.currentLang;
+
+      if (leaderboardData.length === 0) {
+        container.innerHTML = '<li class="text-muted" style="padding: 1rem; text-align: center;">No ranking data available</li>';
+        return;
+      }
+
+      container.innerHTML = leaderboardData.map(user => `
+        <li class="leaderboard-item">
+          <span class="leaderboard-rank">#${user.rank}</span>
+          <span class="leaderboard-user">${user.username}</span>
+          <span class="leaderboard-score">${user.total_score.toFixed(1)} ${lang === 'es' ? 'pts' : 'pts'}</span>
+        </li>
+      `).join('');
+    }
+
+    // Update i18n to handle placeholder attributes
+    const originalSetLanguage = window.i18n.setLanguage;
+    window.i18n.setLanguage = function(lang) {
+      originalSetLanguage.call(window.i18n, lang);
+      // Re-render dynamic content
+      renderProblems();
+      renderLeaderboard();
+    };
+  </script>
+</body>
+</html>

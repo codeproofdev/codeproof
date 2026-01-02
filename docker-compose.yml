@@ -1,0 +1,202 @@
+services:
+  # ============================================
+  # PostgreSQL Database
+  # ============================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: codeproof-postgres
+    environment:
+      POSTGRES_DB: codeproof
+      POSTGRES_USER: codeproof
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-codeproof_dev_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U codeproof"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - codeproof-network
+
+  # ============================================
+  # Redis (Cache + Queue)
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: codeproof-redis
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redis_dev_password}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - codeproof-network
+
+  # ============================================
+  # FastAPI Backend (with isolate + compilers)
+  # ============================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.judge
+    container_name: codeproof-backend
+    # CRITICAL: isolate needs privileged mode for cgroups
+    privileged: true
+    # Alternative to privileged (more secure but may not work on all systems):
+    # cap_add:
+    #   - SYS_ADMIN
+    #   - SYS_PTRACE
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      # Database
+      DATABASE_URL: postgresql+asyncpg://codeproof:${POSTGRES_PASSWORD:-codeproof_dev_password}@postgres:5432/codeproof
+
+      # Redis
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_dev_password}@redis:6379/0
+
+      # Security
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-in-production-min-32-chars-long-please}
+
+      # Environment
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      DEBUG: ${DEBUG:-true}
+
+      # CORS
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:8080}
+
+      # Problem Storage
+      PROBLEM_DATA_ROOT: /var/codeproof/problems
+
+      # Compiler paths (defaults from Dockerfile, override if needed)
+      PYTHON_BINARY: ${PYTHON_BINARY:-/usr/bin/python3.10}
+      CPP_COMPILER: ${CPP_COMPILER:-/usr/bin/g++-12}
+      RUST_COMPILER: ${RUST_COMPILER:-/usr/local/rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc}
+      RUST_LIB_PATH: ${RUST_LIB_PATH:-/usr/local/rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib}
+      NODEJS_BINARY: ${NODEJS_BINARY:-/usr/local/bin/node}
+      GO_COMPILER: ${GO_COMPILER:-/usr/local/go/bin/go}
+
+      # Language settings
+      NODEJS_PROCESSES: ${NODEJS_PROCESSES:-16}
+
+      # Time multipliers
+      TIME_MULTIPLIER_PYTHON: ${TIME_MULTIPLIER_PYTHON:-3.0}
+      TIME_MULTIPLIER_CPP: ${TIME_MULTIPLIER_CPP:-1.0}
+      TIME_MULTIPLIER_RUST: ${TIME_MULTIPLIER_RUST:-1.0}
+      TIME_MULTIPLIER_JAVASCRIPT: ${TIME_MULTIPLIER_JAVASCRIPT:-2.0}
+      TIME_MULTIPLIER_GO: ${TIME_MULTIPLIER_GO:-1.5}
+
+      # Memory grace
+      MEMORY_GRACE_PYTHON_KB: ${MEMORY_GRACE_PYTHON_KB:-768}
+      MEMORY_GRACE_CPP_KB: ${MEMORY_GRACE_CPP_KB:-64}
+      MEMORY_GRACE_RUST_KB: ${MEMORY_GRACE_RUST_KB:-128}
+      MEMORY_GRACE_JAVASCRIPT_KB: ${MEMORY_GRACE_JAVASCRIPT_KB:-512}
+      MEMORY_GRACE_GO_KB: ${MEMORY_GRACE_GO_KB:-256}
+    volumes:
+      # Mount code for hot-reload in development
+      - ./backend:/app
+      # Mount cgroup for isolate (needs read-write access)
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      # Mount problem data (persistent storage - bind mount for direct access)
+      - ./data/problems:/var/codeproof/problems
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - codeproof-network
+
+  # ============================================
+  # RQ Worker (Judge - processes submissions)
+  # ============================================
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.judge
+    container_name: codeproof-worker
+    # CRITICAL: isolate needs privileged mode
+    privileged: true
+    command: python3.10 -m app.queue.worker
+    environment:
+      # Database
+      DATABASE_URL: postgresql+asyncpg://codeproof:${POSTGRES_PASSWORD:-codeproof_dev_password}@postgres:5432/codeproof
+
+      # Redis
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_dev_password}@redis:6379/0
+
+      # Security
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-in-production-min-32-chars-long-please}
+
+      # Environment
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+
+      # Problem Storage
+      PROBLEM_DATA_ROOT: /var/codeproof/problems
+
+      # Compiler paths (same as backend)
+      PYTHON_BINARY: ${PYTHON_BINARY:-/usr/bin/python3.10}
+      CPP_COMPILER: ${CPP_COMPILER:-/usr/bin/g++-12}
+      RUST_COMPILER: ${RUST_COMPILER:-/usr/local/rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc}
+      RUST_LIB_PATH: ${RUST_LIB_PATH:-/usr/local/rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib}
+      NODEJS_BINARY: ${NODEJS_BINARY:-/usr/local/bin/node}
+      GO_COMPILER: ${GO_COMPILER:-/usr/local/go/bin/go}
+      NODEJS_PROCESSES: ${NODEJS_PROCESSES:-16}
+    volumes:
+      - ./backend:/app
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - ./data/problems:/var/codeproof/problems
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - codeproof-network
+
+  # ============================================
+  # Frontend (Static file server for development)
+  # ============================================
+  frontend:
+    image: nginx:alpine
+    container_name: codeproof-frontend
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - codeproof-network
+
+# ============================================
+# VOLUMES
+# ============================================
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  # problem_data removed - now using bind mount (./data/problems)
+
+# ============================================
+# NETWORKS
+# ============================================
+networks:
+  codeproof-network:
+    driver: bridge

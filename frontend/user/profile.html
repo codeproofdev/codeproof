@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - CodeProof</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/styles-minimal-dark.css">
+</head>
+<body>
+
+  <!-- Notification Container -->
+  <div id="notification-container" class="notification-container"></div>
+
+  <!-- IDE Container -->
+  <div class="ide-container">
+    <main class="main-content">
+
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <span>₿</span>
+          <span>CodeProof</span>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="nav-links">
+          <a href="/user/dashboard.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+          <a href="/problems/list.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="4"/>
+            </svg>
+            <span>Problems</span>
+          </a>
+          <a href="/submissions/list.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <span>Submissions</span>
+          </a>
+          <a href="/ranking/leaderboard.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+              <path d="M4 22h16"/>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+            </svg>
+            <span>Ranking</span>
+          </a>
+          <a href="/blocks/explorer.html" class="nav-link">
+            <span>₿</span>
+            <span>Blockchain</span>
+          </a>
+          <a href="/problemsetter/dashboard.html" class="nav-link" id="problemsetter-nav" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+            </svg>
+            <span>Problemsetter</span>
+          </a>
+          <a href="/admin/panel.html" class="nav-link" id="admin-nav" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span>Admin</span>
+          </a>
+        </nav>
+
+        <div class="user-info">
+          <select id="language-selector" class="select select-sm">
+            <option value="en">🇬🇧 EN</option>
+            <option value="es">🇪🇸 ES</option>
+          </select>
+          <div class="user-menu">
+            <div class="user-menu-trigger" id="user-menu-trigger">
+              <span id="username-display">Loading...</span>
+              <div class="user-avatar" id="user-avatar">?</div>
+            </div>
+            <div class="user-dropdown" id="user-dropdown">
+              <a href="/user/profile.html" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>My Profile</span>
+              </a>
+              <a href="/user/settings.html" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <span>Settings</span>
+              </a>
+              <div class="user-dropdown-item" id="logout-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" x2="9" y1="12" y2="12"/>
+                </svg>
+                <span>Logout</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="tabs-bar">
+        <div class="tab active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span data-i18n="profile.title">Profile</span>
+        </div>
+      </div>
+
+      <!-- Profile Content -->
+      <div class="profile-content">
+        <section class="editor-area">
+
+          <!-- Profile Header -->
+          <div class="profile-header">
+            <div class="profile-header-main">
+              <div class="profile-avatar-large" id="profile-avatar">?</div>
+              <div class="profile-info">
+                <h1 class="profile-username" id="profile-username">Loading...</h1>
+                <div class="profile-role-badge" id="profile-role">User</div>
+                <p class="profile-bio" id="profile-bio" style="display: none;"></p>
+                <p class="profile-member-since" id="profile-member-since">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                    <line x1="16" x2="16" y1="2" y2="6"/>
+                    <line x1="8" x2="8" y1="2" y2="6"/>
+                    <line x1="3" x2="21" y1="10" y2="10"/>
+                  </svg>
+                  <span data-i18n="profile.memberSince">Member since</span> <span id="member-date">Dec 2024</span>
+                </p>
+              </div>
+              <div class="profile-actions" id="profile-actions">
+                <!-- Edit button shown only for own profile -->
+              </div>
+            </div>
+
+            <!-- Contact Links -->
+            <div class="profile-contacts" id="profile-contacts">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Stats Overview -->
+          <div class="stats-overview">
+            <div class="stat-box">
+              <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 6v6l4 2"/>
+                </svg>
+              </div>
+              <div class="stat-value" id="stat-solved">0</div>
+              <div class="stat-label" data-i18n="profile.solved">Solved</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                  <path d="M4 22h16"/>
+                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                </svg>
+              </div>
+              <div class="stat-value" id="stat-rank">#-</div>
+              <div class="stat-label" data-i18n="profile.rank">Rank</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </div>
+              <div class="stat-value" id="stat-score">0</div>
+              <div class="stat-label" data-i18n="profile.score">Score</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+              </div>
+              <div class="stat-value" id="stat-acceptance">0%</div>
+              <div class="stat-label" data-i18n="profile.acceptance">Acceptance</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+                </svg>
+              </div>
+              <div class="stat-value" id="stat-streak">0</div>
+              <div class="stat-label" data-i18n="profile.streak">Streak</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+              </div>
+              <div class="stat-value" id="stat-sats">0</div>
+              <div class="stat-label" data-i18n="profile.sats">Sats</div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="profile-section">
+            <h2 class="section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+              </svg>
+              <span data-i18n="profile.recentActivity">Recent Activity</span>
+            </h2>
+            <div id="recent-activity-list" class="activity-list">
+              <p class="text-muted" data-i18n="profile.noActivity">No recent activity</p>
+            </div>
+          </div>
+
+          <!-- Solved Problems -->
+          <div class="profile-section">
+            <h2 class="section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span data-i18n="profile.solvedProblems">Solved Problems</span>
+              <span class="count-badge" id="solved-count">0</span>
+            </h2>
+            <div id="solved-problems-grid" class="problems-grid">
+              <p class="text-muted" data-i18n="profile.noProblemsSolved">No problems solved yet</p>
+            </div>
+          </div>
+
+          <!-- Attempted Problems -->
+          <div class="profile-section">
+            <h2 class="section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" x2="12" y1="8" y2="12"/>
+                <line x1="12" x2="12.01" y1="16" y2="16"/>
+              </svg>
+              <span data-i18n="profile.attemptedProblems">Attempted Problems</span>
+              <span class="count-badge badge-secondary" id="attempted-count">0</span>
+            </h2>
+            <div id="attempted-problems-grid" class="problems-grid">
+              <p class="text-muted" data-i18n="profile.noProblemsAttempted">No problems attempted yet</p>
+            </div>
+          </div>
+
+        </section>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/i18n.js"></script>
+  <script src="/js/components/notifications.js"></script>
+
+  <script>
+    let currentUser = null;
+    let profileUser = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      currentUser = Auth.getCurrentUser();
+
+      if (!currentUser) {
+        window.location.href = '/auth/login.html';
+        return;
+      }
+
+      // Setup UI
+      setupNavigation();
+      setupLanguageSwitcher();
+      setupUserDropdown();
+
+      // Load profile data
+      await loadProfile();
+
+      // Apply i18n translations
+      if (window.i18n && window.i18n.updateElements) {
+        window.i18n.updateElements();
+      }
+    });
+
+    function setupNavigation() {
+      const user = Auth.getCurrentUser();
+      if (user?.role === 'problemsetter' || user?.role === 'admin') {
+        const problemsetterNav = document.getElementById('problemsetter-nav');
+        if (problemsetterNav) problemsetterNav.style.display = 'flex';
+      }
+      if (user?.role === 'admin') {
+        const adminNav = document.getElementById('admin-nav');
+        if (adminNav) adminNav.style.display = 'flex';
+      }
+    }
+
+    function setupLanguageSwitcher() {
+      const currentLang = window.i18n?.currentLang || 'en';
+      const langSelector = document.getElementById('language-selector');
+      if (langSelector) {
+        langSelector.value = currentLang;
+        langSelector.addEventListener('change', (e) => {
+          if (window.i18n && window.i18n.setLanguage) {
+            window.i18n.setLanguage(e.target.value);
+            location.reload();
+          }
+        });
+      }
+    }
+
+    function setupUserDropdown() {
+      if (currentUser) {
+        document.getElementById('username-display').textContent = currentUser.username;
+        document.getElementById('user-avatar').textContent = currentUser.username.charAt(0).toUpperCase();
+
+        const trigger = document.getElementById('user-menu-trigger');
+        const dropdown = document.getElementById('user-dropdown');
+
+        trigger?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          dropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown?.classList.remove('active');
+          }
+        });
+
+        document.getElementById('logout-btn')?.addEventListener('click', async () => {
+          await API.logout();
+        });
+      }
+    }
+
+    async function loadProfile() {
+      try {
+        // Check if viewing another user's profile via URL param
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('id');
+        const username = urlParams.get('user');
+
+        if (userId || username) {
+          // Load specific user's profile from ranking (public data)
+          const ranking = await API.request('/ranking?limit=100');
+          let userInRanking;
+
+          if (username) {
+            // Find user by username
+            userInRanking = ranking.find(u => u.username.toLowerCase() === username.toLowerCase());
+          } else {
+            // Find user by ID (legacy support)
+            userInRanking = ranking.find(u => u.user_id === parseInt(userId));
+          }
+
+          if (!userInRanking) {
+            showUserNotFound(username || userId);
+            return;
+          }
+
+          // Update URL to use username if it was accessed via ID
+          if (userId && !username) {
+            const newUrl = `${window.location.pathname}?user=${userInRanking.username}`;
+            window.history.replaceState({}, '', newUrl);
+          }
+
+          // Create profileUser object from ranking data
+          profileUser = {
+            id: userInRanking.user_id,
+            username: userInRanking.username,
+            total_score: userInRanking.total_score,
+            problems_solved: userInRanking.problems_solved,
+            role: 'user', // Default role for public profiles
+            created_at: new Date().toISOString(), // Placeholder
+            organization: null,
+            country: null
+          };
+        } else {
+          // Load current user's profile
+          profileUser = await API.getCurrentUser();
+        }
+
+        // Update profile header
+        document.getElementById('profile-avatar').textContent = profileUser.username.substring(0, 2).toUpperCase();
+        document.getElementById('profile-username').textContent = profileUser.username;
+        document.getElementById('profile-role').textContent = profileUser.role.toUpperCase();
+
+        // Show bio if user has organization or country
+        const bioEl = document.getElementById('profile-bio');
+        const bioParts = [];
+        if (profileUser.organization) bioParts.push(profileUser.organization);
+        if (profileUser.country) bioParts.push(profileUser.country);
+
+        if (bioParts.length > 0) {
+          bioEl.textContent = bioParts.join(' • ');
+          bioEl.style.display = 'block';
+        }
+
+        // Format member since date
+        const memberDate = new Date(profileUser.created_at);
+        document.getElementById('member-date').textContent = memberDate.toLocaleDateString('en-US', {
+          month: 'short',
+          year: 'numeric'
+        });
+
+        // Show edit button if viewing own profile
+        if (profileUser.id === currentUser.id) {
+          document.getElementById('profile-actions').innerHTML = `
+            <a href="/user/settings.html" class="btn btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+              </svg>
+              <span data-i18n="profile.edit">Edit Profile</span>
+            </a>
+          `;
+        }
+
+        // Render contact links
+        renderContactLinks();
+
+        // Only load detailed stats if viewing own profile
+        if (profileUser.id === currentUser.id) {
+          // Load stats
+          await loadStats();
+
+          // Load recent activity
+          await loadRecentActivity();
+
+          // Load solved problems
+          await loadSolvedProblems();
+
+          // Load attempted problems
+          await loadAttemptedProblems();
+        } else {
+          // For other users, get public stats and submissions
+          try {
+            const ranking = await API.request('/ranking?limit=100');
+            const userStats = ranking.find(u => u.user_id === profileUser.id);
+
+            if (userStats) {
+              document.getElementById('stat-solved').textContent = userStats.problems_solved || 0;
+              document.getElementById('stat-score').textContent = userStats.total_score?.toFixed(2) || '0.00';
+              document.getElementById('stat-acceptance').textContent = '-';
+            } else {
+              document.getElementById('stat-solved').textContent = '0';
+              document.getElementById('stat-score').textContent = '0.00';
+              document.getElementById('stat-acceptance').textContent = '-';
+            }
+
+            // Load public submissions for this user
+            await loadPublicUserSubmissions(profileUser.id);
+
+          } catch (error) {
+            console.error('Error loading user stats from ranking:', error);
+            document.getElementById('stat-solved').textContent = '-';
+            document.getElementById('stat-score').textContent = '-';
+            document.getElementById('stat-acceptance').textContent = '-';
+          }
+        }
+
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        Notifications.error('Failed to load profile');
+      }
+    }
+
+    function showUserNotFound(identifier) {
+      // Hide the main profile content
+      const profileContent = document.querySelector('.profile-content');
+
+      // Get translations using i18n system with parameters
+      const title = window.i18n.t('profile.notFound.title');
+      const message = window.i18n.t('profile.notFound.message', { username: `<strong style="color: var(--accent-orange);">${identifier}</strong>` });
+      const viewLeaderboard = window.i18n.t('profile.notFound.viewLeaderboard');
+      const goToDashboard = window.i18n.t('profile.notFound.goToDashboard');
+
+      // Create 404 error page
+      profileContent.innerHTML = `
+        <section class="editor-area" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; text-align: center; padding: 2rem;">
+          <div style="max-width: 500px;">
+            <div style="margin-bottom: 2rem;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m13.5 8.5-5 5"/>
+                <path d="m8.5 8.5 5 5"/>
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.3-4.3"/>
+              </svg>
+            </div>
+            <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">${title}</h1>
+            <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem;">
+              ${message}
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+              <a href="/ranking/leaderboard.html" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--accent-orange); color: #000; border-radius: var(--radius-sm); font-weight: 600; text-decoration: none; transition: var(--transition-fast);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                  <path d="M4 22h16"/>
+                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                </svg>
+                ${viewLeaderboard}
+              </a>
+              <a href="/user/dashboard.html" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-weight: 600; text-decoration: none; transition: var(--transition-fast);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                ${goToDashboard}
+              </a>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderContactLinks() {
+      const contacts = [];
+
+      if (profileUser.email) {
+        contacts.push(`
+          <a href="mailto:${profileUser.email}" class="contact-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="16" x="2" y="4" rx="2"/>
+              <path d="m2 7 8.97 5.7a1.94 1.94 0 0 0 2.06 0L22 7"/>
+            </svg>
+            ${profileUser.email}
+          </a>
+        `);
+      }
+
+      if (profileUser.github_url) {
+        const githubUsername = profileUser.github_url.split('/').pop();
+        contacts.push(`
+          <a href="${profileUser.github_url}" target="_blank" class="contact-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+              <path d="M9 18c-4.51 2-5-2-7-2"/>
+            </svg>
+            github.com/${githubUsername}
+          </a>
+        `);
+      }
+
+      if (profileUser.npub) {
+        contacts.push(`
+          <a href="https://primal.net/p/${profileUser.npub}" target="_blank" rel="noopener noreferrer" class="contact-link" style="cursor: pointer; transition: opacity 0.2s;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            ${profileUser.npub.substring(0, 20)}...
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4px; opacity: 0.6;">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" x2="21" y1="14" y2="3"/>
+            </svg>
+          </a>
+        `);
+      }
+
+      if (contacts.length > 0) {
+        document.getElementById('profile-contacts').innerHTML = contacts.join('');
+      }
+    }
+
+    async function loadStats() {
+      try {
+        // Get submission stats
+        const stats = await API.getSubmissionStats();
+
+        // Update stat values
+        const acCount = stats.by_verdict?.AC || 0;
+        const total = stats.total || 0;
+
+        document.getElementById('stat-solved').textContent = acCount;
+        document.getElementById('stat-score').textContent = (profileUser.total_score || 0).toFixed(2);
+        document.getElementById('stat-acceptance').textContent = stats.acceptance_rate + '%';
+
+        // TODO: Implement ranking, streak, sats calculation
+
+      } catch (error) {
+        console.error('Error loading stats:', error);
+      }
+    }
+
+    async function loadRecentActivity() {
+      try {
+        const submissions = await API.getSubmissions({ limit: 5 });
+
+        if (submissions && submissions.length > 0) {
+          const activityHTML = submissions.map(sub => {
+            const verdictColors = {
+              AC: 'var(--success-green)',
+              WA: '#ff4444',
+              TLE: '#ffaa00',
+              MLE: '#4488ff',
+              RE: '#ff4444',
+              PENDING: '#ffaa00',
+              CE: '#ff4444',
+              IE: '#9333ea'
+            };
+
+            return `
+              <div class="activity-item">
+                <span class="verdict-badge" style="background: ${verdictColors[sub.verdict]};">${sub.verdict}</span>
+                <span>Problem #${sub.problem_id}</span>
+                <span class="text-muted">${new Date(sub.submitted_at).toLocaleDateString()}</span>
+              </div>
+            `;
+          }).join('');
+
+          document.getElementById('recent-activity-list').innerHTML = activityHTML;
+        }
+      } catch (error) {
+        console.error('Error loading recent activity:', error);
+      }
+    }
+
+    async function loadSolvedProblems() {
+      try {
+        // Get all AC submissions
+        const submissions = await API.getSubmissions({ verdict: 'AC', limit: 100 });
+
+        // Get all problems to filter only approved ones
+        const allProblems = await API.getProblems();
+        const approvedProblemIds = new Set(
+          allProblems.filter(p => p.status === 'approved').map(p => p.id)
+        );
+
+        // Get unique problem IDs that are APPROVED
+        const solvedProblemIds = [...new Set(submissions.map(s => s.problem_id))]
+          .filter(id => approvedProblemIds.has(id))
+          .sort((a, b) => a - b); // Sort ascending (menor a mayor)
+
+        // Update both counters with APPROVED problems count
+        document.getElementById('solved-count').textContent = solvedProblemIds.length;
+        document.getElementById('stat-solved').textContent = solvedProblemIds.length;
+
+        if (solvedProblemIds.length > 0) {
+          const problemsHTML = solvedProblemIds.map(id => `
+            <a href="/problems/detail.html?id=${id}" class="problem-badge problem-badge-solved">
+              ${id}
+            </a>
+          `).join('');
+
+          document.getElementById('solved-problems-grid').innerHTML = problemsHTML;
+        }
+      } catch (error) {
+        console.error('Error loading solved problems:', error);
+      }
+    }
+
+    async function loadAttemptedProblems() {
+      try {
+        // Get all submissions (any verdict)
+        const allSubmissions = await API.getSubmissions({ limit: 200 });
+
+        // Get all unique problem IDs
+        const allProblemIds = [...new Set(allSubmissions.map(s => s.problem_id))];
+
+        // Get AC submissions to exclude
+        const acSubmissions = await API.getSubmissions({ verdict: 'AC', limit: 100 });
+        const solvedProblemIds = new Set(acSubmissions.map(s => s.problem_id));
+
+        // Filter to get only attempted but not solved
+        const attemptedProblemIds = allProblemIds.filter(id => !solvedProblemIds.has(id));
+
+        document.getElementById('attempted-count').textContent = attemptedProblemIds.length;
+
+        if (attemptedProblemIds.length > 0) {
+          const problemsHTML = attemptedProblemIds.map(id => `
+            <a href="/problems/detail.html?id=${id}" class="problem-badge problem-badge-attempted">
+              ${id}
+            </a>
+          `).join('');
+
+          document.getElementById('attempted-problems-grid').innerHTML = problemsHTML;
+        }
+      } catch (error) {
+        console.error('Error loading attempted problems:', error);
+      }
+    }
+
+    /**
+     * Load public submissions for a specific user (when viewing other profiles)
+     */
+    async function loadPublicUserSubmissions(userId) {
+      try {
+        // Get all public submissions using the proper API method
+        // Note: backend has a max limit of 100 per request
+        const allSubmissions = await API.getSubmissions({ all: true, limit: 100 });
+
+        console.log('All submissions:', allSubmissions.length);
+        console.log('Looking for user_id:', userId, 'type:', typeof userId);
+
+        // Filter submissions by user_id (ensure proper type comparison)
+        const userSubmissions = allSubmissions.filter(s => s.user_id === parseInt(userId));
+
+        // Recent Activity
+        const recentSubmissions = userSubmissions.slice(0, 5);
+        if (recentSubmissions.length > 0) {
+          const verdictColors = {
+            AC: 'var(--success-green)',
+            WA: '#ff4444',
+            TLE: '#ffaa00',
+            MLE: '#4488ff',
+            RE: '#ff4444',
+            PENDING: '#ffaa00',
+            CE: '#ff4444',
+            IE: '#9333ea'
+          };
+
+          const activityHTML = recentSubmissions.map(sub => {
+            const timeAgo = getTimeAgo(new Date(sub.submitted_at));
+            const bgColor = verdictColors[sub.verdict] || '#888888';
+
+            return `
+              <div class="activity-item">
+                <span class="verdict-badge" style="background: ${bgColor};">${sub.verdict}</span>
+                <span>Problem #${sub.problem_id}</span>
+                <span class="text-muted">${timeAgo}</span>
+              </div>
+            `;
+          }).join('');
+          document.getElementById('recent-activity-list').innerHTML = activityHTML;
+        }
+
+        // Solved Problems - filter only approved problems
+        const allProblems = await API.getProblems();
+        const approvedProblemIds = new Set(
+          allProblems.filter(p => p.status === 'approved').map(p => p.id)
+        );
+
+        const acSubmissions = userSubmissions.filter(s => s.verdict === 'AC');
+        const solvedProblemIds = [...new Set(acSubmissions.map(s => s.problem_id))]
+          .filter(id => approvedProblemIds.has(id))
+          .sort((a, b) => a - b); // Sort ascending
+
+        console.log('User solved problems (approved only):', solvedProblemIds);
+
+        document.getElementById('solved-count').textContent = solvedProblemIds.length;
+        document.getElementById('stat-solved').textContent = solvedProblemIds.length;
+
+        if (solvedProblemIds.length > 0) {
+          const problemsHTML = solvedProblemIds.map(id => `
+            <a href="/problems/detail.html?id=${id}" class="problem-badge problem-badge-solved">
+              ${id}
+            </a>
+          `).join('');
+          document.getElementById('solved-problems-grid').innerHTML = problemsHTML;
+        }
+
+        // Attempted Problems (tried but not solved) - only approved problems
+        const allProblemIds = [...new Set(userSubmissions.map(s => s.problem_id))]
+          .filter(id => approvedProblemIds.has(id)); // Only approved problems
+        const solvedSet = new Set(solvedProblemIds);
+        const attemptedProblemIds = allProblemIds
+          .filter(id => !solvedSet.has(id))
+          .sort((a, b) => a - b); // Sort ascending
+
+        console.log('User attempted problems (approved only, not solved):', attemptedProblemIds);
+
+        document.getElementById('attempted-count').textContent = attemptedProblemIds.length;
+
+        if (attemptedProblemIds.length > 0) {
+          const problemsHTML = attemptedProblemIds.map(id => `
+            <a href="/problems/detail.html?id=${id}" class="problem-badge problem-badge-attempted">
+              ${id}
+            </a>
+          `).join('');
+          document.getElementById('attempted-problems-grid').innerHTML = problemsHTML;
+        }
+
+      } catch (error) {
+        console.error('Error loading public user submissions:', error);
+      }
+    }
+
+    /**
+     * Helper function to format time ago
+     */
+    function getTimeAgo(date) {
+      const seconds = Math.floor((new Date() - date) / 1000);
+
+      if (seconds < 60) return 'just now';
+      if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+      if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+      if (seconds < 2592000) return `${Math.floor(seconds / 86400)}d ago`;
+      return date.toLocaleDateString();
+    }
+  </script>
+
+  <style>
+    /* Profile Content */
+    .profile-content {
+      height: calc(100vh - var(--header-height) - var(--tabs-height));
+      overflow-y: auto;
+    }
+
+    .editor-area {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Profile Header */
+    .profile-header {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .profile-header-main {
+      display: flex;
+      gap: var(--spacing-lg);
+      align-items: flex-start;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .profile-avatar-large {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--accent-orange);
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-username {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 var(--spacing-xs) 0;
+    }
+
+    .profile-role-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--accent-orange);
+      color: #000;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .profile-bio {
+      color: var(--text-secondary);
+      margin: var(--spacing-sm) 0;
+    }
+
+    .profile-member-since {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-top: var(--spacing-xs);
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+
+    .profile-contacts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+      padding-top: var(--spacing-lg);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      transition: var(--transition-fast);
+    }
+
+    .contact-link:hover {
+      border-color: var(--accent-orange);
+      color: var(--accent-orange);
+    }
+
+    /* Stats Overview */
+    .stats-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .stat-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-lg);
+      text-align: center;
+      transition: var(--transition-fast);
+    }
+
+    .stat-box:hover {
+      border-color: var(--accent-orange);
+      transform: translateY(-2px);
+    }
+
+    .stat-icon {
+      margin-bottom: var(--spacing-sm);
+      color: var(--accent-orange);
+    }
+
+    .stat-icon svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent-orange);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Profile Sections */
+    .profile-section {
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .count-badge {
+      background: var(--accent-orange);
+      color: #000;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Activity List */
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+    }
+
+    /* Problems Grid */
+    .problems-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+    }
+
+    .problem-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: var(--transition-fast);
+    }
+
+    .problem-badge-solved {
+      border-color: var(--success-green);
+      color: var(--success-green);
+    }
+
+    .problem-badge-solved:hover {
+      background: rgba(34, 197, 94, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .problem-badge-attempted {
+      border-color: var(--accent-orange);
+      color: var(--accent-orange);
+    }
+
+    .problem-badge-attempted:hover {
+      background: rgba(247, 147, 26, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .badge-secondary {
+      background: var(--text-secondary);
+      color: var(--bg-primary);
+    }
+
+    /* Verdict Badge */
+    .verdict-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #000;
+      min-width: 50px;
+    }
+
+    /* Language Bar */
+    .language-bar {
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .language-bar-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .language-bar-fill {
+      height: 8px;
+      border-radius: 4px;
+      transition: var(--transition-fast);
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-sm) 0;
+    }
+
+    .stat-row-label {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .stat-row-value {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--accent-orange);
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      background: #ff9f3d;
+      transform: translateY(-1px);
+    }
+  </style>
+</body>
+</html>

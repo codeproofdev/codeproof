@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - CodeProof</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/styles-minimal-dark.css">
+</head>
+<body>
+
+  <div id="notification-container" class="notification-container"></div>
+
+  <div class="ide-container">
+    <main class="main-content">
+      <header class="header">
+        <div class="logo">
+          <span>₿</span>
+          <span>CodeProof</span>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="nav-links">
+          <a href="/user/dashboard.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+          <a href="/problems/list.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="4"/>
+            </svg>
+            <span>Problems</span>
+          </a>
+          <a href="/submissions/list.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <span>Submissions</span>
+          </a>
+          <a href="/ranking/leaderboard.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+              <path d="M4 22h16"/>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+            </svg>
+            <span>Ranking</span>
+          </a>
+          <a href="/blocks/explorer.html" class="nav-link">
+            <span>₿</span>
+            <span>Blockchain</span>
+          </a>
+          <a href="/problemsetter/dashboard.html" class="nav-link" id="problemsetter-nav" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+            </svg>
+            <span>Problemsetter</span>
+          </a>
+          <a href="/admin/panel.html" class="nav-link" id="admin-nav" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span>Admin</span>
+          </a>
+        </nav>
+
+        <div class="user-info">
+          <select id="language-selector" class="select select-sm">
+            <option value="en">🇬🇧 EN</option>
+            <option value="es">🇪🇸 ES</option>
+          </select>
+          <div class="user-menu">
+            <div class="user-menu-trigger" id="user-menu-trigger">
+              <span id="username-display">Loading...</span>
+              <div class="user-avatar" id="user-avatar">?</div>
+            </div>
+            <div class="user-dropdown" id="user-dropdown">
+              <a href="/user/profile.html" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>My Profile</span>
+              </a>
+              <a href="/user/settings.html" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <span>Settings</span>
+              </a>
+              <div class="user-dropdown-item" id="logout-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" x2="9" y1="12" y2="12"/>
+                </svg>
+                <span>Logout</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="tabs-bar">
+        <div class="tab active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <span>Settings</span>
+        </div>
+      </div>
+
+      <!-- Content Area -->
+      <div class="content-wrapper" style="padding: var(--spacing-xl); overflow-y: auto; height: calc(100vh - var(--header-height) - var(--tabs-height));">
+
+        <div class="page-header" style="margin-bottom: var(--spacing-xl);">
+          <h1 class="page-title" style="display: flex; align-items: center; gap: 12px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span data-i18n="settings.title">Account Settings</span>
+          </h1>
+          <p class="page-subtitle" data-i18n="settings.subtitle">Manage your account information and preferences</p>
+        </div>
+
+      <!-- Settings Grid: 2 Columns -->
+      <div class="settings-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xl);">
+
+        <!-- Profile Information Section -->
+        <section class="settings-section">
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="settings.profileInfo">Profile Information</h2>
+          <p class="section-description" data-i18n="settings.profileInfoDesc">Update your profile details and contact information</p>
+        </div>
+
+        <div class="form-card">
+          <form id="profile-form">
+            <!-- Username (readonly) -->
+            <div class="form-group">
+              <label for="username" class="form-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span data-i18n="settings.username">Username</span>
+              </label>
+              <input type="text" id="username" class="form-input" readonly disabled>
+              <small class="form-help" data-i18n="settings.usernameHelp">Username cannot be changed</small>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label for="email" class="form-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="20" height="16" x="2" y="4" rx="2"/>
+                  <path d="m2 7 8.97 5.7a1.94 1.94 0 0 0 2.06 0L22 7"/>
+                </svg>
+                <span data-i18n="settings.email">Email</span>
+              </label>
+              <input type="email" id="email" class="form-input" placeholder="your-email@example.com">
+              <small class="form-help" data-i18n="settings.emailHelp">Your email address for notifications and account recovery</small>
+            </div>
+
+            <!-- Nostr Public Key (npub) -->
+            <div class="form-group">
+              <label for="npub" class="form-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="2"/>
+                  <path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/>
+                </svg>
+                <span data-i18n="settings.npub">Nostr Public Key (npub)</span>
+              </label>
+              <input type="text" id="npub" class="form-input" placeholder="npub1...">
+              <small class="form-help" data-i18n="settings.npubHelp">Your Nostr public key for decentralized identity</small>
+            </div>
+
+            <!-- GitHub Link -->
+            <div class="form-group">
+              <label for="github" class="form-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+                  <path d="M9 18c-4.51 2-5-2-7-2"/>
+                </svg>
+                <span data-i18n="settings.github">GitHub Profile</span>
+              </label>
+              <input type="url" id="github" class="form-input" placeholder="https://github.com/yourusername">
+              <small class="form-help" data-i18n="settings.githubHelp">Link to your GitHub profile</small>
+            </div>
+
+            <!-- Country -->
+            <div class="form-group">
+              <label for="country" class="form-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+                  <path d="M2 12h20"/>
+                </svg>
+                <span data-i18n="settings.country">Country</span>
+              </label>
+              <select id="country" class="form-input">
+                <option value="">Bitcoin Country</option>
+                <option value="Afghanistan">Afghanistan</option>
+                <option value="Albania">Albania</option>
+                <option value="Algeria">Algeria</option>
+                <option value="Andorra">Andorra</option>
+                <option value="Angola">Angola</option>
+                <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+                <option value="Argentina">Argentina</option>
+                <option value="Armenia">Armenia</option>
+                <option value="Australia">Australia</option>
+                <option value="Austria">Austria</option>
+                <option value="Azerbaijan">Azerbaijan</option>
+                <option value="Bahamas">Bahamas</option>
+                <option value="Bahrain">Bahrain</option>
+                <option value="Bangladesh">Bangladesh</option>
+                <option value="Barbados">Barbados</option>
+                <option value="Belarus">Belarus</option>
+                <option value="Belgium">Belgium</option>
+                <option value="Belize">Belize</option>
+                <option value="Benin">Benin</option>
+                <option value="Bhutan">Bhutan</option>
+                <option value="Bolivia">Bolivia</option>
+                <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+                <option value="Botswana">Botswana</option>
+                <option value="Brazil">Brazil</option>
+                <option value="Brunei">Brunei</option>
+                <option value="Bulgaria">Bulgaria</option>
+                <option value="Burkina Faso">Burkina Faso</option>
+                <option value="Burundi">Burundi</option>
+                <option value="Cambodia">Cambodia</option>
+                <option value="Cameroon">Cameroon</option>
+                <option value="Canada">Canada</option>
+                <option value="Cape Verde">Cape Verde</option>
+                <option value="Central African Republic">Central African Republic</option>
+                <option value="Chad">Chad</option>
+                <option value="Chile">Chile</option>
+                <option value="China">China</option>
+                <option value="Colombia">Colombia</option>
+                <option value="Comoros">Comoros</option>
+                <option value="Congo">Congo</option>
+                <option value="Costa Rica">Costa Rica</option>
+                <option value="Croatia">Croatia</option>
+                <option value="Cuba">Cuba</option>
+                <option value="Cyprus">Cyprus</option>
+                <option value="Czech Republic">Czech Republic</option>
+                <option value="Denmark">Denmark</option>
+                <option value="Djibouti">Djibouti</option>
+                <option value="Dominica">Dominica</option>
+                <option value="Dominican Republic">Dominican Republic</option>
+                <option value="East Timor">East Timor</option>
+                <option value="Ecuador">Ecuador</option>
+                <option value="Egypt">Egypt</option>
+                <option value="El Salvador">El Salvador</option>
+                <option value="Equatorial Guinea">Equatorial Guinea</option>
+                <option value="Eritrea">Eritrea</option>
+                <option value="Estonia">Estonia</option>
+                <option value="Ethiopia">Ethiopia</option>
+                <option value="Fiji">Fiji</option>
+                <option value="Finland">Finland</option>
+                <option value="France">France</option>
+                <option value="Gabon">Gabon</option>
+                <option value="Gambia">Gambia</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Germany">Germany</option>
+                <option value="Ghana">Ghana</option>
+                <option value="Greece">Greece</option>
+                <option value="Grenada">Grenada</option>
+                <option value="Guatemala">Guatemala</option>
+                <option value="Guinea">Guinea</option>
+                <option value="Guinea-Bissau">Guinea-Bissau</option>
+                <option value="Guyana">Guyana</option>
+                <option value="Haiti">Haiti</option>
+                <option value="Honduras">Honduras</option>
+                <option value="Hungary">Hungary</option>
+                <option value="Iceland">Iceland</option>
+                <option value="India">India</option>
+                <option value="Indonesia">Indonesia</option>
+                <option value="Iran">Iran</option>
+                <option value="Iraq">Iraq</option>
+                <option value="Ireland">Ireland</option>
+                <option value="Israel">Israel</option>
+                <option value="Italy">Italy</option>
+                <option value="Ivory Coast">Ivory Coast</option>
+                <option value="Jamaica">Jamaica</option>
+                <option value="Japan">Japan</option>
+                <option value="Jordan">Jordan</option>
+                <option value="Kazakhstan">Kazakhstan</option>
+                <option value="Kenya">Kenya</option>
+                <option value="Kiribati">Kiribati</option>
+                <option value="North Korea">North Korea</option>
+                <option value="South Korea">South Korea</option>
+                <option value="Kuwait">Kuwait</option>
+                <option value="Kyrgyzstan">Kyrgyzstan</option>
+                <option value="Laos">Laos</option>
+                <option value="Latvia">Latvia</option>
+                <option value="Lebanon">Lebanon</option>
+                <option value="Lesotho">Lesotho</option>
+                <option value="Liberia">Liberia</option>
+                <option value="Libya">Libya</option>
+                <option value="Liechtenstein">Liechtenstein</option>
+                <option value="Lithuania">Lithuania</option>
+                <option value="Luxembourg">Luxembourg</option>
+                <option value="Macedonia">Macedonia</option>
+                <option value="Madagascar">Madagascar</option>
+                <option value="Malawi">Malawi</option>
+                <option value="Malaysia">Malaysia</option>
+                <option value="Maldives">Maldives</option>
+                <option value="Mali">Mali</option>
+                <option value="Malta">Malta</option>
+                <option value="Marshall Islands">Marshall Islands</option>
+                <option value="Mauritania">Mauritania</option>
+                <option value="Mauritius">Mauritius</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Micronesia">Micronesia</option>
+                <option value="Moldova">Moldova</option>
+                <option value="Monaco">Monaco</option>
+                <option value="Mongolia">Mongolia</option>
+                <option value="Montenegro">Montenegro</option>
+                <option value="Morocco">Morocco</option>
+                <option value="Mozambique">Mozambique</option>
+                <option value="Myanmar">Myanmar</option>
+                <option value="Namibia">Namibia</option>
+                <option value="Nauru">Nauru</option>
+                <option value="Nepal">Nepal</option>
+                <option value="Netherlands">Netherlands</option>
+                <option value="New Zealand">New Zealand</option>
+                <option value="Nicaragua">Nicaragua</option>
+                <option value="Niger">Niger</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="Norway">Norway</option>
+                <option value="Oman">Oman</option>
+                <option value="Pakistan">Pakistan</option>
+                <option value="Palau">Palau</option>
+                <option value="Palestine">Palestine</option>
+                <option value="Panama">Panama</option>
+                <option value="Papua New Guinea">Papua New Guinea</option>
+                <option value="Paraguay">Paraguay</option>
+                <option value="Peru">Peru</option>
+                <option value="Philippines">Philippines</option>
+                <option value="Poland">Poland</option>
+                <option value="Portugal">Portugal</option>
+                <option value="Qatar">Qatar</option>
+                <option value="Romania">Romania</option>
+                <option value="Russia">Russia</option>
+                <option value="Rwanda">Rwanda</option>
+                <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+                <option value="Saint Lucia">Saint Lucia</option>
+                <option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines</option>
+                <option value="Samoa">Samoa</option>
+                <option value="San Marino">San Marino</option>
+                <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+                <option value="Saudi Arabia">Saudi Arabia</option>
+                <option value="Senegal">Senegal</option>
+                <option value="Serbia">Serbia</option>
+                <option value="Seychelles">Seychelles</option>
+                <option value="Sierra Leone">Sierra Leone</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Slovakia">Slovakia</option>
+                <option value="Slovenia">Slovenia</option>
+                <option value="Solomon Islands">Solomon Islands</option>
+                <option value="Somalia">Somalia</option>
+                <option value="South Africa">South Africa</option>
+                <option value="South Sudan">South Sudan</option>
+                <option value="Spain">Spain</option>
+                <option value="Sri Lanka">Sri Lanka</option>
+                <option value="Sudan">Sudan</option>
+                <option value="Suriname">Suriname</option>
+                <option value="Swaziland">Swaziland</option>
+                <option value="Sweden">Sweden</option>
+                <option value="Switzerland">Switzerland</option>
+                <option value="Syria">Syria</option>
+                <option value="Taiwan">Taiwan</option>
+                <option value="Tajikistan">Tajikistan</option>
+                <option value="Tanzania">Tanzania</option>
+                <option value="Thailand">Thailand</option>
+                <option value="Togo">Togo</option>
+                <option value="Tonga">Tonga</option>
+                <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                <option value="Tunisia">Tunisia</option>
+                <option value="Turkey">Turkey</option>
+                <option value="Turkmenistan">Turkmenistan</option>
+                <option value="Tuvalu">Tuvalu</option>
+                <option value="Uganda">Uganda</option>
+                <option value="Ukraine">Ukraine</option>
+                <option value="United Arab Emirates">United Arab Emirates</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="United States">United States</option>
+                <option value="Uruguay">Uruguay</option>
+                <option value="Uzbekistan">Uzbekistan</option>
+                <option value="Vanuatu">Vanuatu</option>
+                <option value="Vatican City">Vatican City</option>
+                <option value="Venezuela">Venezuela</option>
+                <option value="Vietnam">Vietnam</option>
+                <option value="Yemen">Yemen</option>
+                <option value="Zambia">Zambia</option>
+                <option value="Zimbabwe">Zimbabwe</option>
+              </select>
+              <small class="form-help" data-i18n="settings.countryHelp">Your country of residence</small>
+            </div>
+
+            <!-- Organization -->
+            <div class="form-group">
+              <label for="organization" class="form-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 21h18"/>
+                  <path d="M9 8h1"/>
+                  <path d="M9 12h1"/>
+                  <path d="M9 16h1"/>
+                  <path d="M14 8h1"/>
+                  <path d="M14 12h1"/>
+                  <path d="M14 16h1"/>
+                  <path d="M6 4h12v17H6z"/>
+                </svg>
+                <span data-i18n="settings.organization">Organization</span>
+              </label>
+              <input type="text" id="organization" class="form-input" placeholder="University or Company">
+              <small class="form-help" data-i18n="settings.organizationHelp">Your school, university, or company</small>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" id="save-profile-btn" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                  <polyline points="17 21 17 13 7 13 7 21"/>
+                  <polyline points="7 3 7 8 15 8"/>
+                </svg>
+                <span data-i18n="settings.saveProfile">Save Profile</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Change Password Section -->
+      <section class="settings-section">
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="settings.changePassword">Change Password</h2>
+          <p class="section-description" data-i18n="settings.changePasswordDesc">Update your password to keep your account secure</p>
+        </div>
+
+        <div class="form-card">
+          <form id="password-form">
+            <!-- Current Password -->
+            <div class="form-group">
+              <label for="current-password" class="form-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span data-i18n="settings.currentPassword">Current Password</span>
+              </label>
+              <div class="form-group-with-icon" style="position: relative;">
+                <input type="password" id="current-password" class="form-input" placeholder="••••••••">
+                <button type="button" class="password-toggle" data-target="current-password">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- New Password -->
+            <div class="form-group">
+              <label for="new-password" class="form-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span data-i18n="settings.newPassword">New Password</span>
+              </label>
+              <div class="form-group-with-icon" style="position: relative;">
+                <input type="password" id="new-password" class="form-input" placeholder="••••••••">
+                <button type="button" class="password-toggle" data-target="new-password">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+                <small class="form-help" data-i18n="settings.passwordHelp">Minimum 8 characters</small>
+                <small id="new-password-validation" class="validation-message" style="display: none;"></small>
+              </div>
+            </div>
+
+            <!-- Confirm New Password -->
+            <div class="form-group">
+              <label for="confirm-password" class="form-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span data-i18n="settings.confirmPassword">Confirm New Password</span>
+              </label>
+              <div class="form-group-with-icon" style="position: relative;">
+                <input type="password" id="confirm-password" class="form-input" placeholder="••••••••">
+                <button type="button" class="password-toggle" data-target="confirm-password">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+                <small id="confirm-password-validation" class="validation-message" style="display: none;"></small>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" id="update-password-btn" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                  <path d="m9 12 2 2 4-4"/>
+                </svg>
+                <span data-i18n="settings.updatePassword">Update Password</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      </div> <!-- End settings-grid -->
+      </div> <!-- End content-wrapper -->
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/i18n.js"></script>
+  <script src="/js/components/notifications.js"></script>
+
+  <script>
+    let currentUser = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      currentUser = Auth.getCurrentUser();
+
+      if (!currentUser) {
+        window.location.href = '/auth/login.html';
+        return;
+      }
+
+      // Setup navigation and UI
+      setupNavigation();
+      setupLanguageSwitcher();
+      setupUserDropdown();
+      loadUserSettings();
+
+      // Apply i18n translations
+      if (window.i18n && window.i18n.updateElements) {
+        window.i18n.updateElements();
+      }
+
+      // Form handlers (placeholder for now)
+      document.getElementById('profile-form').addEventListener('submit', handleProfileSubmit);
+      document.getElementById('password-form').addEventListener('submit', handlePasswordSubmit);
+    });
+
+    function setupNavigation() {
+      // Show/hide nav items based on role
+      const user = Auth.getCurrentUser();
+      if (user?.role === 'problemsetter' || user?.role === 'admin') {
+        const problemsetterNav = document.getElementById('problemsetter-nav');
+        if (problemsetterNav) problemsetterNav.style.display = 'flex';
+      }
+      if (user?.role === 'admin') {
+        const adminNav = document.getElementById('admin-nav');
+        if (adminNav) adminNav.style.display = 'flex';
+      }
+    }
+
+    function setupLanguageSwitcher() {
+      const currentLang = window.i18n?.currentLang || 'en';
+      const langSelector = document.getElementById('language-selector');
+      if (langSelector) {
+        langSelector.value = currentLang;
+        langSelector.addEventListener('change', (e) => {
+          if (window.i18n && window.i18n.setLanguage) {
+            window.i18n.setLanguage(e.target.value);
+            location.reload();
+          }
+        });
+      }
+    }
+
+    function setupUserDropdown() {
+      if (currentUser) {
+        // Update username display
+        const usernameDisplay = document.getElementById('username-display');
+        if (usernameDisplay) usernameDisplay.textContent = currentUser.username;
+
+        // Update avatar with first letter of username
+        const userAvatar = document.getElementById('user-avatar');
+        if (userAvatar) userAvatar.textContent = currentUser.username.charAt(0).toUpperCase();
+
+        // Toggle dropdown
+        const userMenuTrigger = document.getElementById('user-menu-trigger');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        userMenuTrigger?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          userDropdown.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!userMenuTrigger.contains(e.target) && !userDropdown.contains(e.target)) {
+            userDropdown?.classList.remove('active');
+          }
+        });
+
+        // Logout handler
+        document.getElementById('logout-btn')?.addEventListener('click', async () => {
+          await API.logout();
+        });
+      }
+    }
+
+    async function loadUserSettings() {
+      // Load current user data into form
+      try {
+        const user = await API.getCurrentUser();
+
+        document.getElementById('username').value = user.username || '';
+        document.getElementById('email').value = user.email || '';
+        document.getElementById('npub').value = user.npub || '';
+        document.getElementById('github').value = user.github_url || '';
+        document.getElementById('country').value = user.country || '';
+        document.getElementById('organization').value = user.organization || '';
+      } catch (error) {
+        console.error('Error loading user settings:', error);
+        Notifications.error('Failed to load user settings');
+      }
+    }
+
+    async function handleProfileSubmit(e) {
+      e.preventDefault();
+
+      const saveButton = document.getElementById('save-profile-btn');
+      const buttonText = saveButton.querySelector('span');
+      const originalText = buttonText.textContent;
+
+      try {
+        // Disable button and show loading state
+        saveButton.disabled = true;
+        buttonText.textContent = window.i18n.t('settings.saving');
+
+        // Collect form data
+        const profileData = {
+          email: document.getElementById('email').value.trim() || null,
+          npub: document.getElementById('npub').value.trim() || null,
+          github_url: document.getElementById('github').value.trim() || null,
+          country: document.getElementById('country').value.trim() || null,
+          organization: document.getElementById('organization').value.trim() || null
+        };
+
+        // Call API to update profile
+        const updatedUser = await API.updateProfile(profileData);
+
+        // Update local storage with new user data
+        const currentUserData = JSON.parse(localStorage.getItem('user'));
+        const mergedUser = { ...currentUserData, ...updatedUser };
+        localStorage.setItem('user', JSON.stringify(mergedUser));
+
+        // Show success message
+        Notifications.success('', window.i18n.t('settings.profileUpdated'));
+
+        // Reload user settings to show updated data
+        await loadUserSettings();
+
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        Notifications.error('', error.message || window.i18n.t('settings.profileUpdateError'));
+      } finally {
+        // Re-enable button and restore original text
+        saveButton.disabled = false;
+        buttonText.textContent = originalText;
+      }
+    }
+
+    async function handlePasswordSubmit(e) {
+      e.preventDefault();
+
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      // Basic validation
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        Notifications.error('', 'All password fields are required');
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        Notifications.error('', 'Passwords do not match');
+        return;
+      }
+
+      if (newPassword.length < 8) {
+        Notifications.error('', 'Password must be at least 8 characters');
+        return;
+      }
+
+      const passwordButton = document.getElementById('update-password-btn');
+      const buttonText = passwordButton.querySelector('span');
+      const originalText = buttonText.textContent;
+
+      try {
+        // Disable button and show loading state
+        passwordButton.disabled = true;
+        buttonText.textContent = window.i18n.t('settings.saving');
+
+        // Call API to change password
+        await API.changePassword(currentPassword, newPassword);
+
+        // Clear form
+        document.getElementById('current-password').value = '';
+        document.getElementById('new-password').value = '';
+        document.getElementById('confirm-password').value = '';
+
+        // Show success message
+        Notifications.success('', window.i18n.t('settings.passwordChanged'));
+
+      } catch (error) {
+        console.error('Error changing password:', error);
+        Notifications.error('', error.message || window.i18n.t('settings.passwordChangeError'));
+      } finally {
+        // Re-enable button and restore original text
+        passwordButton.disabled = false;
+        buttonText.textContent = originalText;
+      }
+    }
+
+    // Password toggle buttons
+    document.querySelectorAll('.password-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.target;
+        const input = document.getElementById(targetId);
+
+        if (input.type === 'password') {
+          input.type = 'text';
+          // Change to EyeOff icon
+          btn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+              <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+              <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+              <line x1="2" x2="22" y1="2" y2="22"/>
+            </svg>
+          `;
+        } else {
+          input.type = 'password';
+          // Change to Eye icon
+          btn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          `;
+        }
+      });
+    });
+
+    // Real-time password validation
+    const newPasswordInput = document.getElementById('new-password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const newPasswordValidation = document.getElementById('new-password-validation');
+    const confirmPasswordValidation = document.getElementById('confirm-password-validation');
+
+    function validateNewPassword() {
+      const password = newPasswordInput.value;
+
+      if (password.length === 0) {
+        newPasswordValidation.style.display = 'none';
+        return;
+      }
+
+      if (password.length < 8) {
+        newPasswordValidation.textContent = 'Password must be at least 8 characters';
+        newPasswordValidation.className = 'validation-message invalid';
+        newPasswordValidation.style.display = 'block';
+      } else {
+        newPasswordValidation.textContent = 'Password meets requirements';
+        newPasswordValidation.className = 'validation-message valid';
+        newPasswordValidation.style.display = 'block';
+      }
+
+      // Also validate confirm password if it has a value
+      if (confirmPasswordInput.value.length > 0) {
+        validateConfirmPassword();
+      }
+    }
+
+    function validateConfirmPassword() {
+      const password = newPasswordInput.value;
+      const confirm = confirmPasswordInput.value;
+
+      if (confirm.length === 0) {
+        confirmPasswordValidation.style.display = 'none';
+        return;
+      }
+
+      if (confirm !== password) {
+        confirmPasswordValidation.textContent = 'Passwords do not match';
+        confirmPasswordValidation.className = 'validation-message invalid';
+        confirmPasswordValidation.style.display = 'block';
+      } else {
+        confirmPasswordValidation.textContent = 'Passwords match';
+        confirmPasswordValidation.className = 'validation-message valid';
+        confirmPasswordValidation.style.display = 'block';
+      }
+    }
+
+    newPasswordInput.addEventListener('input', validateNewPassword);
+    confirmPasswordInput.addEventListener('input', validateConfirmPassword);
+  </script>
+
+  <style>
+    .settings-section {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 1024px) {
+      .settings-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .settings-section {
+        margin-bottom: var(--spacing-xl);
+      }
+    }
+
+    .section-header {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .section-title {
+      font-size: var(--fs-xl);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .section-description {
+      font-size: var(--fs-base);
+      color: var(--text-secondary);
+    }
+
+    .form-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-xl);
+    }
+
+    .form-group-with-icon {
+      position: relative;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 5px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .password-toggle:hover {
+      color: var(--accent-orange);
+    }
+
+    .password-toggle svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 1.5;
+    }
+
+    .validation-message {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .validation-message.valid {
+      color: var(--success-green);
+    }
+
+    .validation-message.invalid {
+      color: var(--error-red);
+    }
+
+    .validation-message::before {
+      margin-right: 0.25rem;
+    }
+
+    .validation-message.valid::before {
+      content: "✓ ";
+    }
+
+    .validation-message.invalid::before {
+      content: "✗ ";
+    }
+
+    .form-group {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--fs-base);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: var(--fs-base);
+      transition: var(--transition-fast);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent-orange);
+      box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.1);
+    }
+
+    .form-input:disabled {
+      background: var(--bg-tertiary);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .form-help {
+      display: block;
+      margin-top: var(--spacing-xs);
+      font-size: var(--fs-sm);
+      color: var(--text-secondary);
+    }
+
+    .form-actions {
+      margin-top: var(--spacing-xl);
+      display: flex;
+      gap: var(--spacing-md);
+      justify-content: flex-end;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: var(--fs-base);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .btn-primary {
+      background: var(--accent-orange);
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      background: #ff9f3d;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(247, 147, 26, 0.3);
+    }
+  </style>
+</body>
+</html>

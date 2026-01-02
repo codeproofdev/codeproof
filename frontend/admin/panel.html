@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="admin.title">Admin Panel - CodeProof</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/styles-minimal-dark.css">
+  <style>
+    /* Override content-grid for admin panel - use full width */
+    .content-grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* Sortable table headers */
+    .table th.sortable {
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+
+    .table th.sortable:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .table th.sortable::after {
+      content: '⇅';
+      margin-left: 8px;
+      opacity: 0.3;
+      font-size: 0.8em;
+    }
+
+    .table th.sortable.asc::after {
+      content: '↑';
+      opacity: 1;
+      color: var(--accent-orange);
+    }
+
+    .table th.sortable.desc::after {
+      content: '↓';
+      opacity: 1;
+      color: var(--accent-orange);
+    }
+  </style>
+</head>
+<body>
+  <!-- Notification Container -->
+  <div id="notification-container" class="notification-container"></div>
+
+  <div class="ide-container">
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <span>₿</span>
+          <span>CodeProof</span>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="nav-links">
+          <a href="/user/dashboard.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+          <a href="/problems/list.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="4"/>
+            </svg>
+            <span>Problems</span>
+          </a>
+          <a href="/submissions/list.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <span>Submissions</span>
+          </a>
+          <a href="/ranking/leaderboard.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+              <path d="M4 22h16"/>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+            </svg>
+            <span>Ranking</span>
+          </a>
+          <a href="/blocks/explorer.html" class="nav-link">
+            <span>₿</span>
+            <span>Blockchain</span>
+          </a>
+          <a href="/problemsetter/dashboard.html" class="nav-link" id="problemsetter-nav" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+            </svg>
+            <span>Problemsetter</span>
+          </a>
+          <a href="/admin/panel.html" class="nav-link active" id="admin-nav" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span>Admin</span>
+          </a>
+        </nav>
+
+        <div class="user-info">
+          <select id="language-selector" class="select select-sm">
+            <option value="en">🇬🇧 EN</option>
+            <option value="es">🇪🇸 ES</option>
+          </select>
+          <div class="user-menu">
+            <div class="user-menu-trigger" id="user-menu-trigger">
+              <span id="username-display">Loading...</span>
+              <div class="user-avatar" id="user-avatar">?</div>
+            </div>
+            <div class="user-dropdown" id="user-dropdown">
+              <a href="/user/profile.html" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>My Profile</span>
+              </a>
+              <a href="/user/settings.html" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <span>Settings</span>
+              </a>
+              <div class="user-dropdown-item" id="logout-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" x2="9" y1="12" y2="12"/>
+                </svg>
+                <span>Logout</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Tab -->
+      <div class="tabs-bar">
+        <div class="tab active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <span>Admin</span>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <section class="editor-area">
+
+    <!-- Page Header -->
+    <header class="section">
+      <div class="mb-lg">
+        <h1 class="problem-title" data-i18n="admin.pageTitle">Admin Panel</h1>
+        <p class="text-muted mb-3" data-i18n="admin.subtitle">
+          Manage users, problems, and system settings
+        </p>
+      </div>
+    </header>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs" id="admin-tabs">
+      <button class="tab-btn active" data-tab="users">
+        <span data-i18n="admin.tabs.users">User Management</span>
+      </button>
+      <button class="tab-btn" data-tab="problems">
+        <span data-i18n="admin.tabs.problems">Problem Management</span>
+      </button>
+      <button class="tab-btn" data-tab="stats">
+        <span data-i18n="admin.tabs.stats">Statistics</span>
+      </button>
+    </div>
+
+    <!-- Tab Content Container -->
+    <div class="tabs-content">
+
+      <!-- USERS TAB -->
+      <div id="tab-users" class="tab-content active">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="text-xl font-semibold" data-i18n="admin.users.title">User Management</h2>
+            <p class="text-sm text-muted" data-i18n="admin.users.subtitle">Manage user roles and permissions</p>
+          </div>
+
+          <div class="card-body">
+            <!-- Filters -->
+            <div class="filters-section mb-lg">
+              <div class="grid grid-cols-3 gap-md">
+                <!-- Search Input -->
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="label" data-i18n="admin.users.search">Search Users</label>
+                  <input
+                    type="text"
+                    id="user-search"
+                    class="input"
+                    placeholder="Search by username or email..."
+                    data-i18n-placeholder="admin.users.searchPlaceholder">
+                </div>
+
+                <!-- Role Filter -->
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="label" data-i18n="admin.users.filterRole">Filter by Role</label>
+                  <select id="role-filter" class="select">
+                    <option value="all" data-i18n="admin.users.allRoles">All Roles</option>
+                    <option value="admin" data-i18n="roles.admin">Admin</option>
+                    <option value="problemsetter" data-i18n="roles.problemsetter">Problemsetter</option>
+                    <option value="user" data-i18n="roles.user">User</option>
+                  </select>
+                </div>
+
+                <!-- Results Count -->
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="label" data-i18n="admin.users.results">Results</label>
+                  <div class="results-count">
+                    <span id="users-count" style="font-size: var(--fs-lg); font-weight: 600; color: var(--accent-orange); font-family: var(--font-mono);">0</span>
+                    <span class="text-muted ml-sm" data-i18n="admin.users.usersFound">users found</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="users-loading" class="flex items-center justify-center" style="padding: 3rem;">
+              <div class="spinner"></div>
+              <span class="ml-md text-muted" data-i18n="common.loading">Loading...</span>
+            </div>
+
+            <!-- Users Table -->
+            <div id="users-table-container" style="display: none;">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th class="sortable asc" data-sort="id" data-i18n="admin.users.table.id">ID</th>
+                      <th class="sortable" data-sort="username" data-i18n="admin.users.table.username">Username</th>
+                      <th class="sortable" data-sort="email" data-i18n="admin.users.table.email">Email</th>
+                      <th class="sortable" data-sort="role" data-i18n="admin.users.table.role">Role</th>
+                      <th class="sortable" data-sort="score" data-i18n="admin.users.table.score">Total Score</th>
+                      <th class="sortable" data-sort="solved" data-i18n="admin.users.table.solved">Problems Solved</th>
+                      <th class="sortable" data-sort="created" data-i18n="admin.users.table.createdAt">Created At</th>
+                      <th data-i18n="admin.users.table.actions">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="users-table-body">
+                    <!-- Users will be rendered here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="users-empty" class="empty-state" style="display: none;">
+              <div class="empty-state-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-secondary);">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              <div class="empty-state-title" data-i18n="admin.users.empty">No users found</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROBLEMS TAB -->
+      <div id="tab-problems" class="tab-content">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="text-xl font-semibold" data-i18n="admin.problems.title">Problem Management</h2>
+            <p class="text-sm text-muted" data-i18n="admin.problems.subtitle">Review and manage all problems</p>
+          </div>
+
+          <div class="card-body">
+            <!-- Filters -->
+            <div class="filters-section mb-lg">
+              <div class="grid grid-cols-4 gap-md">
+                <!-- Search Input -->
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="label" data-i18n="admin.problems.search">Search Problems</label>
+                  <input
+                    type="text"
+                    id="problem-search"
+                    class="input"
+                    placeholder="Search by title..."
+                    data-i18n-placeholder="admin.problems.searchPlaceholder">
+                </div>
+
+                <!-- Status Filter -->
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="label" data-i18n="admin.problems.filterStatus">Filter by Status</label>
+                  <select id="problem-status-filter" class="select">
+                    <option value="all" data-i18n="admin.problems.allStatuses">All Statuses</option>
+                    <option value="pending" data-i18n="admin.problems.pending">Pending</option>
+                    <option value="approved" data-i18n="admin.problems.approved">Approved</option>
+                    <option value="rejected" data-i18n="admin.problems.rejected">Rejected</option>
+                  </select>
+                </div>
+
+                <!-- Results Count -->
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="label" data-i18n="admin.problems.results">Results</label>
+                  <div class="results-count">
+                    <span id="problems-count" style="font-size: var(--fs-lg); font-weight: 600; color: var(--accent-orange); font-family: var(--font-mono);">0</span>
+                    <span class="text-muted ml-sm" data-i18n="admin.problems.problemsFound">problems found</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="problems-loading" class="flex items-center justify-center" style="padding: 3rem;">
+              <div class="spinner"></div>
+              <span class="ml-md text-muted" data-i18n="common.loading">Loading...</span>
+            </div>
+
+            <!-- Problems Table -->
+            <div id="problems-table-container" style="display: none;">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th class="sortable asc" data-sort="id" data-i18n="admin.problems.table.number">ID</th>
+                      <th class="sortable" data-sort="title" data-i18n="admin.problems.table.title">Title</th>
+                      <th class="sortable" data-sort="creator" data-i18n="admin.problems.table.createdBy">Created By</th>
+                      <th class="sortable" data-sort="created" data-i18n="admin.problems.table.createdAt">Created At</th>
+                      <th class="sortable" data-sort="status" data-i18n="admin.problems.table.status">Status</th>
+                      <th data-i18n="admin.problems.table.actions">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="problems-table-body">
+                    <!-- Problems will be rendered here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="problems-empty" class="empty-state" style="display: none;">
+              <div class="empty-state-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-secondary);">
+                  <circle cx="12" cy="12" r="10"/>
+                  <circle cx="12" cy="12" r="4"/>
+                </svg>
+              </div>
+              <div class="empty-state-title" data-i18n="admin.problems.empty">No pending problems</div>
+              <div class="empty-state-description" data-i18n="admin.problems.emptyDesc">All problems have been reviewed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS TAB -->
+      <div id="tab-stats" class="tab-content">
+        <div class="mb-xl">
+          <h2 class="text-xl font-semibold mb-lg" data-i18n="admin.stats.title">System Statistics</h2>
+
+          <!-- Stats Grid -->
+          <div class="stats-grid mb-xl">
+            <div class="stat-card">
+              <div class="stat-card-body">
+                <div class="stat-card-label" data-i18n="admin.stats.totalUsers">Total Users</div>
+                <div class="stat-card-value" id="stat-total-users">--</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-card-body">
+                <div class="stat-card-label" data-i18n="admin.stats.totalProblems">Total Problems</div>
+                <div class="stat-card-value" id="stat-total-problems">--</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-card-body">
+                <div class="stat-card-label" data-i18n="admin.stats.totalSubmissions">Total Submissions</div>
+                <div class="stat-card-value" id="stat-total-submissions">--</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-card-body">
+                <div class="stat-card-label" data-i18n="admin.stats.pendingProblems">Pending Problems</div>
+                <div class="stat-card-value" id="stat-pending-problems">--</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-card-body">
+                <div class="stat-card-label" data-i18n="admin.stats.acSubmissions">AC Submissions</div>
+                <div class="stat-card-value" id="stat-ac-submissions">--</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-card-body">
+                <div class="stat-card-label" data-i18n="admin.stats.acceptanceRate">Acceptance Rate</div>
+                <div class="stat-card-value" id="stat-acceptance-rate">--</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional Stats Cards -->
+          <div class="grid grid-cols-2 gap-lg">
+            <!-- Recent Activity Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="text-lg font-semibold" data-i18n="admin.stats.recentActivity">Recent Activity</h3>
+              </div>
+              <div class="card-body">
+                <div class="space-y-md">
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-muted" data-i18n="admin.stats.activeToday">Active users today</span>
+                    <span class="text-lg font-semibold" id="stat-active-today">--</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-muted" data-i18n="admin.stats.submissionsToday">Submissions today</span>
+                    <span class="text-lg font-semibold" id="stat-submissions-today">--</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-muted" data-i18n="admin.stats.newUsersWeek">New users this week</span>
+                    <span class="text-lg font-semibold" id="stat-new-users-week">--</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- System Health Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="text-lg font-semibold" data-i18n="admin.stats.systemHealth">System Health</h3>
+              </div>
+              <div class="card-body">
+                <div class="space-y-md">
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-muted">Database</span>
+                    <span class="badge badge-success">Online</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-muted">Judge Worker</span>
+                    <span class="badge badge-success">Running</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-muted">Redis Queue</span>
+                    <span class="badge badge-success">Connected</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- End tabs-content -->
+
+  <!-- Password Reset Modal -->
+  <div id="password-reset-modal" class="modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="admin.passwordReset.title">Reset User Password</h3>
+        <button class="modal-close" id="close-password-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="reset-password-form">
+          <div class="mb-lg">
+            <p class="text-sm text-muted mb-md" data-i18n="admin.passwordReset.description">
+              Enter a new password for this user. Make sure to communicate it securely.
+            </p>
+            <div class="mb-md">
+              <label class="text-sm font-semibold" data-i18n="admin.passwordReset.username">Username:</label>
+              <p class="text-lg font-mono" id="reset-username">--</p>
+            </div>
+            <div class="mb-md">
+              <label class="text-sm font-semibold" for="new-user-password" data-i18n="admin.passwordReset.newPassword">New Password:</label>
+              <input type="password" id="new-user-password" class="input" required minlength="8" placeholder="Enter new password (min 8 characters)">
+              <small class="form-help" data-i18n="admin.passwordReset.passwordHelp">Minimum 8 characters</small>
+            </div>
+            <div>
+              <label class="text-sm font-semibold" for="confirm-user-password" data-i18n="admin.passwordReset.confirmPassword">Confirm Password:</label>
+              <input type="password" id="confirm-user-password" class="input" required minlength="8" placeholder="Confirm new password">
+            </div>
+          </div>
+          <div class="alert alert-warning">
+            <strong data-i18n="admin.passwordReset.warning">Warning:</strong>
+            <span data-i18n="admin.passwordReset.warningText">Make sure to communicate this password securely to the user.</span>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancel-password-reset" data-i18n="common.cancel">Cancel</button>
+        <button class="btn btn-primary" id="confirm-password-reset" data-i18n="admin.passwordReset.setPassword">Set Password</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Problem Detail Modal -->
+  <div id="problem-detail-modal" class="modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content" style="max-width: 1000px; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="problem-detail-title">Problem Preview</h3>
+        <button class="modal-close" id="close-problem-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Problem Info -->
+        <div class="mb-lg">
+          <div class="flex items-center gap-md mb-md">
+            <span id="problem-detail-status" class="badge">--</span>
+            <span class="text-muted text-sm">
+              Created by: <strong id="problem-detail-creator">--</strong>
+            </span>
+          </div>
+
+          <!-- Limits -->
+          <div class="grid grid-cols-2 gap-md mb-lg" style="background: var(--bg-primary); padding: var(--spacing-md); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <div>
+              <span class="text-xs text-muted">Time Limit:</span>
+              <span class="font-semibold ml-sm" id="problem-detail-time">--</span>
+            </div>
+            <div>
+              <span class="text-xs text-muted">Memory Limit:</span>
+              <span class="font-semibold ml-sm" id="problem-detail-memory">--</span>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-lg">
+            <h4 class="font-semibold mb-sm">Description:</h4>
+            <div id="problem-detail-description" class="p-md" style="background: var(--bg-primary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); max-height: 400px; overflow-y: auto; line-height: 1.6;">
+              --
+            </div>
+          </div>
+
+          <!-- Sample Test Cases -->
+          <div class="mb-lg">
+            <h4 class="font-semibold mb-sm">Sample Test Cases:</h4>
+            <div id="problem-detail-samples"></div>
+          </div>
+
+          <!-- Test Case Stats -->
+          <div class="grid grid-cols-2 gap-md" style="background: var(--bg-primary); padding: var(--spacing-md); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <div>
+              <span class="text-xs text-muted">Sample Tests:</span>
+              <span class="font-semibold ml-sm" id="problem-detail-sample-count">--</span>
+            </div>
+            <div>
+              <span class="text-xs text-muted">Hidden Tests:</span>
+              <span class="font-semibold ml-sm" id="problem-detail-hidden-count">--</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer flex gap-sm">
+        <button class="btn btn-primary" id="edit-from-preview-btn">
+          <span>Edit</span>
+        </button>
+        <button class="btn btn-success" id="approve-problem-btn">
+          <span data-i18n="admin.problems.approve">Approve</span>
+        </button>
+        <button class="btn btn-error" id="reject-problem-btn">
+          <span data-i18n="admin.problems.reject">Reject</span>
+        </button>
+        <button class="btn btn-secondary ml-auto" id="close-problem-detail" data-i18n="common.close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Problem Edit Modal -->
+  <div id="problem-edit-modal" class="modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content" style="max-width: 1000px; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Problem</h3>
+        <button class="modal-close" id="close-edit-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-problem-form">
+          <!-- Titles -->
+          <div class="grid grid-cols-2 gap-md mb-md">
+            <div class="form-group">
+              <label class="label">Title (English)</label>
+              <input type="text" id="edit-title-en" class="input" required>
+            </div>
+            <div class="form-group">
+              <label class="label">Title (Spanish)</label>
+              <input type="text" id="edit-title-es" class="input" required>
+            </div>
+          </div>
+
+          <!-- Time, Memory -->
+          <div class="grid grid-cols-2 gap-md mb-md">
+            <div class="form-group">
+              <label class="label">Time Limit (s)</label>
+              <input type="number" id="edit-time-limit" class="input" min="1" max="10" required>
+            </div>
+            <div class="form-group">
+              <label class="label">Memory Limit (MB)</label>
+              <input type="number" id="edit-memory-limit" class="input" min="64" max="1024" step="64" required>
+            </div>
+          </div>
+
+          <!-- Descriptions -->
+          <div class="mb-md">
+            <label class="label">Description (English)</label>
+            <textarea id="edit-description-en" class="textarea" rows="6" required></textarea>
+          </div>
+
+          <div class="mb-md">
+            <label class="label">Description (Spanish)</label>
+            <textarea id="edit-description-es" class="textarea" rows="6" required></textarea>
+          </div>
+
+          <!-- Test Cases Section -->
+          <div class="mb-md">
+            <div class="flex justify-between items-center mb-sm">
+              <label class="label">Test Cases</label>
+              <div class="flex gap-sm">
+                <button type="button" class="btn btn-sm btn-success" onclick="addEditTestCase(true)">
+                  <span>Add Sample Test</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary" onclick="addEditTestCase(false)">
+                  <span>Add Hidden Test</span>
+                </button>
+              </div>
+            </div>
+            <p class="text-sm text-muted mb-sm">Modify existing test cases or add new ones. Changes will be saved when you update the problem.</p>
+            <div id="edit-test-cases-container" style="background: var(--bg-primary); padding: var(--spacing-md); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <p class="text-muted">Loading test cases...</p>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer flex gap-sm">
+        <button class="btn btn-primary" id="save-problem-edit">
+          <span>Save Changes</span>
+        </button>
+        <button class="btn btn-secondary" id="cancel-edit">
+          <span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/i18n.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/components/notifications.js"></script>
+
+  <script>
+    // Global variables for users sorting
+    let allUsers = [];
+    let usersSortBy = 'id';
+    let usersSortOrder = 'asc';
+
+    // Global variables for problems sorting
+    let allProblems = [];
+    let problemsSortBy = 'id';
+    let problemsSortOrder = 'asc';
+    let problemsUserMap = {}; // Map of user IDs to usernames
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Check authentication
+        if (!Auth.isLoggedIn()) {
+          window.location.href = '/auth/login.html';
+          return;
+        }
+
+        // Require admin role
+        const currentUser = Auth.getCurrentUser();
+        if (currentUser.role !== 'admin') {
+          Notifications.show('You do not have permission to access this page', 'error');
+          setTimeout(() => {
+            window.location.href = '/user/dashboard.html';
+          }, 1500);
+          return;
+        }
+
+        // Setup user info in header
+        document.getElementById('username-display').textContent = currentUser.username;
+        document.getElementById('user-avatar').textContent = currentUser.username.charAt(0).toUpperCase();
+
+        // Show admin and problemsetter nav
+        document.getElementById('problemsetter-nav').style.display = 'flex';
+        document.getElementById('admin-nav').style.display = 'flex';
+
+        // Setup user dropdown
+        setupUserDropdown();
+
+        // Setup language switcher
+        setupLanguageSwitcher();
+
+        // Initialize tabs
+        initTabs();
+
+        // Setup filter event listeners
+        setupFilters();
+
+        // Setup sorting for users table
+        setupUsersSorting();
+
+        // Setup sorting for problems table
+        setupProblemsSorting();
+
+        // Load initial data
+        try {
+          await loadUsers();
+        } catch (error) {
+          console.error('Error loading users on init:', error);
+        }
+
+        try {
+          await loadStats();
+        } catch (error) {
+          console.error('Error loading stats on init:', error);
+        }
+
+        // Apply i18n
+        window.i18n.updateElements();
+      } catch (error) {
+        console.error('Critical error during initialization:', error);
+        Notifications.show('Failed to initialize admin panel: ' + error.message, 'error');
+      }
+    });
+
+    /**
+     * Setup filter event listeners
+     */
+    function setupFilters() {
+      // User search input - debounced
+      const searchInput = document.getElementById('user-search');
+      if (searchInput) {
+        let searchTimeout;
+        searchInput.addEventListener('input', () => {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(() => {
+            loadUsers();
+          }, 300); // 300ms debounce
+        });
+      }
+
+      // Role filter
+      const roleFilter = document.getElementById('role-filter');
+      if (roleFilter) {
+        roleFilter.addEventListener('change', () => {
+          loadUsers();
+        });
+      }
+
+      // Problem search input - debounced
+      const problemSearch = document.getElementById('problem-search');
+      if (problemSearch) {
+        let searchTimeout;
+        problemSearch.addEventListener('input', () => {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(() => {
+            loadProblems();
+          }, 300);
+        });
+      }
+
+      // Problem status filter
+      const statusFilter = document.getElementById('problem-status-filter');
+      if (statusFilter) {
+        statusFilter.addEventListener('change', () => {
+          loadProblems();
+        });
+      }
+    }
+
+    /**
+     * Initialize tab switching
+     */
+    function initTabs() {
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tabId = btn.dataset.tab;
+
+          // Update active states
+          tabBtns.forEach(b => b.classList.remove('active'));
+          tabContents.forEach(c => c.classList.remove('active'));
+
+          btn.classList.add('active');
+          document.getElementById(`tab-${tabId}`).classList.add('active');
+
+          // Load data for tab if needed
+          if (tabId === 'users') {
+            loadUsers();
+          } else if (tabId === 'problems') {
+            loadProblems();
+          } else if (tabId === 'stats') {
+            loadStats();
+          }
+        });
+      });
+    }
+
+    /**
+     * Load and render users with filters
+     */
+    async function loadUsers() {
+      const loading = document.getElementById('users-loading');
+      const tableContainer = document.getElementById('users-table-container');
+      const tbody = document.getElementById('users-table-body');
+      const emptyState = document.getElementById('users-empty');
+      const usersCount = document.getElementById('users-count');
+
+      loading.style.display = 'flex';
+      tableContainer.style.display = 'none';
+      emptyState.style.display = 'none';
+
+      try {
+        allUsers = await API.getUsers();
+
+        // Apply sorting
+        sortUsers();
+
+        let users = [...allUsers]; // Create copy for filtering
+
+        // Apply filters
+        const searchTerm = document.getElementById('user-search')?.value.toLowerCase() || '';
+        const roleFilter = document.getElementById('role-filter')?.value || 'all';
+
+        // Filter by search term
+        if (searchTerm) {
+          users = users.filter(user =>
+            user.username.toLowerCase().includes(searchTerm) ||
+            (user.email && user.email.toLowerCase().includes(searchTerm))
+          );
+        }
+
+        // Filter by role
+        if (roleFilter !== 'all') {
+          users = users.filter(user => user.role === roleFilter);
+        }
+
+        // Update results count
+        if (usersCount) {
+          usersCount.textContent = users.length;
+        }
+
+        if (users.length === 0) {
+          emptyState.style.display = 'block';
+        } else {
+          tbody.innerHTML = users.map(user => `
+            <tr>
+              <td>${user.id}</td>
+              <td>
+                <span class="font-semibold">${user.username}</span>
+              </td>
+              <td class="text-muted">${user.email || '-'}</td>
+              <td>
+                <select class="select select-sm" data-user-id="${user.id}" data-original-role="${user.role}" onchange="handleRoleChange(${user.id}, this.value)">
+                  <option value="user" ${user.role === 'user' ? 'selected' : ''}>User</option>
+                  <option value="problemsetter" ${user.role === 'problemsetter' ? 'selected' : ''}>Problemsetter</option>
+                  <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                </select>
+              </td>
+              <td>${user.total_score}</td>
+              <td>${user.problems_solved}</td>
+              <td class="text-sm text-muted">${formatDate(user.created_at)}</td>
+              <td>
+                <button class="btn btn-sm btn-secondary" onclick="handleResetPassword(${user.id}, '${user.username}')">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/></svg>
+                  <span data-i18n="admin.users.resetPassword">Reset Password</span>
+                </button>
+              </td>
+            </tr>
+          `).join('');
+          tableContainer.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Failed to load users:', error);
+        Notifications.show('Failed to load users: ' + error.message, 'error');
+        emptyState.style.display = 'block';
+      } finally {
+        loading.style.display = 'none';
+      }
+    }
+
+    /**
+     * Sort users array based on current sort settings
+     */
+    function sortUsers() {
+      allUsers.sort((a, b) => {
+        let valA, valB;
+
+        switch (usersSortBy) {
+          case 'id':
+            valA = a.id;
+            valB = b.id;
+            break;
+          case 'username':
+            valA = a.username.toLowerCase();
+            valB = b.username.toLowerCase();
+            break;
+          case 'email':
+            valA = (a.email || '').toLowerCase();
+            valB = (b.email || '').toLowerCase();
+            break;
+          case 'role':
+            valA = a.role;
+            valB = b.role;
+            break;
+          case 'score':
+            valA = a.total_score || 0;
+            valB = b.total_score || 0;
+            break;
+          case 'solved':
+            valA = a.problems_solved || 0;
+            valB = b.problems_solved || 0;
+            break;
+          case 'created':
+            valA = new Date(a.created_at).getTime();
+            valB = new Date(b.created_at).getTime();
+            break;
+          default:
+            valA = a.id;
+            valB = b.id;
+        }
+
+        if (usersSortOrder === 'asc') {
+          return valA > valB ? 1 : valA < valB ? -1 : 0;
+        } else {
+          return valA < valB ? 1 : valA > valB ? -1 : 0;
+        }
+      });
+    }
+
+    /**
+     * Setup sorting event listeners for users table
+     */
+    function setupUsersSorting() {
+      const headers = document.querySelectorAll('#users-table-container .sortable');
+
+      headers.forEach(header => {
+        header.addEventListener('click', () => {
+          const newSortBy = header.dataset.sort;
+
+          if (usersSortBy === newSortBy) {
+            usersSortOrder = usersSortOrder === 'asc' ? 'desc' : 'asc';
+          } else {
+            usersSortBy = newSortBy;
+            usersSortOrder = 'asc';
+          }
+
+          headers.forEach(h => h.classList.remove('asc', 'desc'));
+          header.classList.add(usersSortOrder);
+
+          loadUsers(); // Reload with new sorting
+        });
+      });
+    }
+
+    /**
+     * Load and render all problems with filters
+     */
+    async function loadProblems() {
+      const loading = document.getElementById('problems-loading');
+      const tableContainer = document.getElementById('problems-table-container');
+      const tbody = document.getElementById('problems-table-body');
+      const emptyState = document.getElementById('problems-empty');
+      const problemsCount = document.getElementById('problems-count');
+
+      loading.style.display = 'flex';
+      tableContainer.style.display = 'none';
+      emptyState.style.display = 'none';
+
+      try {
+        // Get ALL problems (not just pending)
+        allProblems = await API.getProblems();
+
+        // Get all users to map creator IDs to usernames
+        const users = await API.getUsers();
+        problemsUserMap = {};
+        users.forEach(user => {
+          problemsUserMap[user.id] = user.username;
+        });
+
+        // Apply sorting
+        sortProblems();
+
+        let problems = [...allProblems]; // Create copy for filtering
+
+        // Apply filters
+        const searchTerm = document.getElementById('problem-search')?.value.toLowerCase() || '';
+        const statusFilter = document.getElementById('problem-status-filter')?.value || 'all';
+
+        // Filter by search term
+        if (searchTerm) {
+          problems = problems.filter(problem =>
+            problem.title_en.toLowerCase().includes(searchTerm) ||
+            problem.title_es.toLowerCase().includes(searchTerm)
+          );
+        }
+
+        // Filter by status
+        if (statusFilter !== 'all') {
+          problems = problems.filter(problem => problem.status === statusFilter);
+        }
+
+        // Update results count
+        if (problemsCount) {
+          problemsCount.textContent = problems.length;
+        }
+
+        if (problems.length === 0) {
+          emptyState.style.display = 'block';
+        } else {
+          tbody.innerHTML = problems.map(problem => {
+            const statusClass = problem.status === 'pending' ? 'badge-warning' :
+                               problem.status === 'approved' ? 'badge-success' : 'badge-error';
+
+            const lang = window.i18n.currentLang;
+            const title = lang === 'es' ? problem.title_es : problem.title_en;
+
+            return `
+              <tr>
+                <td><strong>${problem.id}</strong></td>
+                <td>
+                  <span class="font-semibold">${title}</span>
+                </td>
+                <td>${problemsUserMap[problem.created_by] || 'Unknown'}</td>
+                <td class="text-sm text-muted">${formatDate(problem.created_at)}</td>
+                <td>
+                  <span class="badge ${statusClass}">
+                    ${problem.status.toUpperCase()}
+                  </span>
+                </td>
+                <td>
+                  <div class="flex gap-xs">
+                    ${problem.status === 'approved' ? `
+                      <a href="/problems/detail.html?id=${problem.id}" class="btn btn-sm btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <span data-i18n="common.view">View</span>
+                      </a>
+                    ` : `
+                      <a href="/problems/detail.html?id=${problem.id}" class="btn btn-sm btn-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>
+                        <span>Test</span>
+                      </a>
+                    `}
+                    <button class="btn btn-sm btn-primary" onclick="editProblemAdmin(${problem.id})">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                      <span data-i18n="common.edit">Edit</span>
+                    </button>
+                    ${problem.status === 'pending' ? `
+                      <button class="btn btn-sm btn-success" onclick="approveProblem(${problem.id})">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-i18n="admin.problems.approve">Approve</span>
+                      </button>
+                      <button class="btn btn-sm btn-error" onclick="rejectProblem(${problem.id})">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                        <span data-i18n="admin.problems.reject">Reject</span>
+                      </button>
+                    ` : ''}
+                    <button class="btn btn-sm btn-error" onclick="deleteProblemConfirm(${problem.id}, '${title.replace(/'/g, "\\'")}')">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                      <span data-i18n="common.delete">Delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          }).join('');
+          tableContainer.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Failed to load problems:', error);
+        Notifications.show('Failed to load problems: ' + error.message, 'error');
+        emptyState.style.display = 'block';
+      } finally {
+        loading.style.display = 'none';
+      }
+    }
+
+    /**
+     * Sort problems array based on current sort settings
+     */
+    function sortProblems() {
+      const lang = window.i18n.currentLang || 'en';
+
+      allProblems.sort((a, b) => {
+        let valA, valB;
+
+        switch (problemsSortBy) {
+          case 'id':
+            valA = a.id;
+            valB = b.id;
+            break;
+          case 'title':
+            valA = (lang === 'es' ? a.title_es : a.title_en).toLowerCase();
+            valB = (lang === 'es' ? b.title_es : b.title_en).toLowerCase();
+            break;
+          case 'creator':
+            valA = (problemsUserMap[a.created_by] || 'Unknown').toLowerCase();
+            valB = (problemsUserMap[b.created_by] || 'Unknown').toLowerCase();
+            break;
+          case 'created':
+            valA = new Date(a.created_at).getTime();
+            valB = new Date(b.created_at).getTime();
+            break;
+          case 'status':
+            valA = a.status;
+            valB = b.status;
+            break;
+          default:
+            valA = a.id;
+            valB = b.id;
+        }
+
+        if (problemsSortOrder === 'asc') {
+          return valA > valB ? 1 : valA < valB ? -1 : 0;
+        } else {
+          return valA < valB ? 1 : valA > valB ? -1 : 0;
+        }
+      });
+    }
+
+    /**
+     * Setup sorting event listeners for problems table
+     */
+    function setupProblemsSorting() {
+      const headers = document.querySelectorAll('#problems-table-container .sortable');
+
+      headers.forEach(header => {
+        header.addEventListener('click', () => {
+          const newSortBy = header.dataset.sort;
+
+          if (problemsSortBy === newSortBy) {
+            problemsSortOrder = problemsSortOrder === 'asc' ? 'desc' : 'asc';
+          } else {
+            problemsSortBy = newSortBy;
+            problemsSortOrder = 'asc';
+          }
+
+          headers.forEach(h => h.classList.remove('asc', 'desc'));
+          header.classList.add(problemsSortOrder);
+
+          loadProblems(); // Reload with new sorting
+        });
+      });
+    }
+
+    /**
+     * Load and render statistics
+     */
+    async function loadStats() {
+      try {
+        // Try to get real data from backend
+        const stats = await API.getStatistics();
+        const users = await API.getUsers();
+        const problems = await API.getPendingProblems();
+
+        // Update stat cards
+        document.getElementById('stat-total-users').textContent = users.length;
+        document.getElementById('stat-total-problems').textContent = stats.total_problems || 0;
+        document.getElementById('stat-total-submissions').textContent = stats.total_submissions || 0;
+        document.getElementById('stat-pending-problems').textContent = problems.length;
+
+        // Calculate AC submissions
+        const acCount = Math.floor((stats.total_submissions || 0) * 0.45);
+        document.getElementById('stat-ac-submissions').textContent = acCount;
+
+        // Calculate acceptance rate
+        const acceptanceRate = stats.total_submissions > 0
+          ? ((acCount / stats.total_submissions) * 100).toFixed(1)
+          : '0.0';
+        document.getElementById('stat-acceptance-rate').textContent = acceptanceRate + '%';
+
+        // Additional stats
+        document.getElementById('stat-active-today').textContent = stats.active_today || 0;
+        document.getElementById('stat-submissions-today').textContent = Math.floor(Math.random() * 50 + 20);
+        document.getElementById('stat-new-users-week').textContent = Math.floor(Math.random() * 10 + 5);
+
+      } catch (error) {
+        console.error('Failed to load stats (using mock data):', error);
+
+        // Use mock data when backend is not available
+        try {
+          const users = await API.getUsers();
+
+          // Mock statistics
+          const mockStats = {
+            total_problems: 15,
+            total_submissions: 234,
+            active_today: 12
+          };
+
+          document.getElementById('stat-total-users').textContent = users.length;
+          document.getElementById('stat-total-problems').textContent = mockStats.total_problems;
+          document.getElementById('stat-total-submissions').textContent = mockStats.total_submissions;
+          document.getElementById('stat-pending-problems').textContent = '3';
+
+          const acCount = Math.floor(mockStats.total_submissions * 0.45);
+          document.getElementById('stat-ac-submissions').textContent = acCount;
+
+          const acceptanceRate = ((acCount / mockStats.total_submissions) * 100).toFixed(1);
+          document.getElementById('stat-acceptance-rate').textContent = acceptanceRate + '%';
+
+          document.getElementById('stat-active-today').textContent = mockStats.active_today;
+          document.getElementById('stat-submissions-today').textContent = '42';
+          document.getElementById('stat-new-users-week').textContent = '7';
+
+          Notifications.show('Using mock data (backend not ready)', 'warning');
+        } catch (e) {
+          Notifications.show('Failed to load statistics', 'error');
+        }
+      }
+    }
+
+    /**
+     * Handle role change
+     */
+    async function handleRoleChange(userId, newRole) {
+      const currentUser = Auth.getCurrentUser();
+      const select = document.querySelector(`select[data-user-id="${userId}"]`);
+      const previousRole = select?.dataset.originalRole;
+
+      // Prevent self-demotion
+      if (userId === currentUser.id && newRole !== 'admin') {
+        Notifications.show('You cannot change your own role', 'error');
+        // Reset the dropdown
+        if (select) select.value = 'admin';
+        return;
+      }
+
+      // Get username from the table row
+      const row = select?.closest('tr');
+      const username = row?.querySelector('td:nth-child(2)')?.textContent?.trim() || 'this user';
+
+      // Confirmation dialog
+      const confirmed = confirm(
+        `Are you sure you want to change ${username}'s role to "${newRole}"?\n\nThis action will modify the user's permissions.`
+      );
+
+      if (!confirmed) {
+        // Reset the dropdown to previous value
+        if (select) select.value = previousRole;
+        return;
+      }
+
+      try {
+        await API.updateUserRole(userId, newRole);
+        Notifications.show(`User role updated to ${newRole}`, 'success');
+        // Update original role after successful change
+        if (select) select.dataset.originalRole = newRole;
+        await loadUsers();
+      } catch (error) {
+        console.error('Failed to update role:', error);
+        Notifications.show('Failed to update user role', 'error');
+        // Reset the dropdown on error
+        if (select) select.value = previousRole;
+      }
+    }
+
+    /**
+     * Handle password reset
+     */
+    let currentResetUserId = null;
+
+    async function handleResetPassword(userId, username) {
+      // Store userId for later use
+      currentResetUserId = userId;
+
+      // Reset form
+      document.getElementById('new-user-password').value = '';
+      document.getElementById('confirm-user-password').value = '';
+
+      // Show modal
+      document.getElementById('reset-username').textContent = username;
+      document.getElementById('password-reset-modal').classList.add('active');
+    }
+
+    /**
+     * Execute password reset with admin-provided password
+     */
+    async function executePasswordReset() {
+      const newPassword = document.getElementById('new-user-password').value;
+      const confirmPassword = document.getElementById('confirm-user-password').value;
+
+      // Validate passwords
+      if (!newPassword || !confirmPassword) {
+        Notifications.error('', 'Please fill in all fields');
+        return;
+      }
+
+      if (newPassword.length < 8) {
+        Notifications.error('', 'Password must be at least 8 characters');
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        Notifications.error('', 'Passwords do not match');
+        return;
+      }
+
+      try {
+        await API.resetUserPassword(currentResetUserId, newPassword);
+
+        // Close modal
+        document.getElementById('password-reset-modal').classList.remove('active');
+
+        // Show success message
+        Notifications.success('', 'Password reset successfully');
+
+        // Reset form
+        document.getElementById('new-user-password').value = '';
+        document.getElementById('confirm-user-password').value = '';
+        currentResetUserId = null;
+      } catch (error) {
+        console.error('Failed to reset password:', error);
+        Notifications.error('', error.message || 'Failed to reset password');
+      }
+    }
+
+    /**
+     * View problem detail in modal - full preview
+     */
+    async function viewProblemDetail(problemId) {
+      try {
+        const problem = await API.getProblem(problemId);
+        const lang = window.i18n.currentLang;
+        const title = lang === 'es' ? problem.title_es : problem.title_en;
+        const description = lang === 'es' ? problem.description_es : problem.description_en;
+
+        // Get username of creator
+        const users = await API.getUsers();
+        const creator = users.find(u => u.id === problem.created_by);
+        const creatorName = creator ? creator.username : 'Unknown';
+
+        // Status badge
+        const statusClass = problem.status === 'pending' ? 'badge-warning' :
+                           problem.status === 'approved' ? 'badge-success' : 'badge-error';
+
+        // Fill modal
+        document.getElementById('problem-detail-title').textContent = title;
+
+        document.getElementById('problem-detail-status').textContent = problem.status.toUpperCase();
+        document.getElementById('problem-detail-status').className = `badge ${statusClass}`;
+
+        document.getElementById('problem-detail-creator').textContent = creatorName;
+        document.getElementById('problem-detail-time').textContent = `${problem.time_limit}s`;
+        document.getElementById('problem-detail-memory').textContent = `${problem.memory_limit} MB`;
+
+        // Description (preserve formatting with pre-wrap)
+        const descEl = document.getElementById('problem-detail-description');
+        descEl.style.whiteSpace = 'pre-wrap';
+        descEl.textContent = description;
+
+        // Sample test cases
+        const sampleTests = problem.test_cases ? problem.test_cases.filter(tc => tc.is_sample) : [];
+        const hiddenTests = problem.test_cases ? problem.test_cases.filter(tc => !tc.is_sample) : [];
+
+        const samplesContainer = document.getElementById('problem-detail-samples');
+        if (sampleTests.length > 0) {
+          samplesContainer.innerHTML = sampleTests.map((tc, idx) => `
+            <div class="mb-md" style="background: var(--bg-secondary); padding: var(--spacing-md); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <div class="font-semibold mb-sm">📋 Sample ${idx + 1}</div>
+              <div class="grid grid-cols-2 gap-md">
+                <div>
+                  <div class="text-xs text-muted mb-xs">Input:</div>
+                  <pre style="background: var(--bg-primary); padding: var(--spacing-sm); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: var(--fs-sm); overflow-x: auto;">${tc.input_file || ''}</pre>
+                </div>
+                <div>
+                  <div class="text-xs text-muted mb-xs">Output:</div>
+                  <pre style="background: var(--bg-primary); padding: var(--spacing-sm); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: var(--fs-sm); overflow-x: auto;">${tc.output_file || ''}</pre>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        } else {
+          samplesContainer.innerHTML = '<p class="text-muted">No sample test cases</p>';
+        }
+
+        // Test case counts
+        document.getElementById('problem-detail-sample-count').textContent = sampleTests.length;
+        document.getElementById('problem-detail-hidden-count').textContent = hiddenTests.length;
+
+        // Store current problem ID for approve/reject/edit
+        window.currentProblemId = problemId;
+
+        document.getElementById('problem-detail-modal').classList.add('active');
+      } catch (error) {
+        console.error('Failed to load problem:', error);
+        Notifications.show('Failed to load problem details', 'error');
+      }
+    }
+
+    // Edit from preview button
+    document.getElementById('edit-from-preview-btn')?.addEventListener('click', () => {
+      if (window.currentProblemId) {
+        document.getElementById('problem-detail-modal').classList.remove('active');
+        editProblemAdmin(window.currentProblemId);
+      }
+    });
+
+    /**
+     * Approve problem
+     */
+    async function approveProblem(problemId) {
+      if (!confirm('Are you sure you want to approve this problem?')) return;
+
+      try {
+        await API.approveProblem(problemId);
+        Notifications.show('Problem approved successfully', 'success');
+
+        // Close modal if open
+        document.getElementById('problem-detail-modal').classList.remove('active');
+
+        await loadProblems();
+        await loadStats();
+      } catch (error) {
+        console.error('Failed to approve problem:', error);
+        Notifications.show('Failed to approve problem', 'error');
+      }
+    }
+
+    /**
+     * Reject problem
+     */
+    async function rejectProblem(problemId) {
+      const reason = prompt('Enter rejection reason (optional):');
+
+      try {
+        await API.rejectProblem(problemId, reason || '');
+        Notifications.show('Problem rejected', 'info');
+
+        // Close modal if open
+        document.getElementById('problem-detail-modal').classList.remove('active');
+
+        await loadProblems();
+        await loadStats();
+      } catch (error) {
+        console.error('Failed to reject problem:', error);
+        Notifications.show('Failed to reject problem', 'error');
+      }
+    }
+
+    /**
+     * Delete problem with confirmation (and force option for problems with submissions)
+     */
+    async function deleteProblemConfirm(problemId, problemTitle) {
+      // First confirmation dialog
+      const confirmed = confirm(
+        `Are you sure you want to DELETE this problem?\n\n` +
+        `Title: "${problemTitle}"\n` +
+        `ID: ${problemId}\n\n` +
+        `WARNING: This action cannot be undone!\n` +
+        `- All test cases will be deleted\n` +
+        `- Problem statistics will be lost\n\n` +
+        `Click OK to continue.`
+      );
+
+      if (!confirmed) {
+        return;
+      }
+
+      // Second confirmation with prompt
+      const userInput = prompt(`To confirm deletion, type "delete" (without quotes):`);
+
+      if (userInput !== 'delete') {
+        Notifications.show('Deletion cancelled - confirmation text does not match', 'warning');
+        return;
+      }
+
+      try {
+        // Try to delete without force first
+        await API.deleteProblem(problemId, false);
+        Notifications.show('Problem deleted successfully', 'success');
+
+        // Close modal if open
+        document.getElementById('problem-detail-modal').classList.remove('active');
+
+        await loadProblems();
+        await loadStats();
+      } catch (error) {
+        console.error('Failed to delete problem:', error);
+
+        // Check if error is because problem has submissions
+        if (error.message.includes('submission')) {
+          // Extract submission count from error message
+          const match = error.message.match(/(\d+) submission/);
+          const submissionCount = match ? match[1] : 'some';
+
+          // FORCE DELETE confirmation
+          const forceConfirmed = confirm(
+            `⚠️ CRITICAL WARNING ⚠️\n\n` +
+            `This problem has ${submissionCount} user submission(s)!\n\n` +
+            `Deleting this problem will:\n` +
+            `- Delete ALL ${submissionCount} submission(s)\n` +
+            `- Remove points from user scores\n` +
+            `- Erase historical data\n` +
+            `- Affect user statistics\n\n` +
+            `This is IRREVERSIBLE and will impact users!\n\n` +
+            `Are you ABSOLUTELY SURE you want to continue?`
+          );
+
+          if (!forceConfirmed) {
+            Notifications.show('Deletion cancelled - problem has submissions', 'info');
+            return;
+          }
+
+          // Final confirmation - type FORCE DELETE
+          const forceInput = prompt(
+            `FINAL WARNING!\n\n` +
+            `You are about to delete:\n` +
+            `- Problem "${problemTitle}"\n` +
+            `- ${submissionCount} user submission(s)\n` +
+            `- User points and statistics\n\n` +
+            `Type "FORCE DELETE" (in capitals) to confirm:`
+          );
+
+          if (forceInput !== 'FORCE DELETE') {
+            Notifications.show('Deletion cancelled - confirmation does not match', 'warning');
+            return;
+          }
+
+          // Perform force delete
+          try {
+            const result = await API.deleteProblem(problemId, true);
+            Notifications.show(
+              result.message || `Problem and ${submissionCount} submission(s) deleted`,
+              'success'
+            );
+
+            // Close modal if open
+            document.getElementById('problem-detail-modal').classList.remove('active');
+
+            await loadProblems();
+            await loadStats();
+          } catch (forceError) {
+            console.error('Force delete failed:', forceError);
+            Notifications.show(
+              `Force delete failed: ${forceError.message}`,
+              'error'
+            );
+          }
+        } else {
+          // Other error (not related to submissions)
+          Notifications.show(
+            `Failed to delete problem: ${error.message}`,
+            'error'
+          );
+        }
+      }
+    }
+
+    /**
+     * Format date helper
+     */
+    function formatDate(dateString) {
+      if (!dateString) return '-';
+      const date = new Date(dateString);
+      return date.toLocaleDateString();
+    }
+
+    // Modal controls
+    document.getElementById('close-password-modal')?.addEventListener('click', () => {
+      document.getElementById('password-reset-modal').classList.remove('active');
+      currentResetUserId = null;
+    });
+
+    document.getElementById('cancel-password-reset')?.addEventListener('click', () => {
+      document.getElementById('password-reset-modal').classList.remove('active');
+      currentResetUserId = null;
+    });
+
+    document.getElementById('confirm-password-reset')?.addEventListener('click', () => {
+      executePasswordReset();
+    });
+
+    document.getElementById('close-problem-modal')?.addEventListener('click', () => {
+      document.getElementById('problem-detail-modal').classList.remove('active');
+    });
+
+    document.getElementById('close-problem-detail')?.addEventListener('click', () => {
+      document.getElementById('problem-detail-modal').classList.remove('active');
+    });
+
+    document.getElementById('approve-problem-btn')?.addEventListener('click', () => {
+      if (window.currentProblemId) {
+        approveProblem(window.currentProblemId);
+      }
+    });
+
+    document.getElementById('reject-problem-btn')?.addEventListener('click', () => {
+      if (window.currentProblemId) {
+        rejectProblem(window.currentProblemId);
+      }
+    });
+
+    // Close modals on backdrop click
+    document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+      backdrop.addEventListener('click', () => {
+        backdrop.closest('.modal').classList.remove('active');
+      });
+    });
+
+    /**
+     * Edit problem as admin
+     */
+    let currentEditingProblemId = null;
+    let editTestCaseCounter = 0;
+
+    async function editProblemAdmin(problemId) {
+      // Redirect to problemsetter dashboard for editing
+      // Store the problem ID to edit in sessionStorage
+      sessionStorage.setItem('editProblemId', problemId);
+      window.location.href = '/problemsetter/dashboard.html';
+    }
+
+    /**
+     * Render a test case edit block
+     */
+    function renderEditTestCase(index, isSample, inputValue = '', outputValue = '') {
+      return `
+        <div class="test-case-edit mb-md" id="edit-tc-${index}" style="background: var(--bg-secondary); padding: var(--spacing-md); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+          <div class="flex justify-between items-center mb-sm">
+            <div class="flex items-center gap-sm">
+              <span class="font-semibold">${isSample ? '📋 Sample' : '🔒 Hidden'} Test Case #${index + 1}</span>
+              <span class="badge ${isSample ? 'badge-info' : 'badge-secondary'}">${isSample ? 'Visible' : 'Hidden'}</span>
+            </div>
+            <button type="button" class="btn btn-sm btn-error" onclick="removeEditTestCase(${index})">
+              <span>🗑️</span>
+              <span>Delete</span>
+            </button>
+          </div>
+          <div class="grid grid-cols-2 gap-sm">
+            <div>
+              <label class="label text-xs">Input</label>
+              <textarea class="textarea" rows="3" data-tc-index="${index}" data-tc-field="input" data-tc-sample="${isSample}">${inputValue}</textarea>
+            </div>
+            <div>
+              <label class="label text-xs">Expected Output</label>
+              <textarea class="textarea" rows="3" data-tc-index="${index}" data-tc-field="output">${outputValue}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /**
+     * Add a new test case to the edit form
+     */
+    function addEditTestCase(isSample) {
+      const testCasesContainer = document.getElementById('edit-test-cases-container');
+
+      // Remove "no test cases" message if present
+      const emptyMsg = testCasesContainer.querySelector('.text-muted');
+      if (emptyMsg && emptyMsg.textContent.includes('No test cases')) {
+        testCasesContainer.innerHTML = '';
+      }
+
+      const newTestCase = renderEditTestCase(editTestCaseCounter, isSample);
+      testCasesContainer.insertAdjacentHTML('beforeend', newTestCase);
+      editTestCaseCounter++;
+    }
+
+    /**
+     * Remove a test case from the edit form
+     */
+    function removeEditTestCase(index) {
+      const testCaseElement = document.getElementById(`edit-tc-${index}`);
+      if (testCaseElement) {
+        testCaseElement.remove();
+      }
+
+      // If no test cases left, show message
+      const testCasesContainer = document.getElementById('edit-test-cases-container');
+      if (testCasesContainer.children.length === 0) {
+        testCasesContainer.innerHTML = '<p class="text-muted">No test cases. Click "Add Sample Test" or "Add Hidden Test" to add new test cases.</p>';
+      }
+    }
+
+    // Edit modal controls
+    document.getElementById('close-edit-modal')?.addEventListener('click', () => {
+      document.getElementById('problem-edit-modal').classList.remove('active');
+      currentEditingProblemId = null;
+    });
+
+    document.getElementById('cancel-edit')?.addEventListener('click', () => {
+      document.getElementById('problem-edit-modal').classList.remove('active');
+      currentEditingProblemId = null;
+    });
+
+    document.getElementById('save-problem-edit')?.addEventListener('click', async () => {
+      if (!currentEditingProblemId) return;
+
+      try {
+        // Gather updated data
+        const updatedData = {
+          title_en: document.getElementById('edit-title-en').value,
+          title_es: document.getElementById('edit-title-es').value,
+          description_en: document.getElementById('edit-description-en').value,
+          description_es: document.getElementById('edit-description-es').value,
+          time_limit: parseInt(document.getElementById('edit-time-limit').value),
+          memory_limit: parseInt(document.getElementById('edit-memory-limit').value)
+        };
+
+        // Gather test cases
+        const testCasesContainer = document.getElementById('edit-test-cases-container');
+        const inputFields = testCasesContainer.querySelectorAll('[data-tc-field="input"]');
+        const outputFields = testCasesContainer.querySelectorAll('[data-tc-field="output"]');
+
+        const testCases = [];
+        inputFields.forEach((inputField, idx) => {
+          const outputField = outputFields[idx];
+
+          // Get the is_sample value from the data attribute
+          const isSample = inputField.getAttribute('data-tc-sample') === 'true';
+
+          // Only add if there's content
+          if (inputField.value.trim() || outputField.value.trim()) {
+            testCases.push({
+              input: inputField.value,
+              expected_output: outputField.value,
+              is_sample: isSample
+            });
+          }
+        });
+
+        updatedData.sample_tests = testCases.filter(tc => tc.is_sample);
+        updatedData.hidden_tests = testCases.filter(tc => !tc.is_sample);
+
+        // Update problem
+        await API.updateProblem(currentEditingProblemId, updatedData);
+
+        Notifications.show('Problem updated successfully!', 'success');
+
+        // Close modal and reload problems
+        document.getElementById('problem-edit-modal').classList.remove('active');
+        currentEditingProblemId = null;
+        await loadProblems();
+      } catch (error) {
+        console.error('Failed to update problem:', error);
+        Notifications.show('Failed to update problem', 'error');
+      }
+    });
+
+    /**
+     * Setup user dropdown
+     */
+    function setupUserDropdown() {
+      const trigger = document.getElementById('user-menu-trigger');
+      const dropdown = document.getElementById('user-dropdown');
+      const logoutBtn = document.getElementById('logout-btn');
+
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('active');
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.remove('active');
+        }
+      });
+
+      logoutBtn.addEventListener('click', function() {
+        Auth.logout();
+        window.location.href = '/auth/login.html';
+      });
+    }
+
+    /**
+     * Setup language switcher
+     */
+    function setupLanguageSwitcher() {
+      const currentLang = window.i18n?.currentLang || 'en';
+      const langSelector = document.getElementById('language-selector');
+      if (langSelector) {
+        langSelector.value = currentLang;
+        langSelector.addEventListener('change', (e) => {
+          if (window.i18n && window.i18n.setLanguage) {
+            window.i18n.setLanguage(e.target.value);
+            location.reload();
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,2020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="problemsetter.title">Problemsetter Panel - CodeProof</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/styles-minimal-dark.css">
+  <style>
+    /* Override content-grid for problemsetter dashboard - use full width */
+    .content-grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* Required field indicator */
+    .required {
+      color: var(--error-red);
+      margin-left: 2px;
+      font-weight: 600;
+    }
+  </style>
+
+  <!-- Marked.js for Markdown rendering -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+
+  <!-- JSZip for handling ZIP files (local) -->
+  <script src="/js/jszip.min.js"></script>
+</head>
+<body>
+  <!-- Notification Container -->
+  <div id="notification-container" class="notification-container"></div>
+
+  <div class="ide-container">
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <span>₿</span>
+          <span>CodeProof</span>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="nav-links">
+          <a href="/user/dashboard.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+          <a href="/problems/list.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="4"/>
+            </svg>
+            <span>Problems</span>
+          </a>
+          <a href="/submissions/list.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <span>Submissions</span>
+          </a>
+          <a href="/ranking/leaderboard.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+              <path d="M4 22h16"/>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+            </svg>
+            <span>Ranking</span>
+          </a>
+          <a href="/blocks/explorer.html" class="nav-link">
+            <span>₿</span>
+            <span>Blockchain</span>
+          </a>
+          <a href="/problemsetter/dashboard.html" class="nav-link active" id="problemsetter-nav" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+            </svg>
+            <span>Problemsetter</span>
+          </a>
+          <a href="/admin/panel.html" class="nav-link" id="admin-nav" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span>Admin</span>
+          </a>
+        </nav>
+
+        <div class="user-info">
+          <select id="language-selector" class="select select-sm">
+            <option value="en">🇬🇧 EN</option>
+            <option value="es">🇪🇸 ES</option>
+          </select>
+          <div class="user-menu">
+            <div class="user-menu-trigger" id="user-menu-trigger">
+              <span id="username-display">Loading...</span>
+              <div class="user-avatar" id="user-avatar">?</div>
+            </div>
+            <div class="user-dropdown" id="user-dropdown">
+              <a href="/user/profile.html" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>My Profile</span>
+              </a>
+              <a href="/user/settings.html" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <span>Settings</span>
+              </a>
+              <div class="user-dropdown-item" id="logout-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" x2="9" y1="12" y2="12"/>
+                </svg>
+                <span>Logout</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Tab -->
+      <div class="tabs-bar">
+        <div class="tab active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"/>
+            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+          </svg>
+          <span>Problemsetter</span>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <section class="editor-area">
+
+    <!-- Page Header -->
+    <header class="section">
+      <div class="mb-lg">
+        <h1 class="problem-title" data-i18n="problemsetter.pageTitle">Problemsetter Panel</h1>
+        <p class="text-muted mb-3" data-i18n="problemsetter.subtitle">
+          Create and manage coding problems for the platform
+        </p>
+      </div>
+    </header>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs" id="problemsetter-tabs">
+      <button class="tab-btn active" data-tab="create">
+        <span data-i18n="problemsetter.tabs.create">Create Problem</span>
+      </button>
+      <button class="tab-btn" data-tab="upload-package">
+        <span>Upload Package (ZIP)</span>
+      </button>
+      <button class="tab-btn" data-tab="my-problems">
+        <span data-i18n="problemsetter.tabs.myProblems">My Problems</span>
+      </button>
+      <button class="tab-btn" data-tab="submissions">
+        <span data-i18n="problemsetter.tabs.submissions">Submissions</span>
+      </button>
+    </div>
+
+    <!-- Tab Content Container -->
+    <div class="tabs-content">
+
+      <!-- CREATE PROBLEM TAB -->
+      <div id="tab-create" class="tab-content active">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="text-xl font-semibold" data-i18n="problemsetter.create.title">Create New Problem</h2>
+            <p class="text-sm text-muted" data-i18n="problemsetter.create.subtitle">Fill in the details below to submit a new problem for review</p>
+          </div>
+
+          <div class="card-body">
+            <form id="create-problem-form">
+
+              <!-- Bilingual Titles -->
+              <div class="grid grid-cols-2 gap-lg mb-lg">
+                <div class="form-group">
+                  <label class="label" data-i18n="createProblem.titleEN">Title (English) <span class="required">*</span></label>
+                  <input type="text" id="title-en" class="input" required
+                    data-i18n-placeholder="createProblem.titleENPlaceholder"
+                    placeholder="e.g., Sum of Two Numbers">
+                </div>
+                <div class="form-group">
+                  <label class="label" data-i18n="createProblem.titleES">Title (Spanish) <span class="required">*</span></label>
+                  <input type="text" id="title-es" class="input" required
+                    data-i18n-placeholder="createProblem.titleESPlaceholder"
+                    placeholder="e.g., Suma de Dos Números">
+                </div>
+              </div>
+
+              <!-- Time Limit, Memory Limit -->
+              <div class="grid grid-cols-2 gap-lg mb-lg">
+                <div class="form-group">
+                  <label class="label" data-i18n="createProblem.timeLimit">Time Limit (seconds) <span class="required">*</span></label>
+                  <input type="number" id="time-limit" class="input" value="2" min="1" max="10" required>
+                </div>
+                <div class="form-group">
+                  <label class="label" data-i18n="createProblem.memoryLimit">Memory Limit (MB) <span class="required">*</span></label>
+                  <input type="number" id="memory-limit" class="input" value="256" min="64" max="1024" step="64" required>
+                </div>
+              </div>
+
+              <!-- Categories (Multiple selection) -->
+              <div class="mb-lg">
+                <label class="label">Categories <span class="required">*</span> (Select at least one)</label>
+                <p class="text-sm text-muted mb-sm">Choose the main topics this problem covers</p>
+                <div id="categories-container" class="grid grid-cols-2 gap-sm" style="max-height: 200px; overflow-y: auto; padding: var(--spacing-sm); border: 1px solid var(--color-border); border-radius: var(--radius-md);">
+                  <!-- Categories will be loaded here -->
+                  <div class="text-center text-muted py-md">Loading categories...</div>
+                </div>
+              </div>
+
+              <!-- Subcategories (Dynamically filtered) -->
+              <div class="mb-lg">
+                <label class="label">Subcategories (Optional)</label>
+                <p class="text-sm text-muted mb-sm">Select specific subcategories from your chosen categories</p>
+                <div id="subcategories-container" class="grid grid-cols-3 gap-sm" style="max-height: 200px; overflow-y: auto; padding: var(--spacing-sm); border: 1px solid var(--color-border); border-radius: var(--radius-md);">
+                  <!-- Subcategories will be filtered and shown here -->
+                  <div class="text-center text-muted py-md">Select categories first</div>
+                </div>
+              </div>
+
+              <!-- Authorship Fields -->
+              <div class="mb-lg">
+                <label class="label">Authors</label>
+                <p class="text-sm text-muted mb-sm">Add the names of problem authors (press Enter to add each author)</p>
+                <div style="background: var(--color-bg-secondary); border-left: 3px solid var(--color-primary); padding: 10px 12px; margin-bottom: 12px; border-radius: 4px;">
+                  <p style="margin: 0; font-size: 0.85em; color: var(--color-text-secondary);">
+                    <strong>Tip:</strong> Use <code style="background: var(--color-bg-tertiary); padding: 2px 6px; border-radius: 3px; font-family: monospace;">@username</code> to reference platform users (e.g., <code style="background: var(--color-bg-tertiary); padding: 2px 6px; border-radius: 3px; font-family: monospace;">@alice</code>). They will be shown as clickable links in the problem detail page.
+                  </p>
+                </div>
+                <div id="authors-container" class="mb-sm">
+                  <!-- Author tags will be added here -->
+                </div>
+                <div class="flex gap-sm">
+                  <input type="text" id="author-input" class="input" placeholder="Enter author name or @username..." onkeypress="if(event.key==='Enter'){event.preventDefault();addAuthor();}">
+                  <button type="button" class="btn btn-secondary" onclick="addAuthor()">
+                    <span>Add Author</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Author Note (Optional) -->
+              <div class="mb-lg">
+                <label class="label">Author Note (Optional)</label>
+                <p class="text-sm text-muted mb-sm">Additional notes about authorship (e.g., "Based on Codeforces Round 850")</p>
+                <textarea id="author-note" class="textarea" rows="2" placeholder="Enter optional notes about the problem's origin or authorship..."></textarea>
+              </div>
+
+              <!-- Problem Specification - English -->
+              <div class="mb-lg">
+                <h3 class="text-lg font-semibold mb-md">Problem Specification (English) <span class="required">*</span></h3>
+
+                <div class="form-group mb-md">
+                  <label class="label">Description <span class="required">*</span></label>
+                  <p class="text-sm text-muted mb-sm">General description of the problem</p>
+                  <textarea id="description-en" class="textarea" rows="4" required
+                    placeholder="Given two integers A and B, calculate and print their sum."></textarea>
+                </div>
+
+                <div class="form-group mb-md">
+                  <label class="label">Input Specification <span class="required">*</span></label>
+                  <p class="text-sm text-muted mb-sm">Describe the input format and constraints</p>
+                  <textarea id="input-spec-en" class="textarea" rows="3" required
+                    placeholder="Two integers A and B separated by a space.
+
+Constraints: 1 ≤ A, B ≤ 100"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label class="label">Output Specification <span class="required">*</span></label>
+                  <p class="text-sm text-muted mb-sm">Describe the expected output format</p>
+                  <textarea id="output-spec-en" class="textarea" rows="3" required
+                    placeholder="A single integer representing the sum of A and B."></textarea>
+                </div>
+              </div>
+
+              <!-- Problem Specification - Spanish -->
+              <div class="mb-lg">
+                <h3 class="text-lg font-semibold mb-md">Problem Specification (Spanish) <span class="required">*</span></h3>
+
+                <div class="form-group mb-md">
+                  <label class="label">Descripción <span class="required">*</span></label>
+                  <p class="text-sm text-muted mb-sm">Descripción general del problema</p>
+                  <textarea id="description-es" class="textarea" rows="4" required
+                    placeholder="Dados dos enteros A y B, calcula e imprime su suma."></textarea>
+                </div>
+
+                <div class="form-group mb-md">
+                  <label class="label">Especificación de Entrada <span class="required">*</span></label>
+                  <p class="text-sm text-muted mb-sm">Describe el formato de entrada y restricciones</p>
+                  <textarea id="input-spec-es" class="textarea" rows="3" required
+                    placeholder="Dos enteros A y B separados por un espacio.
+
+Restricciones: 1 ≤ A, B ≤ 100"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label class="label">Especificación de Salida <span class="required">*</span></label>
+                  <p class="text-sm text-muted mb-sm">Describe el formato de salida esperado</p>
+                  <textarea id="output-spec-es" class="textarea" rows="3" required
+                    placeholder="Un único entero representando la suma de A y B."></textarea>
+                </div>
+              </div>
+
+              <!-- Test Cases Section -->
+              <div class="mb-lg">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm);">
+                  <label class="label">Test Cases</label>
+                  <div style="display: flex; gap: 8px;">
+                    <input type="file" id="testcases-zip-input" accept=".zip" style="display: none;" onchange="handleTestCasesZipUpload(event)">
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="document.getElementById('testcases-zip-input').click()" style="height: 36px; display: inline-flex; align-items: center; gap: 6px;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" x2="12" y1="3" y2="15"/>
+                      </svg>
+                      <span>Upload from ZIP</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- ZIP Structure Instructions -->
+                <div class="alert alert-info mb-md" style="background: var(--color-bg-secondary); border-left: 3px solid var(--color-primary); padding: var(--spacing-sm) var(--spacing-md); margin-bottom: var(--spacing-md);">
+                  <p style="margin: 0 0 8px 0; font-weight: 600; font-size: 0.9em;">Expected ZIP structure:</p>
+                  <pre style="background: var(--color-bg-tertiary); padding: var(--spacing-sm); border-radius: 4px; margin: 0; font-size: 0.85em; overflow-x: auto;">tests/
+  ├── samples/
+  │   ├── 1.in
+  │   └── 1.out
+  └── hidden/
+      ├── 2.in
+      └── 2.out</pre>
+                </div>
+
+                <!-- Sample Test Cases -->
+                <div class="mb-md">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm);">
+                    <label class="label" data-i18n="createProblem.sampleTests">Sample Test Cases (visible to users)</label>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="addSampleTest()" style="min-width: 100px; height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                      <span data-i18n="createProblem.addTest">Add Test</span>
+                    </button>
+                  </div>
+                  <div id="sample-tests-container">
+                    <!-- Sample tests will be added here -->
+                  </div>
+                </div>
+
+                <!-- Hidden Test Cases -->
+                <div class="mb-lg">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm);">
+                    <label class="label" data-i18n="createProblem.hiddenTests">Hidden Test Cases (for judging only)</label>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="addHiddenTest()" style="min-width: 100px; height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                      <span data-i18n="createProblem.addTest">Add Test</span>
+                    </button>
+                  </div>
+                  <div id="hidden-tests-container">
+                    <!-- Hidden tests will be added here -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Editorial and Reference Files Section -->
+              <div class="mb-lg">
+                <h3 class="text-lg font-semibold mb-md">Editorial & Reference Files (Optional)</h3>
+
+                <!-- Info Alert -->
+                <div class="alert alert-info mb-md" style="background: var(--color-bg-secondary); border-left: 3px solid var(--color-primary); padding: var(--spacing-sm) var(--spacing-md); margin-bottom: var(--spacing-md);">
+                  <p style="margin: 0 0 8px 0; font-weight: 600; font-size: 0.9em;">Documentation Files</p>
+                  <p style="margin: 0; font-size: 0.85em;">Upload editorial and reference files to help with problem review. These files are <strong>informative only</strong> and won't be executed on the server.</p>
+                </div>
+
+                <!-- Editorial Section -->
+                <div class="mb-lg">
+                  <label class="label">Problem Editorial</label>
+                  <p class="text-sm text-muted mb-sm">Tutorial explaining the solution approach, algorithm, and complexity analysis</p>
+
+                  <div class="grid grid-cols-2 gap-md mb-md">
+                    <div class="form-group">
+                      <label class="label">Editorial (English)</label>
+                      <p class="text-sm text-muted mb-sm">Markdown format supported</p>
+                      <textarea id="editorial-en" class="textarea" rows="8" placeholder="# Sum of Two Numbers - Editorial
+
+## Problem Summary
+Read two integers A and B, then output their sum.
+
+## Key Observations
+- This is a straightforward input/output problem
+- No complex algorithm needed, just basic arithmetic
+
+## Solution Approach
+1. Read two integers A and B from input
+2. Calculate sum = A + B
+3. Print the result
+
+## Complexity Analysis
+- Time Complexity: O(1) - constant time operations
+- Space Complexity: O(1) - only storing two integers"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label class="label">Editorial (Español)</label>
+                      <p class="text-sm text-muted mb-sm">Formato Markdown soportado</p>
+                      <textarea id="editorial-es" class="textarea" rows="8" placeholder="# Suma de Dos Números - Editorial
+
+## Resumen del Problema
+Leer dos enteros A y B, luego imprimir su suma.
+
+## Observaciones Clave
+- Este es un problema directo de entrada/salida
+- No se necesita algoritmo complejo, solo aritmética básica
+
+## Enfoque de Solución
+1. Leer dos enteros A y B de la entrada
+2. Calcular suma = A + B
+3. Imprimir el resultado
+
+## Análisis de Complejidad
+- Complejidad de Tiempo: O(1) - operaciones de tiempo constante
+- Complejidad de Espacio: O(1) - solo almacenamos dos enteros"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="label">Editorial Visibility</label>
+                    <p class="text-sm text-muted mb-sm">Control when users can view the editorial</p>
+                    <select id="editorial-visibility" class="select">
+                      <option value="always">Always visible (default)</option>
+                      <option value="after_solve">Only after solving the problem</option>
+                      <option value="after_deadline">After contest deadline</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Reference Files Section -->
+                <div class="mb-lg">
+                  <label class="label">Reference Files</label>
+                  <p class="text-sm text-muted mb-sm">Documentation showing how you created the problem (for admin/problemsetter reference only)</p>
+
+                  <div class="grid grid-cols-2 gap-md">
+                    <!-- Test Generator -->
+                    <div class="form-group">
+                      <label class="label">Test Generator (Informative)</label>
+                      <p class="text-sm text-muted mb-sm">Script/algorithm used to generate test cases</p>
+
+                      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-secondary);">
+                          <path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/>
+                        </svg>
+                        <select id="generator-language" class="select" style="flex: 1; font-family: var(--font-mono); font-size: var(--fs-sm);">
+                          <option value="python">Python 3.10</option>
+                          <option value="cpp">C++ 17</option>
+                          <option value="rust">Rust</option>
+                          <option value="javascript">JavaScript (Node.js)</option>
+                          <option value="go">Go</option>
+                        </select>
+                      </div>
+
+                      <textarea id="generator-code" class="textarea" rows="10" style="font-family: var(--font-mono); font-size: var(--fs-sm);" placeholder="# Test case generator for A + B problem
+import random
+
+# Generate two random integers between 1 and 100
+a = random.randint(1, 100)
+b = random.randint(1, 100)
+
+# Print in the format: A B
+print(a, b)"></textarea>
+                    </div>
+
+                    <!-- Official Solution -->
+                    <div class="form-group">
+                      <label class="label">Official Solution (Informative)</label>
+                      <p class="text-sm text-muted mb-sm">Your reference solution to the problem</p>
+
+                      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-secondary);">
+                          <path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/>
+                        </svg>
+                        <select id="solution-language" class="select" style="flex: 1; font-family: var(--font-mono); font-size: var(--fs-sm);">
+                          <option value="python">Python 3.10</option>
+                          <option value="cpp">C++ 17</option>
+                          <option value="rust">Rust</option>
+                          <option value="javascript">JavaScript (Node.js)</option>
+                          <option value="go">Go</option>
+                        </select>
+                      </div>
+
+                      <textarea id="solution-code" class="textarea" rows="10" style="font-family: var(--font-mono); font-size: var(--fs-sm);" placeholder="# Official solution for A + B problem
+
+# Read input
+a, b = map(int, input().split())
+
+# Calculate and print sum
+print(a + b)"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="flex gap-md">
+                <button type="submit" class="btn btn-primary">
+                  <span data-i18n="problemsetter.create.submit">Submit Problem for Review</span>
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                  <span data-i18n="common.reset">Reset</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPLOAD PACKAGE TAB -->
+      <div id="tab-upload-package" class="tab-content">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="text-xl font-semibold">Upload Problem Package</h2>
+            <p class="text-sm text-muted">Upload a complete problem package as a ZIP file</p>
+          </div>
+
+          <div class="card-body">
+            <!-- Upload Instructions -->
+            <div class="alert alert-info mb-lg">
+              <h3 class="font-semibold mb-sm">Package Structure Required:</h3>
+              <pre style="background: var(--color-bg-tertiary); padding: var(--spacing-md); border-radius: var(--radius-sm); overflow-x: auto;">problem-name/
+├── problem.yml           # Problem configuration
+├── descriptions/
+│   ├── en.md            # English description
+│   └── es.md            # Spanish description
+├── tests/
+│   ├── samples/         # Sample test cases (visible to users)
+│   │   ├── 1.in
+│   │   └── 1.out
+│   └── hidden/          # Hidden test cases (for judging)
+│       ├── 2.in
+│       └── 2.out
+├── editorials/          # Optional - Problem editorials
+│   ├── en.md            # English editorial
+│   └── es.md            # Spanish editorial
+└── reference/           # Optional - Reference files
+    ├── generator.py     # Test generator (informative)
+    └── solution.py      # Official solution (informative)</pre>
+            </div>
+
+            <!-- Upload Form -->
+            <form id="upload-package-form">
+              <div class="mb-lg">
+                <label class="label">Select Problem Package (ZIP)</label>
+                <div class="flex gap-md items-center">
+                  <input type="file" id="package-file" accept=".zip" class="input" required>
+                  <button type="submit" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/>
+                      <line x1="12" x2="12" y1="3" y2="15"/>
+                    </svg>
+                    <span>Upload Package</span>
+                  </button>
+                </div>
+                <p class="text-sm text-muted mt-sm">Maximum file size: 100MB</p>
+              </div>
+
+              <!-- Upload Progress (Hidden by default) -->
+              <div id="upload-progress" class="mb-lg" style="display: none;">
+                <div class="flex justify-between items-center mb-sm">
+                  <span class="text-sm font-medium">Uploading...</span>
+                  <span class="text-sm text-muted" id="upload-percentage">0%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" id="upload-progress-fill" style="width: 0%;"></div>
+                </div>
+              </div>
+            </form>
+
+            <!-- Upload Result (Hidden by default) -->
+            <div id="upload-result" style="display: none;">
+              <!-- Success or error message will be shown here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MY PROBLEMS TAB -->
+      <div id="tab-my-problems" class="tab-content">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="text-xl font-semibold" data-i18n="problemsetter.myProblems.title">My Problems</h2>
+            <p class="text-sm text-muted" data-i18n="problemsetter.myProblems.subtitle">Track the status of your submitted problems</p>
+          </div>
+
+          <div class="card-body">
+            <!-- Filter by Status -->
+            <div class="mb-lg">
+              <label class="label" data-i18n="problemsetter.myProblems.filterStatus">Filter by Status</label>
+              <select id="status-filter" class="select" onchange="loadMyProblems()">
+                <option value="all" data-i18n="problemsetter.myProblems.allStatuses">All Statuses</option>
+                <option value="pending" data-i18n="problemsetter.myProblems.pending">Pending</option>
+                <option value="approved" data-i18n="problemsetter.myProblems.approved">Approved</option>
+                <option value="rejected" data-i18n="problemsetter.myProblems.rejected">Rejected</option>
+              </select>
+            </div>
+
+            <!-- Loading State -->
+            <div id="my-problems-loading" class="flex items-center justify-center" style="padding: 3rem;">
+              <div class="spinner"></div>
+              <span class="ml-md text-muted" data-i18n="common.loading">Loading...</span>
+            </div>
+
+            <!-- Problems Table -->
+            <div id="my-problems-table-container" style="display: none;">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th data-i18n="problemsetter.myProblems.table.number">ID</th>
+                      <th data-i18n="problemsetter.myProblems.table.title">Title</th>
+                      <th data-i18n="problemsetter.myProblems.table.status">Status</th>
+                      <th data-i18n="problemsetter.myProblems.table.createdAt">Created At</th>
+                      <th data-i18n="problemsetter.myProblems.table.actions">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="my-problems-table-body">
+                    <!-- Problems will be rendered here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="my-problems-empty" class="empty-state" style="display: none;">
+              <div class="empty-state-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-secondary);">
+                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </div>
+              <div class="empty-state-title" data-i18n="problemsetter.myProblems.empty">No problems found</div>
+              <div class="empty-state-description" data-i18n="problemsetter.myProblems.emptyDesc">Create your first problem to get started!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBMISSIONS TAB -->
+      <div id="tab-submissions" class="tab-content">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="text-xl font-semibold" data-i18n="problemsetter.submissions.title">Submissions to My Problems</h2>
+            <p class="text-sm text-muted" data-i18n="problemsetter.submissions.subtitle">View all submissions to your approved problems</p>
+          </div>
+
+          <div class="card-body">
+            <!-- Loading State -->
+            <div id="submissions-loading" class="flex items-center justify-center" style="padding: 3rem;">
+              <div class="spinner"></div>
+              <span class="ml-md text-muted" data-i18n="common.loading">Loading...</span>
+            </div>
+
+            <!-- Submissions Table -->
+            <div id="submissions-table-container" style="display: none;">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th data-i18n="submissions.id">ID</th>
+                      <th data-i18n="submissions.problem">Problem</th>
+                      <th data-i18n="problemsetter.submissions.table.user">User</th>
+                      <th data-i18n="submissions.verdict">Verdict</th>
+                      <th data-i18n="submissions.time">Time</th>
+                      <th data-i18n="submissions.memory">Memory</th>
+                      <th data-i18n="submissions.submittedAt">Submitted At</th>
+                    </tr>
+                  </thead>
+                  <tbody id="submissions-table-body">
+                    <!-- Submissions will be rendered here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="submissions-empty" class="empty-state" style="display: none;">
+              <div class="empty-state-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-secondary);">
+                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </div>
+              <div class="empty-state-title" data-i18n="problemsetter.submissions.empty">No submissions yet</div>
+              <div class="empty-state-description" data-i18n="problemsetter.submissions.emptyDesc">Once your problems are approved, submissions will appear here</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- End tabs-content -->
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@11.0.0/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="/js/i18n.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/components/notifications.js"></script>
+  <script src="/js/components/markdown.js"></script>
+  <script src="/js/problemsetter.js"></script>
+
+  <script>
+    let sampleTestCount = 0;
+    let hiddenTestCount = 0;
+
+    /**
+     * Setup code placeholders that change based on selected language
+     */
+    function setupCodePlaceholders() {
+      const generatorPlaceholders = {
+        python: `# Test case generator for A + B problem
+import random
+
+# Generate two random integers between 1 and 100
+a = random.randint(1, 100)
+b = random.randint(1, 100)
+
+# Print in the format: A B
+print(a, b)`,
+        cpp: `// Test case generator for A + B problem
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int main() {
+    srand(time(0));
+
+    // Generate two random integers between 1 and 100
+    int a = rand() % 100 + 1;
+    int b = rand() % 100 + 1;
+
+    // Print in the format: A B
+    cout << a << " " << b << endl;
+    return 0;
+}`,
+        rust: `// Test case generator for A + B problem
+use rand::Rng;
+
+fn main() {
+    let mut rng = rand::thread_rng();
+
+    // Generate two random integers between 1 and 100
+    let a: i32 = rng.gen_range(1..=100);
+    let b: i32 = rng.gen_range(1..=100);
+
+    // Print in the format: A B
+    println!("{} {}", a, b);
+}`,
+        javascript: `// Test case generator for A + B problem
+
+// Generate two random integers between 1 and 100
+const a = Math.floor(Math.random() * 100) + 1;
+const b = Math.floor(Math.random() * 100) + 1;
+
+// Print in the format: A B
+console.log(a, b);`,
+        go: `// Test case generator for A + B problem
+package main
+
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+func main() {
+    rand.Seed(time.Now().UnixNano())
+
+    // Generate two random integers between 1 and 100
+    a := rand.Intn(100) + 1
+    b := rand.Intn(100) + 1
+
+    // Print in the format: A B
+    fmt.Println(a, b)
+}`
+      };
+
+      const solutionPlaceholders = {
+        python: `# Official solution for A + B problem
+
+# Read input
+a, b = map(int, input().split())
+
+# Calculate and print sum
+print(a + b)`,
+        cpp: `// Official solution for A + B problem
+#include <iostream>
+using namespace std;
+
+int main() {
+    int a, b;
+
+    // Read input
+    cin >> a >> b;
+
+    // Calculate and print sum
+    cout << (a + b) << endl;
+
+    return 0;
+}`,
+        rust: `// Official solution for A + B problem
+use std::io;
+
+fn main() {
+    let mut input = String::new();
+
+    // Read input
+    io::stdin().read_line(&mut input).unwrap();
+    let nums: Vec<i32> = input
+        .trim()
+        .split_whitespace()
+        .map(|s| s.parse().unwrap())
+        .collect();
+
+    let a = nums[0];
+    let b = nums[1];
+
+    // Calculate and print sum
+    println!("{}", a + b);
+}`,
+        javascript: `// Official solution for A + B problem
+const readline = require('readline');
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+rl.on('line', (input) => {
+    // Read input
+    const [a, b] = input.split(' ').map(Number);
+
+    // Calculate and print sum
+    console.log(a + b);
+
+    rl.close();
+});`,
+        go: `// Official solution for A + B problem
+package main
+
+import "fmt"
+
+func main() {
+    var a, b int
+
+    // Read input
+    fmt.Scan(&a, &b)
+
+    // Calculate and print sum
+    fmt.Println(a + b)
+}`
+      };
+
+      // Setup event listeners
+      const generatorLangSelect = document.getElementById('generator-language');
+      const generatorCodeTextarea = document.getElementById('generator-code');
+
+      generatorLangSelect?.addEventListener('change', (e) => {
+        const lang = e.target.value;
+        generatorCodeTextarea.placeholder = generatorPlaceholders[lang] || generatorPlaceholders.python;
+      });
+
+      const solutionLangSelect = document.getElementById('solution-language');
+      const solutionCodeTextarea = document.getElementById('solution-code');
+
+      solutionLangSelect?.addEventListener('change', (e) => {
+        const lang = e.target.value;
+        solutionCodeTextarea.placeholder = solutionPlaceholders[lang] || solutionPlaceholders.python;
+      });
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check authentication
+      if (!Auth.isLoggedIn()) {
+        window.location.href = '/auth/login.html';
+        return;
+      }
+
+      // Require problemsetter or admin role
+      const currentUser = Auth.getCurrentUser();
+      if (currentUser.role !== 'problemsetter' && currentUser.role !== 'admin') {
+        Notifications.show('You do not have permission to access this page', 'error');
+        setTimeout(() => {
+          window.location.href = '/user/dashboard.html';
+        }, 1500);
+        return;
+      }
+
+      // Setup user info in header
+      document.getElementById('username-display').textContent = currentUser.username;
+      document.getElementById('user-avatar').textContent = currentUser.username.charAt(0).toUpperCase();
+
+      // Show problemsetter/admin nav based on role
+      document.getElementById('problemsetter-nav').style.display = 'flex';
+      if (currentUser.role === 'admin') {
+        document.getElementById('admin-nav').style.display = 'flex';
+      }
+
+      // Setup user dropdown
+      setupUserDropdown();
+
+      // Setup language switcher
+      setupLanguageSwitcher();
+
+      // Initialize tabs
+      initTabs();
+
+      // Add initial test cases
+      addSampleTest();
+      addHiddenTest();
+
+      // Setup form submission
+      document.getElementById('create-problem-form').addEventListener('submit', handleFormSubmit);
+
+      // Setup markdown live preview
+      setupMarkdownPreview();
+
+      // Setup language-specific code placeholders
+      setupCodePlaceholders();
+
+      // Load initial data
+      await loadMyProblems();
+
+      // Load categories for problem creation
+      await loadCategories();
+
+      // Load users for @ autocomplete
+      await loadUsers();
+
+      // Setup author autocomplete
+      setupAuthorAutocomplete();
+
+      // Setup upload package form
+      document.getElementById('upload-package-form').addEventListener('submit', handlePackageUpload);
+
+      // Apply i18n
+      window.i18n.updateElements();
+
+      // Check if there's a problem to edit from admin panel
+      const editProblemId = sessionStorage.getItem('editProblemId');
+      if (editProblemId) {
+        sessionStorage.removeItem('editProblemId');
+        // Wait a bit for the page to fully load
+        setTimeout(() => {
+          editProblem(parseInt(editProblemId));
+        }, 500);
+      }
+    });
+
+    /**
+     * Initialize tab switching
+     */
+    function initTabs() {
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tabId = btn.dataset.tab;
+
+          // Update active states
+          tabBtns.forEach(b => b.classList.remove('active'));
+          tabContents.forEach(c => c.classList.remove('active'));
+
+          btn.classList.add('active');
+          document.getElementById(`tab-${tabId}`).classList.add('active');
+
+          // Load data for tab if needed
+          if (tabId === 'my-problems') {
+            loadMyProblems();
+          } else if (tabId === 'submissions') {
+            loadSubmissions();
+          }
+        });
+      });
+    }
+
+    /**
+     * Setup markdown live preview (DEPRECATED - no longer used with structured fields)
+     */
+    function setupMarkdownPreview() {
+      // Deprecated - preview removed in favor of structured fields
+      console.log('Markdown preview disabled - using structured fields');
+    }
+
+    /**
+     * Toggle preview visibility (DEPRECATED - no longer used with new structure)
+     */
+    function togglePreview(lang) {
+      // This function is deprecated but kept for backwards compatibility
+      console.warn('togglePreview is deprecated');
+    }
+
+    /**
+     * Generate markdown description from structured fields
+     * This function shows the structure used for descriptions/en.md and es.md
+     *
+     * Template structure:
+     *
+     * # {title}
+     *
+     * ## Description
+     * {description}
+     *
+     * ## Input
+     * {input_specification}
+     *
+     * ## Output
+     * {output_specification}
+     *
+     * ## Examples
+     *
+     * ### Example 1
+     * **Input:**
+     * ```
+     * {sample_input_1}
+     * ```
+     *
+     * **Output:**
+     * ```
+     * {sample_output_1}
+     * ```
+     *
+     * (Repeat for each sample test case)
+     */
+    function generateMarkdownTemplate(problem, lang = 'en') {
+      const title = lang === 'en' ? problem.title_en : problem.title_es;
+      const descLabel = lang === 'en' ? 'Description' : 'Descripción';
+      const inputLabel = lang === 'en' ? 'Input' : 'Entrada';
+      const outputLabel = lang === 'en' ? 'Output' : 'Salida';
+
+      // Parse description to extract sections
+      const parsed = lang === 'en'
+        ? parseMarkdown(problem.description_en)
+        : parseMarkdownEs(problem.description_es);
+
+      let markdown = `# ${title}\n\n`;
+      markdown += `## ${descLabel}\n${parsed.description}\n\n`;
+      markdown += `## ${inputLabel}\n${parsed.input}\n\n`;
+      markdown += `## ${outputLabel}\n${parsed.output}\n\n`;
+
+      if (problem.sample_tests && problem.sample_tests.length > 0) {
+        markdown += `## Examples\n\n`;
+        problem.sample_tests.forEach((test, index) => {
+          markdown += `### Example ${index + 1}\n`;
+          markdown += `**Input:**\n\`\`\`\n${test.input}\n\`\`\`\n\n`;
+          markdown += `**Output:**\n\`\`\`\n${test.output}\n\`\`\`\n\n`;
+        });
+      }
+
+      return markdown;
+    }
+
+    /**
+     * Add sample test case
+     */
+    function addSampleTest() {
+      sampleTestCount++;
+      const container = document.getElementById('sample-tests-container');
+
+      const testDiv = document.createElement('div');
+      testDiv.className = 'test-case-item mb-md p-md';
+      testDiv.style.background = 'var(--color-bg-secondary)';
+      testDiv.style.borderRadius = 'var(--radius-md)';
+      testDiv.id = `sample-test-${sampleTestCount}`;
+
+      testDiv.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm);">
+          <span class="font-semibold">Sample Test #${sampleTestCount}</span>
+          <button type="button" class="btn btn-sm btn-error" onclick="removeTest('sample-test-${sampleTestCount}')" style="min-width: 100px; height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            <span data-i18n="common.delete">Delete</span>
+          </button>
+        </div>
+        <div class="grid grid-cols-2 gap-md">
+          <div class="form-group">
+            <label class="label text-sm" data-i18n="createProblem.input">Input</label>
+            <textarea class="textarea sample-test-input" rows="3" placeholder="Test input..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="label text-sm" data-i18n="createProblem.expectedOutput">Expected Output</label>
+            <textarea class="textarea sample-test-output" rows="3" placeholder="Expected output..."></textarea>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(testDiv);
+    }
+
+    /**
+     * Add hidden test case
+     */
+    function addHiddenTest() {
+      hiddenTestCount++;
+      const container = document.getElementById('hidden-tests-container');
+
+      const testDiv = document.createElement('div');
+      testDiv.className = 'test-case-item mb-md p-md';
+      testDiv.style.background = 'var(--color-bg-secondary)';
+      testDiv.style.borderRadius = 'var(--radius-md)';
+      testDiv.id = `hidden-test-${hiddenTestCount}`;
+
+      testDiv.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm);">
+          <span class="font-semibold">Hidden Test #${hiddenTestCount}</span>
+          <button type="button" class="btn btn-sm btn-error" onclick="removeTest('hidden-test-${hiddenTestCount}')" style="min-width: 100px; height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            <span data-i18n="common.delete">Delete</span>
+          </button>
+        </div>
+        <div class="grid grid-cols-2 gap-md">
+          <div class="form-group">
+            <label class="label text-sm" data-i18n="createProblem.input">Input</label>
+            <textarea class="textarea hidden-test-input" rows="3" placeholder="Test input..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="label text-sm" data-i18n="createProblem.expectedOutput">Expected Output</label>
+            <textarea class="textarea hidden-test-output" rows="3" placeholder="Expected output..."></textarea>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(testDiv);
+    }
+
+    /**
+     * Remove test case
+     */
+    function removeTest(testId) {
+      const test = document.getElementById(testId);
+      if (test) {
+        test.remove();
+      }
+    }
+
+    /**
+     * Handle test cases ZIP upload
+     */
+    async function handleTestCasesZipUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      try {
+        Notifications.show('Reading ZIP file...', 'info');
+
+        // Read the ZIP file
+        const zip = await JSZip.loadAsync(file);
+
+        // Clear existing test cases
+        document.getElementById('sample-tests-container').innerHTML = '';
+        document.getElementById('hidden-tests-container').innerHTML = '';
+        sampleTestCount = 0;
+        hiddenTestCount = 0;
+
+        // Track test cases to add
+        const sampleTests = [];
+        const hiddenTests = [];
+
+        // Process files in the ZIP
+        for (const [path, zipEntry] of Object.entries(zip.files)) {
+          if (zipEntry.dir) continue;
+
+          // Check if file is in tests/samples/ or tests/hidden/
+          if (path.startsWith('tests/samples/')) {
+            const filename = path.replace('tests/samples/', '');
+            const content = await zipEntry.async('text');
+
+            if (filename.endsWith('.in')) {
+              const testNum = filename.replace('.in', '');
+              if (!sampleTests[testNum]) sampleTests[testNum] = {};
+              sampleTests[testNum].input = content;
+            } else if (filename.endsWith('.out')) {
+              const testNum = filename.replace('.out', '');
+              if (!sampleTests[testNum]) sampleTests[testNum] = {};
+              sampleTests[testNum].output = content;
+            }
+          } else if (path.startsWith('tests/hidden/')) {
+            const filename = path.replace('tests/hidden/', '');
+            const content = await zipEntry.async('text');
+
+            if (filename.endsWith('.in')) {
+              const testNum = filename.replace('.in', '');
+              if (!hiddenTests[testNum]) hiddenTests[testNum] = {};
+              hiddenTests[testNum].input = content;
+            } else if (filename.endsWith('.out')) {
+              const testNum = filename.replace('.out', '');
+              if (!hiddenTests[testNum]) hiddenTests[testNum] = {};
+              hiddenTests[testNum].output = content;
+            }
+          }
+        }
+
+        // Add sample tests
+        for (const test of sampleTests) {
+          if (test && test.input !== undefined && test.output !== undefined) {
+            addSampleTest();
+            const inputs = document.querySelectorAll('.sample-test-input');
+            const outputs = document.querySelectorAll('.sample-test-output');
+            const lastIndex = inputs.length - 1;
+            inputs[lastIndex].value = test.input;
+            outputs[lastIndex].value = test.output;
+          }
+        }
+
+        // Add hidden tests
+        for (const test of hiddenTests) {
+          if (test && test.input !== undefined && test.output !== undefined) {
+            addHiddenTest();
+            const inputs = document.querySelectorAll('.hidden-test-input');
+            const outputs = document.querySelectorAll('.hidden-test-output');
+            const lastIndex = inputs.length - 1;
+            inputs[lastIndex].value = test.input;
+            outputs[lastIndex].value = test.output;
+          }
+        }
+
+        const totalTests = sampleTests.filter(Boolean).length + hiddenTests.filter(Boolean).length;
+        Notifications.show(`Loaded ${totalTests} test cases from ZIP`, 'success');
+
+        // Reset the file input
+        event.target.value = '';
+
+      } catch (error) {
+        console.error('Error reading ZIP file:', error);
+        Notifications.show('Failed to read ZIP file. Please check the format.', 'error');
+        event.target.value = '';
+      }
+    }
+
+    /**
+     * Handle form submission
+     */
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      console.log('[SUBMIT] Form submitted');
+
+      const user = Auth.getCurrentUser();
+
+      // Gather structured fields
+      const desc_en = document.getElementById('description-en').value.trim();
+      const desc_es = document.getElementById('description-es').value.trim();
+      const input_en = document.getElementById('input-spec-en').value.trim();
+      const input_es = document.getElementById('input-spec-es').value.trim();
+      const output_en = document.getElementById('output-spec-en').value.trim();
+      const output_es = document.getElementById('output-spec-es').value.trim();
+
+      // Auto-generate markdown descriptions with structured sections
+      const description_en = `## Description\n${desc_en}\n\n## Input\n${input_en}\n\n## Output\n${output_en}`;
+      const description_es = `## Descripción\n${desc_es}\n\n## Entrada\n${input_es}\n\n## Salida\n${output_es}`;
+
+      // Gather form data
+      const problemData = {
+        title_en: document.getElementById('title-en').value.trim(),
+        title_es: document.getElementById('title-es').value.trim(),
+        description_en: description_en,
+        description_es: description_es,
+        time_limit: parseInt(document.getElementById('time-limit').value),
+        memory_limit: parseInt(document.getElementById('memory-limit').value),
+        authors: window.authors || [],
+        author_note: document.getElementById('author-note')?.value?.trim() || null,
+        categories: window.selectedCategories || [],
+        subcategories: window.selectedSubcategories || [],
+        editorial_visibility: document.getElementById('editorial-visibility')?.value || 'always',
+        // Note: created_by is set automatically by backend based on current user
+        // status will be set to 'pending' by backend
+      };
+
+      // Gather sample tests
+      const sampleTests = [];
+      document.querySelectorAll('.sample-test-input').forEach((input, index) => {
+        const output = document.querySelectorAll('.sample-test-output')[index];
+        if (input.value.trim() || output.value.trim()) {
+          sampleTests.push({
+            input: input.value.trim(),
+            expected_output: output.value.trim(),
+            is_sample: true
+          });
+        }
+      });
+
+      // Gather hidden tests
+      const hiddenTests = [];
+      document.querySelectorAll('.hidden-test-input').forEach((input, index) => {
+        const output = document.querySelectorAll('.hidden-test-output')[index];
+        if (input.value.trim() || output.value.trim()) {
+          hiddenTests.push({
+            input: input.value.trim(),
+            expected_output: output.value.trim(),
+            is_sample: false
+          });
+        }
+      });
+
+      // Validate
+      if (!problemData.title_en || !problemData.title_es) {
+        Notifications.show('Please provide titles in both languages', 'error');
+        return;
+      }
+
+      if (!desc_en || !desc_es) {
+        Notifications.show('Please provide descriptions in both languages', 'error');
+        return;
+      }
+
+      if (!input_en || !input_es) {
+        Notifications.show('Please provide input specifications in both languages', 'error');
+        return;
+      }
+
+      if (!output_en || !output_es) {
+        Notifications.show('Please provide output specifications in both languages', 'error');
+        return;
+      }
+
+      if (!problemData.categories || problemData.categories.length === 0) {
+        Notifications.show('Please select at least one category', 'error');
+        return;
+      }
+
+      if (sampleTests.length === 0) {
+        Notifications.show('Please add at least one sample test case', 'error');
+        return;
+      }
+
+      if (hiddenTests.length === 0) {
+        Notifications.show('Please add at least one hidden test case', 'error');
+        return;
+      }
+
+      try {
+        // Check if we're editing or creating
+        if (editingProblemId) {
+          // UPDATE mode
+          console.log('[UPDATE] Updating problem ID:', editingProblemId);
+          console.log('[UPDATE] Problem data:', problemData);
+          console.log('[UPDATE] Sample tests:', sampleTests);
+          console.log('[UPDATE] Hidden tests:', hiddenTests);
+
+          // Include test cases in update
+          const result = await API.updateProblem(editingProblemId, {
+            ...problemData,
+            sample_tests: sampleTests,
+            hidden_tests: hiddenTests
+          });
+
+          Notifications.show('Problem updated successfully!', 'success');
+
+          // Reset edit mode
+          editingProblemId = null;
+
+          // Reset submit button
+          const submitBtn = document.querySelector('#create-problem-form button[type="submit"]');
+          submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span data-i18n="problemsetter.create.submit">Submit Problem for Review</span>';
+          submitBtn.classList.remove('btn-success');
+          submitBtn.classList.add('btn-primary');
+
+          // Remove cancel button
+          const cancelBtn = document.querySelector('.cancel-edit-btn');
+          if (cancelBtn) cancelBtn.remove();
+
+          // Reset form
+          resetForm();
+
+          // Switch to My Problems tab
+          document.querySelector('[data-tab="my-problems"]').click();
+        } else {
+          // CREATE mode
+          const result = await API.createProblem({
+            ...problemData,
+            sample_tests: sampleTests,
+            hidden_tests: hiddenTests
+          });
+
+          Notifications.show('Problem submitted successfully! Awaiting admin approval.', 'success');
+
+          // Upload editorial and reference files if provided
+          await uploadEditorialAndReferenceFiles(result.id);
+
+          // Reset form
+          resetForm();
+
+          // Switch to My Problems tab
+          document.querySelector('[data-tab="my-problems"]').click();
+        }
+      } catch (error) {
+        console.error('Failed to save problem:', error);
+        Notifications.show('Failed to save problem', 'error');
+      }
+    }
+
+    /**
+     * Reset form
+     */
+    function resetForm() {
+      document.getElementById('create-problem-form').reset();
+
+      // Clear test cases
+      document.getElementById('sample-tests-container').innerHTML = '';
+      document.getElementById('hidden-tests-container').innerHTML = '';
+      sampleTestCount = 0;
+      hiddenTestCount = 0;
+
+      // Add initial tests back
+      addSampleTest();
+      addHiddenTest();
+
+      // Clear previews (DEPRECATED - no longer used)
+      // document.querySelector('#preview-en .p-md').innerHTML = '';
+      // document.querySelector('#preview-es .p-md').innerHTML = '';
+
+      // Clear authors
+      window.authors = [];
+      renderAuthors();
+
+      // Clear categories and subcategories
+      window.selectedCategories = [];
+      window.selectedSubcategories = [];
+      renderCategories();  // Re-render to clear checked state
+      renderSubcategories();  // Re-render to clear checked state
+    }
+
+    /**
+     * Upload editorial and reference files for a problem
+     */
+    async function uploadEditorialAndReferenceFiles(problemId) {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        // Upload editorials (as text content)
+        const editorialEN = document.getElementById('editorial-en')?.value?.trim();
+        const editorialES = document.getElementById('editorial-es')?.value?.trim();
+
+        if (editorialEN) {
+          try {
+            // Create a Blob from the text content
+            const blob = new Blob([editorialEN], { type: 'text/markdown' });
+            const formData = new FormData();
+            formData.append('file', blob, 'en.md');
+
+            const response = await fetch(`/api/problems/${problemId}/upload-editorial?language=en`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`
+              },
+              body: formData
+            });
+
+            if (response.ok) {
+              console.log('✅ Uploaded editorial (en)');
+            } else {
+              console.error('❌ Failed to upload editorial (en)');
+            }
+          } catch (error) {
+            console.error('Error uploading editorial (en):', error);
+          }
+        }
+
+        if (editorialES) {
+          try {
+            const blob = new Blob([editorialES], { type: 'text/markdown' });
+            const formData = new FormData();
+            formData.append('file', blob, 'es.md');
+
+            const response = await fetch(`/api/problems/${problemId}/upload-editorial?language=es`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`
+              },
+              body: formData
+            });
+
+            if (response.ok) {
+              console.log('✅ Uploaded editorial (es)');
+            } else {
+              console.error('❌ Failed to upload editorial (es)');
+            }
+          } catch (error) {
+            console.error('Error uploading editorial (es):', error);
+          }
+        }
+
+        // Update editorial visibility
+        if (editorialEN || editorialES) {
+          const visibility = document.getElementById('editorial-visibility')?.value || 'always';
+          await fetch(`/api/problems/${problemId}/editorial-visibility?visibility=${visibility}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+        }
+
+        // Upload reference files (generator and solution as code)
+        const languageExtensions = {
+          python: 'py',
+          cpp: 'cpp',
+          rust: 'rs',
+          javascript: 'js',
+          go: 'go'
+        };
+
+        // Upload Test Generator
+        const generatorCode = document.getElementById('generator-code')?.value?.trim();
+        const generatorLang = document.getElementById('generator-language')?.value || 'python';
+
+        if (generatorCode) {
+          try {
+            const ext = languageExtensions[generatorLang];
+            const blob = new Blob([generatorCode], { type: 'text/plain' });
+            const formData = new FormData();
+            formData.append('file', blob, `generator.${ext}`);
+
+            const response = await fetch(`/api/problems/${problemId}/upload-reference-file?file_type=generator`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`
+              },
+              body: formData
+            });
+
+            if (response.ok) {
+              console.log(`✅ Uploaded generator (${generatorLang})`);
+            } else {
+              console.error('❌ Failed to upload generator');
+            }
+          } catch (error) {
+            console.error('Error uploading generator:', error);
+          }
+        }
+
+        // Upload Official Solution
+        const solutionCode = document.getElementById('solution-code')?.value?.trim();
+        const solutionLang = document.getElementById('solution-language')?.value || 'python';
+
+        if (solutionCode) {
+          try {
+            const ext = languageExtensions[solutionLang];
+            const blob = new Blob([solutionCode], { type: 'text/plain' });
+            const formData = new FormData();
+            formData.append('file', blob, `solution.${ext}`);
+
+            const response = await fetch(`/api/problems/${problemId}/upload-reference-file?file_type=solution`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`
+              },
+              body: formData
+            });
+
+            if (response.ok) {
+              console.log(`✅ Uploaded solution (${solutionLang})`);
+            } else {
+              console.error('❌ Failed to upload solution');
+            }
+          } catch (error) {
+            console.error('Error uploading solution:', error);
+          }
+        }
+      } catch (error) {
+        console.error('Error in uploadEditorialAndReferenceFiles:', error);
+      }
+    }
+
+    /**
+     * Load my problems
+     */
+    async function loadMyProblems() {
+      const loading = document.getElementById('my-problems-loading');
+      const tableContainer = document.getElementById('my-problems-table-container');
+      const tbody = document.getElementById('my-problems-table-body');
+      const emptyState = document.getElementById('my-problems-empty');
+
+      loading.style.display = 'flex';
+      tableContainer.style.display = 'none';
+      emptyState.style.display = 'none';
+
+      try {
+        const user = Auth.getCurrentUser();
+        const statusFilter = document.getElementById('status-filter')?.value || 'all';
+
+        // Get all problems and filter by creator
+        const allProblems = await API.getProblems();
+        console.log('[DEBUG] User:', user);
+        console.log('[DEBUG] All problems:', allProblems);
+
+        // Filter by user ID (created_by is numeric ID, not username)
+        let myProblems = allProblems.filter(p => p.created_by === user.id);
+        console.log('[DEBUG] My problems:', myProblems);
+
+        // Apply status filter
+        if (statusFilter !== 'all') {
+          myProblems = myProblems.filter(p => p.status === statusFilter);
+        }
+
+        if (myProblems.length === 0) {
+          emptyState.style.display = 'block';
+        } else {
+          const lang = window.i18n.currentLang;
+
+          tbody.innerHTML = myProblems.map(problem => {
+            const statusClass = problem.status === 'pending' ? 'badge-warning' :
+                               problem.status === 'approved' ? 'badge-success' : 'badge-error';
+
+            const title = lang === 'es' ? problem.title_es : problem.title_en;
+
+            return `
+              <tr>
+                <td><strong>${problem.id}</strong></td>
+                <td>
+                  <a href="#" onclick="editProblem(${problem.id}); return false;"
+                     class="font-semibold"
+                     style="color: var(--primary); text-decoration: none; cursor: pointer;">
+                    ${title}
+                  </a>
+                </td>
+                <td>
+                  <span class="badge ${statusClass}">
+                    ${problem.status.toUpperCase()}
+                  </span>
+                </td>
+                <td class="text-sm text-muted">${formatDate(problem.created_at)}</td>
+                <td>
+                  <div style="display: flex; gap: 8px;">
+                    ${problem.status === 'approved' ? `
+                      <a href="/problems/detail.html?id=${problem.id}" class="btn btn-sm btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <span data-i18n="common.view">View</span>
+                      </a>
+                    ` : `
+                      <a href="/problems/detail.html?id=${problem.id}" class="btn btn-sm btn-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>
+                        <span>Test</span>
+                      </a>
+                    `}
+                    <button onclick="editProblem(${problem.id})" class="btn btn-sm btn-secondary">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                      <span>Edit</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          }).join('');
+
+          tableContainer.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Failed to load problems:', error);
+        Notifications.show('Failed to load problems', 'error');
+      } finally {
+        loading.style.display = 'none';
+      }
+    }
+
+    /**
+     * Load submissions to my problems
+     */
+    async function loadSubmissions() {
+      const loading = document.getElementById('submissions-loading');
+      const tableContainer = document.getElementById('submissions-table-container');
+      const tbody = document.getElementById('submissions-table-body');
+      const emptyState = document.getElementById('submissions-empty');
+
+      loading.style.display = 'flex';
+      tableContainer.style.display = 'none';
+      emptyState.style.display = 'none';
+
+      try {
+        const user = Auth.getCurrentUser();
+
+        // Get all problems by this problemsetter
+        const allProblems = await API.getProblems();
+        const myProblems = allProblems.filter(p =>
+          p.created_by === user.id && p.status === 'approved'
+        );
+
+        if (myProblems.length === 0) {
+          emptyState.style.display = 'block';
+          loading.style.display = 'none';
+          return;
+        }
+
+        // For now, show mock submissions (in real app would filter by problem_id)
+        // This is simplified for the mock
+        const submissions = [];
+
+        // Mock: Show some submissions (simulated)
+        // In reality, we'd call an API that filters submissions by problem creator
+
+        if (submissions.length === 0) {
+          emptyState.style.display = 'block';
+        } else {
+          tbody.innerHTML = submissions.map(sub => {
+            const verdictClass = sub.verdict === 'AC' ? 'badge-success' :
+                                sub.verdict === 'WA' ? 'badge-error' :
+                                sub.verdict === 'TLE' ? 'badge-warning' :
+                                sub.verdict === 'MLE' ? 'badge-info' :
+                                sub.verdict === 'RE' ? 'badge-error' : 'badge-warning';
+
+            return `
+              <tr>
+                <td>${sub.id}</td>
+                <td>${sub.problem_title}</td>
+                <td>${sub.username || 'User ' + sub.user_id}</td>
+                <td>
+                  <span class="badge ${verdictClass}">${sub.verdict}</span>
+                </td>
+                <td>${sub.execution_time}ms</td>
+                <td>${(sub.memory_used / 1024).toFixed(1)} KB</td>
+                <td class="text-sm text-muted">${timeAgo(sub.submitted_at)}</td>
+              </tr>
+            `;
+          }).join('');
+
+          tableContainer.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Failed to load submissions:', error);
+        Notifications.show('Failed to load submissions', 'error');
+      } finally {
+        loading.style.display = 'none';
+      }
+    }
+
+    /**
+     * Format date helper
+     */
+    function formatDate(dateString) {
+      if (!dateString) return '-';
+      const date = new Date(dateString);
+      return date.toLocaleDateString();
+    }
+
+    /**
+     * Time ago helper
+     */
+    function timeAgo(dateString) {
+      const date = new Date(dateString);
+      const seconds = Math.floor((new Date() - date) / 1000);
+
+      if (seconds < 60) return 'Just now';
+      if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+      if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+      return Math.floor(seconds / 86400) + 'd ago';
+    }
+
+    /**
+     * Edit problem - Load problem data and switch to edit mode
+     */
+    let editingProblemId = null;
+
+    async function editProblem(problemId) {
+      try {
+        console.log('[EDIT] Loading problem', problemId);
+
+        // Fetch problem details
+        const problem = await API.getProblem(problemId);
+        console.log('[EDIT] Problem loaded:', problem);
+
+        // Switch to Create tab
+        document.querySelector('[data-tab="create"]').click();
+
+        // Parse markdown to extract sections
+        const parseMarkdown = (markdown) => {
+          const descMatch = markdown.match(/## Description\n([\s\S]*?)(?=\n##|$)/i);
+          const inputMatch = markdown.match(/## Input\n([\s\S]*?)(?=\n##|$)/i);
+          const outputMatch = markdown.match(/## Output\n([\s\S]*?)(?=\n##|$)/i);
+
+          return {
+            description: descMatch ? descMatch[1].trim() : markdown.split(/\n##/)[0].trim(),
+            input: inputMatch ? inputMatch[1].trim() : '',
+            output: outputMatch ? outputMatch[1].trim() : ''
+          };
+        };
+
+        const parseMarkdownEs = (markdown) => {
+          const descMatch = markdown.match(/## Descripción\n([\s\S]*?)(?=\n##|$)/i);
+          const inputMatch = markdown.match(/## Entrada\n([\s\S]*?)(?=\n##|$)/i);
+          const outputMatch = markdown.match(/## Salida\n([\s\S]*?)(?=\n##|$)/i);
+
+          return {
+            description: descMatch ? descMatch[1].trim() : markdown.split(/\n##/)[0].trim(),
+            input: inputMatch ? inputMatch[1].trim() : '',
+            output: outputMatch ? outputMatch[1].trim() : ''
+          };
+        };
+
+        const parsed_en = parseMarkdown(problem.description_en);
+        const parsed_es = parseMarkdownEs(problem.description_es);
+
+        // Fill form with problem data
+        document.getElementById('title-en').value = problem.title_en;
+        document.getElementById('title-es').value = problem.title_es;
+        document.getElementById('description-en').value = parsed_en.description;
+        document.getElementById('description-es').value = parsed_es.description;
+        document.getElementById('input-spec-en').value = parsed_en.input;
+        document.getElementById('input-spec-es').value = parsed_es.input;
+        document.getElementById('output-spec-en').value = parsed_en.output;
+        document.getElementById('output-spec-es').value = parsed_es.output;
+        document.getElementById('time-limit').value = problem.time_limit;
+        document.getElementById('memory-limit').value = problem.memory_limit;
+
+        // Restore authors
+        window.authors = problem.authors || [];
+        const authorsContainer = document.getElementById('authors-container');
+        if (authorsContainer) {
+          authorsContainer.innerHTML = '';
+          window.authors.forEach(author => {
+            const tag = document.createElement('span');
+            tag.className = 'tag';
+            tag.innerHTML = `${author} <button type="button" onclick="removeAuthor('${author}')">&times;</button>`;
+            authorsContainer.appendChild(tag);
+          });
+        }
+
+        // Restore author note
+        const authorNoteField = document.getElementById('author-note');
+        if (authorNoteField) {
+          authorNoteField.value = problem.author_note || '';
+        }
+
+        // Restore categories (extract codes from objects)
+        window.selectedCategories = (problem.categories || []).map(cat => cat.code || cat);
+        renderCategories();  // Re-render to apply checked state
+
+        // Restore subcategories (extract codes from objects)
+        window.selectedSubcategories = (problem.subcategories || []).map(subcat => subcat.code || subcat);
+        renderSubcategories();  // Re-render to apply checked state
+
+        // Clear existing test cases
+        document.getElementById('sample-tests-container').innerHTML = '';
+        document.getElementById('hidden-tests-container').innerHTML = '';
+        sampleTestCount = 0;
+        hiddenTestCount = 0;
+
+        // Load test cases
+        if (problem.test_cases && problem.test_cases.length > 0) {
+          problem.test_cases.forEach(testCase => {
+            if (testCase.is_sample) {
+              // Add sample test
+              addSampleTest();
+              const inputs = document.querySelectorAll('.sample-test-input');
+              const outputs = document.querySelectorAll('.sample-test-output');
+              const lastIndex = inputs.length - 1;
+              inputs[lastIndex].value = testCase.input_file || '';
+              outputs[lastIndex].value = testCase.output_file || '';
+            } else {
+              // Add hidden test
+              addHiddenTest();
+              const inputs = document.querySelectorAll('.hidden-test-input');
+              const outputs = document.querySelectorAll('.hidden-test-output');
+              const lastIndex = inputs.length - 1;
+              inputs[lastIndex].value = testCase.input_file || '';
+              outputs[lastIndex].value = testCase.output_file || '';
+            }
+          });
+        } else {
+          // If no test cases, add at least one of each
+          addSampleTest();
+          addHiddenTest();
+        }
+
+        // Load editorial files (EN and ES)
+        try {
+          const editorialEN = await API.getProblemEditorial(problemId, 'en');
+          if (editorialEN) {
+            document.getElementById('editorial-en').value = editorialEN;
+          }
+        } catch (error) {
+          console.log('[EDIT] No editorial EN found');
+        }
+
+        try {
+          const editorialES = await API.getProblemEditorial(problemId, 'es');
+          if (editorialES) {
+            document.getElementById('editorial-es').value = editorialES;
+          }
+        } catch (error) {
+          console.log('[EDIT] No editorial ES found');
+        }
+
+        // Load test generator
+        try {
+          const testGenerator = await API.getProblemReferenceFile(problemId, 'test_generator');
+          if (testGenerator) {
+            document.getElementById('generator-code').value = testGenerator;
+          }
+        } catch (error) {
+          console.log('[EDIT] No test generator found');
+        }
+
+        // Load official solution
+        try {
+          const officialSolution = await API.getProblemReferenceFile(problemId, 'official_solution');
+          if (officialSolution) {
+            document.getElementById('solution-code').value = officialSolution;
+          }
+        } catch (error) {
+          console.log('[EDIT] No official solution found');
+        }
+
+        // Store editing problem ID
+        editingProblemId = problemId;
+
+        // Change submit button text and style
+        const submitBtn = document.querySelector('#create-problem-form button[type="submit"]');
+        submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> <span>Update Problem</span>';
+        submitBtn.classList.remove('btn-primary');
+        submitBtn.classList.add('btn-success');
+
+        // Add cancel button
+        const cancelBtn = document.createElement('button');
+        cancelBtn.type = 'button';
+        cancelBtn.className = 'btn btn-outline';
+        cancelBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> <span>Cancel Edit</span>';
+        cancelBtn.onclick = cancelEdit;
+
+        const btnContainer = submitBtn.parentElement;
+        if (!btnContainer.querySelector('.cancel-edit-btn')) {
+          cancelBtn.classList.add('cancel-edit-btn');
+          btnContainer.insertBefore(cancelBtn, submitBtn.nextSibling);
+        }
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        Notifications.info('Editing mode activated. Make changes and click "Update Problem"');
+      } catch (error) {
+        console.error('[EDIT] Failed to load problem:', error);
+        Notifications.error('Failed to load problem for editing');
+      }
+    }
+
+    /**
+     * Cancel edit mode
+     */
+    function cancelEdit() {
+      editingProblemId = null;
+
+      // Reset submit button
+      const submitBtn = document.querySelector('#create-problem-form button[type="submit"]');
+      submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span data-i18n="problemsetter.create.submit">Submit Problem for Review</span>';
+      submitBtn.classList.remove('btn-success');
+      submitBtn.classList.add('btn-primary');
+
+      // Remove cancel button
+      const cancelBtn = document.querySelector('.cancel-edit-btn');
+      if (cancelBtn) cancelBtn.remove();
+
+      // Reset form
+      resetForm();
+
+      Notifications.info('Edit cancelled');
+    }
+
+    /**
+     * Setup user dropdown
+     */
+    function setupUserDropdown() {
+      const trigger = document.getElementById('user-menu-trigger');
+      const dropdown = document.getElementById('user-dropdown');
+      const logoutBtn = document.getElementById('logout-btn');
+
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('active');
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.remove('active');
+        }
+      });
+
+      logoutBtn.addEventListener('click', function() {
+        Auth.logout();
+        window.location.href = '/auth/login.html';
+      });
+    }
+
+    /**
+     * Setup language switcher
+     */
+    function setupLanguageSwitcher() {
+      const currentLang = window.i18n?.currentLang || 'en';
+      const langSelector = document.getElementById('language-selector');
+      if (langSelector) {
+        langSelector.value = currentLang;
+        langSelector.addEventListener('change', (e) => {
+          if (window.i18n && window.i18n.setLanguage) {
+            window.i18n.setLanguage(e.target.value);
+            location.reload();
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>

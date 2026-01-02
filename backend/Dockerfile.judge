@@ -1,0 +1,159 @@
+# CodeProof Judge System - Complete Docker Image
+# Includes isolate sandbox + all compilers (Python, C++, Rust, Node.js, Go)
+# Size: ~2-3GB
+
+FROM ubuntu:22.04
+
+# Prevent interactive prompts during build
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# ============================================
+# SYSTEM DEPENDENCIES
+# ============================================
+RUN apt-get update && apt-get install -y \
+    # Build tools
+    build-essential \
+    git \
+    curl \
+    wget \
+    pkg-config \
+    libssl-dev \
+    # Python 3.10
+    python3.10 \
+    python3.10-dev \
+    python3-pip \
+    python3.10-venv \
+    # C++ compiler (GCC 12)
+    g++-12 \
+    gcc-12 \
+    # Required for isolate
+    libcap-dev \
+    libsystemd-dev \
+    # PostgreSQL client libraries
+    libpq-dev \
+    # Utilities
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set gcc-12 and g++-12 as default
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 100 && \
+    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 100
+
+# ============================================
+# INSTALL ISOLATE SANDBOX
+# ============================================
+WORKDIR /tmp
+RUN git clone https://github.com/ioi/isolate.git && \
+    cd isolate && \
+    make isolate && \
+    make install && \
+    cd .. && \
+    rm -rf isolate
+
+# ============================================
+# INSTALL RUST
+# ============================================
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:$PATH
+
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable && \
+    chmod -R a+w $RUSTUP_HOME $CARGO_HOME && \
+    rustup --version && \
+    cargo --version && \
+    rustc --version && \
+    # Copy rustc to standard location
+    cp /usr/local/cargo/bin/rustc /usr/local/bin/rustc
+
+# Set Rust library path for runtime
+ENV RUST_LIB_PATH=/usr/local/rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib \
+    LD_LIBRARY_PATH=/usr/local/rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib:${LD_LIBRARY_PATH}
+
+# ============================================
+# INSTALL NODE.JS 18 LTS
+# ============================================
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    node --version && \
+    npm --version && \
+    # Copy node to standard location (already in /usr/bin)
+    cp /usr/bin/node /usr/local/bin/node
+
+# ============================================
+# INSTALL GO 1.21
+# ============================================
+ENV GO_VERSION=1.21.6
+RUN wget https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz && \
+    rm go${GO_VERSION}.linux-amd64.tar.gz && \
+    /usr/local/go/bin/go version
+
+ENV PATH=/usr/local/go/bin:$PATH
+
+# ============================================
+# CREATE APP DIRECTORY AND USER
+# ============================================
+WORKDIR /app
+
+# Create codeproof user with specific UID/GID for consistency
+RUN groupadd -g 1000 codeproof && \
+    useradd -m -u 1000 -g codeproof codeproof
+
+# ============================================
+# INSTALL PYTHON DEPENDENCIES
+# ============================================
+# Upgrade pip
+RUN python3.10 -m pip install --upgrade pip
+
+# Copy requirements first (for Docker layer caching)
+COPY requirements.txt .
+RUN python3.10 -m pip install -r requirements.txt
+
+# ============================================
+# COPY APPLICATION CODE
+# ============================================
+COPY . .
+
+# ============================================
+# CONFIGURE ISOLATE
+# ============================================
+# Create isolate directories
+RUN mkdir -p /var/local/lib/isolate && \
+    mkdir -p /run/isolate && \
+    chmod 755 /var/local/lib/isolate
+
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# ============================================
+# SET DEFAULT COMPILER PATHS (for .env defaults)
+# ============================================
+ENV PYTHON_BINARY=/usr/bin/python3.10 \
+    CPP_COMPILER=/usr/bin/g++-12 \
+    RUST_COMPILER=/usr/local/bin/rustc \
+    NODEJS_BINARY=/usr/local/bin/node \
+    GO_COMPILER=/usr/local/go/bin/go \
+    NODEJS_PROCESSES=16
+
+# ============================================
+# PERMISSIONS
+# ============================================
+RUN chown -R codeproof:codeproof /app
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Use entrypoint script to set up isolate
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
+# Default command (can be overridden by docker-compose)
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

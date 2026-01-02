@@ -1,0 +1,371 @@
+# =============================================================================
+# CodeProof - .gitignore
+# =============================================================================
+
+# =============================================================================
+# ENVIRONMENT & SECRETS
+# =============================================================================
+.env
+.env.local
+.env.production
+.env.*.local
+*.key
+*.pem
+secrets/
+
+# =============================================================================
+# PYTHON
+# =============================================================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# =============================================================================
+# ALEMBIC (Database Migrations)
+# =============================================================================
+# Keep migrations folder but ignore auto-generated files
+# alembic/versions/*.py  # Uncomment to ignore migration files
+
+# =============================================================================
+# DOCKER
+# =============================================================================
+# Docker volumes and data
+docker-compose.override.yml
+.dockerignore
+*.dockerfile
+.docker/
+
+# =============================================================================
+# DATABASE
+# =============================================================================
+*.db
+*.sqlite
+*.sqlite3
+postgres-data/
+pgdata/
+*.sql.gz
+
+# =============================================================================
+# REDIS
+# =============================================================================
+dump.rdb
+*.rdb
+
+# =============================================================================
+# LOGS
+# =============================================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# =============================================================================
+# NODE.JS (for future frontend tooling)
+# =============================================================================
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+.npm
+.eslintcache
+.node_repl_history
+*.tgz
+.yarn-integrity
+
+# =============================================================================
+# IDEs & EDITORS
+# =============================================================================
+
+# VSCode
+.vscode/
+!.vscode/settings.json.example
+!.vscode/extensions.json
+*.code-workspace
+
+# PyCharm / IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.vim/
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# =============================================================================
+# OPERATING SYSTEMS
+# =============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+.directory
+.Trash-*
+.nfs*
+
+# =============================================================================
+# PROJECT SPECIFIC
+# =============================================================================
+
+# =============================================================================
+# PROBLEM DATA (Content, not Platform)
+# =============================================================================
+# IMPORTANT: Problems are separate from the platform
+# Each instance manages its own problems locally
+# Problem repositories (like codeproof/problems) are separate GitHub repos
+
+# Data directory (persisted in Docker volumes, not in Git)
+data/
+data/problems/
+data/backups/
+data/exports/
+
+# Problem packages
+*.zip
+problems/
+!backend/app/tests/fixtures/*.zip  # Keep test fixtures
+
+# =============================================================================
+
+# Submission storage
+storage/
+submissions/
+!storage/.gitkeep
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Test output
+test-results/
+test-output/
+
+# Code execution temp files
+/code_runner/temp/
+*.pyc.tmp
+
+# Generated files
+generated/
+
+# =============================================================================
+# DEPLOYMENT
+# =============================================================================
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# SSL certificates (except examples)
+*.crt
+*.cer
+*.der
+!example.crt
+
+# =============================================================================
+# DEVELOPMENT TOOLS
+# =============================================================================
+
+# Coverage
+.coverage
+htmlcov/
+
+# Profiling
+*.prof
+*.lprof
+
+# Performance testing
+locust/
+.locust/
+
+# =============================================================================
+# KEEP THESE FILES
+# =============================================================================
+!.gitkeep
+!.env.example
+!README.md

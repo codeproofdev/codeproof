@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Initial Setup - CodeProof</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/styles-minimal-dark.css">
+  <style>
+    /* Additional styles for setup page - Minimal Dark Theme */
+    body {
+      background: var(--bg-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-lg);
+    }
+
+    .setup-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      max-width: 500px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .setup-header {
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: var(--spacing-2xl) var(--spacing-xl);
+      text-align: center;
+    }
+
+    .setup-header h1 {
+      color: var(--text-primary);
+      font-size: 2rem;
+      margin-bottom: var(--spacing-xs);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .setup-header p {
+      color: var(--text-secondary);
+      font-size: var(--fs-sm);
+      margin-top: var(--spacing-sm);
+    }
+
+    .setup-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .setup-icon svg {
+      width: 64px;
+      height: 64px;
+      stroke-width: 1.5;
+      color: var(--accent-orange);
+    }
+
+    .setup-body {
+      padding: var(--spacing-2xl) var(--spacing-xl);
+    }
+
+    .setup-info {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-left: 3px solid var(--accent-orange);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .setup-info-title {
+      font-size: var(--fs-base);
+      font-weight: 600;
+      color: var(--accent-orange);
+      margin-bottom: var(--spacing-sm);
+      font-family: var(--font-mono);
+    }
+
+    .setup-info-text {
+      font-size: var(--fs-sm);
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+      padding: 4px;
+      transition: color var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .password-toggle:hover {
+      color: var(--accent-orange);
+    }
+
+    .password-toggle svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 1.5;
+    }
+
+    .form-group-with-icon {
+      position: relative;
+    }
+
+    .form-group-with-icon input {
+      padding-right: 40px;
+    }
+
+    .setup-footer {
+      text-align: center;
+      padding-top: var(--spacing-lg);
+      color: var(--text-secondary);
+      font-size: var(--fs-sm);
+    }
+
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      pointer-events: none;
+    }
+
+    .input-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 1.5;
+    }
+
+    .input-with-icon input {
+      padding-left: 40px;
+    }
+
+    .form-group-with-icon .input-with-icon input {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Notification Container -->
+  <div id="notification-container" class="notification-container"></div>
+
+  <!-- Setup Container -->
+  <div class="setup-container">
+    <!-- Header -->
+    <div class="setup-header">
+      <div class="setup-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+          <path d="M9 18h6"/>
+          <path d="M10 22h4"/>
+        </svg>
+      </div>
+      <h1>
+        <span>₿</span>
+        <span>CodeProof</span>
+      </h1>
+      <p>Initial Setup - Create Admin Account</p>
+    </div>
+
+    <!-- Body -->
+    <div class="setup-body">
+      <!-- Info Box -->
+      <div class="setup-info">
+        <div class="setup-info-title" style="display: flex; align-items: center; gap: 8px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4"/>
+            <path d="M12 8h.01"/>
+          </svg>
+          <span>Welcome to CodeProof!</span>
+        </div>
+        <div class="setup-info-text">
+          No users found in the system. Please create your administrator account to get started.
+          This will be your main account with full access to all features.
+        </div>
+      </div>
+
+      <!-- Setup Form -->
+      <form id="setup-form">
+        <div class="form-group">
+          <label for="admin-username" class="form-label">Admin Username</label>
+          <div class="input-with-icon">
+            <div class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <input
+              type="text"
+              id="admin-username"
+              class="input"
+              placeholder="Choose admin username"
+              required
+              autocomplete="username"
+              minlength="3"
+            >
+          </div>
+          <span class="form-help">Minimum 3 characters, alphanumeric + underscore</span>
+        </div>
+
+        <div class="form-group form-group-with-icon">
+          <label for="admin-password" class="form-label">Admin Password</label>
+          <div class="input-with-icon">
+            <div class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <input
+              type="password"
+              id="admin-password"
+              class="input"
+              placeholder="Choose admin password"
+              required
+              autocomplete="new-password"
+              minlength="8"
+            >
+            <button type="button" class="password-toggle" data-target="admin-password">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <span class="form-help">Minimum 8 characters, must contain letter and number</span>
+        </div>
+
+        <div class="form-group form-group-with-icon">
+          <label for="admin-confirm" class="form-label">Confirm Password</label>
+          <div class="input-with-icon">
+            <div class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <input
+              type="password"
+              id="admin-confirm"
+              class="input"
+              placeholder="Confirm admin password"
+              required
+              autocomplete="new-password"
+              minlength="8"
+            >
+            <button type="button" class="password-toggle" data-target="admin-confirm">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+            <path d="M9 18h6"/>
+            <path d="M10 22h4"/>
+          </svg>
+          <span>Create Admin Account</span>
+        </button>
+
+        <div class="setup-footer">
+          After setup, you'll be redirected to the login page
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/components/notifications.js"></script>
+
+  <script>
+    // Helper function to safely show notifications
+    function showNotification(type, title, message) {
+      if (window.Notifications && window.Notifications[type]) {
+        window.Notifications[type](title, message);
+      } else {
+        console.log(`[${type.toUpperCase()}] ${title}: ${message}`);
+      }
+    }
+
+    // Page initialization
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check setup status first
+      try {
+        const data = await API.request('/setup/status');
+
+        if (!data.needs_setup) {
+          // Setup already completed, redirect to login
+          showNotification('info', 'Info', 'Setup already completed. Redirecting to login...');
+          setTimeout(() => {
+            window.location.href = '/auth/login.html';
+          }, 1500);
+          return;
+        }
+      } catch (error) {
+        console.error('Failed to check setup status:', error);
+        showNotification('error', 'Error', 'Failed to check setup status');
+      }
+
+      // Password toggle buttons
+      document.querySelectorAll('.password-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.dataset.target;
+          const input = document.getElementById(targetId);
+
+          if (input.type === 'password') {
+            input.type = 'text';
+            btn.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                <line x1="2" x2="22" y1="2" y2="22"/>
+              </svg>
+            `;
+          } else {
+            input.type = 'password';
+            btn.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            `;
+          }
+        });
+      });
+
+      // Setup form submission
+      const setupForm = document.getElementById('setup-form');
+      setupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById('admin-username').value.trim();
+        const password = document.getElementById('admin-password').value;
+        const confirm = document.getElementById('admin-confirm').value;
+
+        // Validate username length
+        if (username.length < 3) {
+          showNotification('error', 'Error', 'Username must be at least 3 characters');
+          return;
+        }
+
+        // Validate username format (alphanumeric + underscore)
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+          showNotification('error', 'Error', 'Username must be alphanumeric (underscores allowed)');
+          return;
+        }
+
+        // Validate password length
+        if (password.length < 8) {
+          showNotification('error', 'Error', 'Password must be at least 8 characters');
+          return;
+        }
+
+        // Check if passwords match
+        if (password !== confirm) {
+          showNotification('error', 'Error', 'Passwords do not match');
+          return;
+        }
+
+        // Password requirements
+        const hasNumber = /\d/.test(password);
+        const hasLetter = /[a-zA-Z]/.test(password);
+
+        if (!hasNumber || !hasLetter) {
+          showNotification('error', 'Error', 'Password must contain at least one letter and one number');
+          return;
+        }
+
+        try {
+          // Disable submit button to prevent double-click
+          const submitBtn = setupForm.querySelector('button[type="submit"]');
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<span>Creating admin...</span>';
+
+          // Call setup init endpoint
+          const adminUser = await API.request('/setup/init', {
+            method: 'POST',
+            body: JSON.stringify({ username, password })
+          });
+
+          showNotification('success', 'Success', `Admin account created: ${adminUser.username}`);
+
+          // Redirect to login after short delay
+          setTimeout(() => {
+            window.location.href = '/auth/login.html';
+          }, 1500);
+
+        } catch (error) {
+          console.error('Setup failed:', error);
+
+          // Re-enable submit button
+          const submitBtn = setupForm.querySelector('button[type="submit"]');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>Create Admin Account</span>';
+
+          let errorMessage = 'Failed to create admin account';
+          if (error.message) {
+            errorMessage = error.message;
+          }
+
+          showNotification('error', 'Error', errorMessage);
+        }
+      });
+
+      // Auto-focus on username field
+      document.getElementById('admin-username').focus();
+    });
+  </script>
+</body>
+</html>
