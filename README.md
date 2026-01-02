@@ -95,7 +95,7 @@ codeproof/
 
 CodeProof organizes challenges across 5 major areas of Bitcoin development, from computer science fundamentals to cutting-edge Layer 2/3 protocols:
 
-### Algorithms & Data Structures (ID: 10-99)
+### Algorithms & Data Structures
 Core computer science fundamentals that form the foundation of efficient Bitcoin implementations.
 
 - **Basics**: Arrays, strings, sorting, searching
@@ -110,7 +110,7 @@ Core computer science fundamentals that form the foundation of efficient Bitcoin
 - **Geometry**: Computational geometry fundamentals
 - **Network Flow**: Maximum flow, bipartite matching
 
-### ₿ Bitcoin Core & Protocol (ID: 100-199)
+### ₿ Bitcoin Core & Protocol
 The heart of Bitcoin—learn how the protocol actually works under the hood.
 
 - **Fundamentals**: Blockchain basics, proof-of-work, address generation
@@ -121,7 +121,7 @@ The heart of Bitcoin—learn how the protocol actually works under the hood.
 - **P2P Network**: Peer-to-peer protocol, peer discovery, transaction relay
 - **Storage & Indexing**: Chainstate database, block storage, indexing strategies
 
-### Cryptography (ID: 200-299)
+### Cryptography
 Cryptographic primitives that secure Bitcoin and enable trustless transactions.
 
 - **Hash Functions**: SHA-256, RIPEMD-160, merkle tree construction
@@ -129,7 +129,7 @@ Cryptographic primitives that secure Bitcoin and enable trustless transactions.
 - **Key Management**: HD wallets, BIP32/39/44 standards, output descriptors
 - **Encoding**: Base58, Bech32, Bech32m encoding schemes
 
-### Layer 2/3 & Sidechains (ID: 300-399)
+### Layer 2/3 & Sidechains
 Scaling solutions and off-chain protocols that extend Bitcoin's capabilities.
 
 **Lightning Network (Layer 2)**
@@ -156,7 +156,7 @@ Privacy-enhancing techniques and security best practices for Bitcoin application
 - **Security**: Secure key storage, multisignature schemes, hardware wallets, timelocks
 
 
-### Contributing
+## Contributing
 
 We welcome contributions! Here's the workflow:
 
@@ -166,7 +166,7 @@ We welcome contributions! Here's the workflow:
 4. Push to the branch (`git push origin feature/cool-feature`)
 5. Open a Pull Request
 
-### Adding New Problems
+## Adding New Problems
 
 Problems are defined in YAML format in `data/problems/` with:
 - Metadata (title, description, difficulty)
