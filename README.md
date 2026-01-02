@@ -15,7 +15,7 @@ What makes it unique? Your accepted solutions get mined into blocks every 10 min
 
 ## Features
 
-- **Blockchain-Anchored Solutions** - Every accepted solution is mined into a block
+- **Timestamp-Anchored Solutions** - Every accepted solution is mined into a block
 - **Dynamic Scoring** - Points decrease as more developers solve problems
 - **Bitcoin-Specific Challenges** - Problems covering Bitcoin protocol, cryptography, Lightning Network, and Layer 2/3 protocols
 - **Global Leaderboards** - Compete with Bitcoin developers worldwide
@@ -30,7 +30,7 @@ Just clone and run:
 ```bash
 git clone https://github.com/Forte11Cuba/codeproof.git
 cd codeproof
-docker-compose up
+docker compose up
 ```
 
 That's it! Access the platform:
