@@ -15,7 +15,6 @@ What makes it unique? Your accepted solutions get mined into blocks every 10 min
 
 ## Features
 
-- **Timestamp-Anchored Solutions** - Every accepted solution is mined into a block
 - **Dynamic Scoring** - Points decrease as more developers solve problems
 - **Bitcoin-Specific Challenges** - Problems covering Bitcoin protocol, cryptography, Lightning Network, and Layer 2/3 protocols
 - **Global Leaderboards** - Compete with Bitcoin developers worldwide
