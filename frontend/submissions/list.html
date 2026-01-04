@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submissions - CodeProof</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/styles-minimal-dark.css">
+
+  <!-- Monaco Editor for viewing code -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/editor/editor.main.css">
+</head>
+<body>
+
+  <!-- Notification Container -->
+  <div id="notification-container" class="notification-container"></div>
+
+  <!-- IDE Container -->
+  <div class="ide-container">
+    <main class="main-content">
+
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <span>₿</span>
+          <span>CodeProof</span>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="nav-links">
+          <a href="/user/dashboard.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+          <a href="/problems/list.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="4"/>
+            </svg>
+            <span>Problems</span>
+          </a>
+          <a href="/submissions/list.html" class="nav-link active">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <span>Submissions</span>
+          </a>
+          <a href="/ranking/leaderboard.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+              <path d="M4 22h16"/>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+            </svg>
+            <span>Ranking</span>
+          </a>
+          <a href="/blocks/explorer.html" class="nav-link">
+            <span>₿</span>
+            <span>Blockchain</span>
+          </a>
+          <a href="/problemsetter/dashboard.html" class="nav-link" id="problemsetter-nav" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+            </svg>
+            <span>Problemsetter</span>
+          </a>
+          <a href="/admin/panel.html" class="nav-link" id="admin-nav" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span>Admin</span>
+          </a>
+        </nav>
+
+        <div class="user-info">
+          <select id="language-selector" class="select select-sm">
+            <option value="en">🇬🇧 EN</option>
+            <option value="es">🇪🇸 ES</option>
+          </select>
+          <div class="user-menu">
+            <div class="user-menu-trigger" id="user-menu-trigger">
+              <span id="username-display">Loading...</span>
+              <div class="user-avatar" id="user-avatar">?</div>
+            </div>
+            <div class="user-dropdown" id="user-dropdown">
+              <a href="/user/profile.html" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>My Profile</span>
+              </a>
+              <a href="/user/settings.html" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <span>Settings</span>
+              </a>
+              <div class="user-dropdown-item" id="logout-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" x2="9" y1="12" y2="12"/>
+                </svg>
+                <span>Logout</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="tabs-bar">
+        <div class="tab active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <span>Submissions</span>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <section class="editor-area">
+          <h1 class="problem-title" data-i18n="submissions.title">My Submissions</h1>
+          <p class="text-muted mb-3" data-i18n="submissions.description">
+            View all your code submissions and their results
+          </p>
+
+          <!-- Filters -->
+          <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: var(--spacing-lg); margin-bottom: var(--spacing-lg);">
+            <div style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; align-items: flex-end;">
+              <!-- Verdict Filter -->
+              <div style="flex: 1; min-width: 200px;">
+                <label for="verdict-filter" style="display: block; margin-bottom: 8px; font-size: var(--fs-sm); color: var(--text-secondary);">
+                  <span data-i18n="submissions.filterByVerdict">Filter by Verdict</span>
+                </label>
+                <select id="verdict-filter" style="width: 100%; padding: 8px 12px; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); font-size: var(--fs-base);">
+                  <option value="all" data-i18n="submissions.allVerdicts">All Verdicts</option>
+                  <option value="AC">AC - Accepted</option>
+                  <option value="WA">WA - Wrong Answer</option>
+                  <option value="TLE">TLE - Time Limit Exceeded</option>
+                  <option value="MLE">MLE - Memory Limit Exceeded</option>
+                  <option value="RE">RE - Runtime Error</option>
+                  <option value="IE">IE - Internal Error</option>
+                  <option value="PENDING">PENDING - Judging</option>
+                </select>
+              </div>
+
+              <!-- Problem Filter -->
+              <div style="flex: 1; min-width: 200px;">
+                <label for="problem-filter" style="display: block; margin-bottom: 8px; font-size: var(--fs-sm); color: var(--text-secondary);">
+                  <span data-i18n="submissions.filterByProblem">Filter by Problem</span>
+                </label>
+                <select id="problem-filter" style="width: 100%; padding: 8px 12px; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); font-size: var(--fs-base);">
+                  <option value="all" data-i18n="submissions.allProblems">All Problems</option>
+                </select>
+              </div>
+
+              <!-- Reset Button -->
+              <button id="reset-filters" style="padding: 8px 16px; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); cursor: pointer; transition: var(--transition-fast);">
+                <span>↺</span>
+                <span data-i18n="common.reset">Reset</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Submissions Table -->
+          <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead style="background: var(--bg-tertiary); border-bottom: 1px solid var(--border-color);">
+                <tr>
+                  <th style="padding: 12px; text-align: left; font-size: var(--fs-sm); color: var(--text-secondary); font-weight: 600;" data-i18n="submissions.id">ID</th>
+                  <th style="padding: 12px; text-align: left; font-size: var(--fs-sm); color: var(--text-secondary); font-weight: 600;" data-i18n="submissions.user">User</th>
+                  <th style="padding: 12px; text-align: left; font-size: var(--fs-sm); color: var(--text-secondary); font-weight: 600;" data-i18n="submissions.problem">Problem</th>
+                  <th style="padding: 12px; text-align: left; font-size: var(--fs-sm); color: var(--text-secondary); font-weight: 600;" data-i18n="submissions.language">Language</th>
+                  <th style="padding: 12px; text-align: left; font-size: var(--fs-sm); color: var(--text-secondary); font-weight: 600;" data-i18n="submissions.verdict">Verdict</th>
+                  <th style="padding: 12px; text-align: left; font-size: var(--fs-sm); color: var(--text-secondary); font-weight: 600;" data-i18n="submissions.time">Time</th>
+                  <th style="padding: 12px; text-align: left; font-size: var(--fs-sm); color: var(--text-secondary); font-weight: 600;" data-i18n="submissions.memory">Memory</th>
+                  <th style="padding: 12px; text-align: left; font-size: var(--fs-sm); color: var(--text-secondary); font-weight: 600;" data-i18n="submissions.submittedAt">Submitted</th>
+                </tr>
+              </thead>
+              <tbody id="submissions-tbody">
+                <!-- Submissions will be rendered here -->
+              </tbody>
+            </table>
+
+            <!-- Empty State -->
+            <div id="empty-state" style="display: none; text-align: center; padding: 3rem;">
+              <div style="margin-bottom: 1rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-secondary); margin: 0 auto;">
+                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </div>
+              <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;" data-i18n="submissions.noSubmissions">No submissions yet</h3>
+              <p class="text-muted" data-i18n="submissions.noSubmissionsText">
+                Start solving problems to see your submissions here
+              </p>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading-state" style="display: none; text-align: center; padding: 3rem;">
+              <p class="text-muted" data-i18n="common.loading">Loading...</p>
+            </div>
+          </div>
+        </section>
+
+        <aside class="stats-sidebar">
+          <div class="stats-header">Statistics</div>
+
+          <div class="stat-block">
+            <div class="stat-label" data-i18n="submissions.totalSubmissions">Total Submissions</div>
+            <div class="stat-value" style="font-size: 2em; color: var(--accent-orange);" id="total-submissions">0</div>
+          </div>
+
+          <div class="stat-block">
+            <div class="stat-label" data-i18n="submissions.accepted">Accepted</div>
+            <div class="stat-value" style="font-size: 1.5em; color: var(--success-green);" id="accepted-count">0</div>
+          </div>
+
+          <div class="stat-block">
+            <div class="stat-label" data-i18n="submissions.acceptanceRate">Acceptance Rate</div>
+            <div class="stat-value" style="font-size: 1.5em; color: var(--text-primary);" id="acceptance-rate">0%</div>
+          </div>
+        </aside>
+      </div>
+
+  <!-- Submission Detail Modal -->
+  <div id="submission-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; display: none; align-items: center; justify-content: center;">
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px);" onclick="document.getElementById('submission-modal').style.display='none'"></div>
+    <div style="position: relative; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto; z-index: 10000; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-lg); border-bottom: 1px solid var(--border-color); background: var(--bg-secondary);">
+        <h2 style="margin: 0; color: var(--text-primary); font-size: var(--fs-lg);" data-i18n="submissions.submissionDetails">Submission Details</h2>
+        <button id="close-modal" style="background: none; border: none; font-size: 2rem; color: var(--text-secondary); cursor: pointer; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); transition: var(--transition-fast);">&times;</button>
+      </div>
+
+      <div style="padding: var(--spacing-lg);">
+        <!-- Submission Info -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--spacing-md); margin-bottom: var(--spacing-lg);">
+          <div>
+            <div style="font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 4px;" data-i18n="submissions.submissionId">Submission ID</div>
+            <div style="font-size: var(--fs-lg); font-weight: 700; color: var(--text-primary);" id="modal-submission-id">-</div>
+          </div>
+          <div>
+            <div style="font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 4px;" data-i18n="submissions.problem">Problem</div>
+            <div style="font-size: var(--fs-lg); font-weight: 700; color: var(--text-primary);" id="modal-problem">-</div>
+          </div>
+          <div>
+            <div style="font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 4px;" data-i18n="submissions.verdict">Verdict</div>
+            <div id="modal-verdict">-</div>
+          </div>
+          <div>
+            <div style="font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 4px;" data-i18n="submissions.time">Time</div>
+            <div style="font-size: var(--fs-lg); color: var(--text-primary);" id="modal-time">-</div>
+          </div>
+          <div>
+            <div style="font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 4px;" data-i18n="submissions.memory">Memory</div>
+            <div style="font-size: var(--fs-lg); color: var(--text-primary);" id="modal-memory">-</div>
+          </div>
+          <div>
+            <div style="font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 4px;" data-i18n="submissions.submittedAt">Submitted</div>
+            <div style="font-size: var(--fs-lg); color: var(--text-primary);" id="modal-submitted">-</div>
+          </div>
+        </div>
+
+        <!-- Test Results -->
+        <div style="margin-bottom: var(--spacing-lg);">
+          <h3 style="color: var(--text-primary); margin-bottom: var(--spacing-md);" data-i18n="submissions.testResults">Test Results</h3>
+          <div id="test-results-container">
+            <!-- Test results will be rendered here -->
+          </div>
+        </div>
+
+        <!-- Code -->
+        <div>
+          <h3 style="color: var(--text-primary); margin-bottom: var(--spacing-md);" data-i18n="submissions.sourceCode">Source Code</h3>
+          <div id="modal-code-editor" style="height: 400px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden;"></div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: var(--spacing-md); padding: var(--spacing-lg); border-top: 1px solid var(--border-color); background: var(--bg-secondary);">
+        <button id="close-modal-btn" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); font-size: var(--fs-base); font-weight: 600; cursor: pointer; transition: var(--transition-fast);">
+          <span data-i18n="common.close">Close</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Monaco Editor Loader -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+
+  <!-- CodeProof Scripts -->
+  <script src="/js/i18n.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/components/notifications.js"></script>
+  <script src="/js/components/navigation.js"></script>
+
+  <script>
+    // Global state
+    let allSubmissions = [];
+    let filteredSubmissions = [];
+    let modalEditor = null;
+    let pollingInterval = null;
+
+    /**
+     * Initialize page
+     */
+    async function init() {
+      // Check authentication
+      const currentUser = Auth.getCurrentUser();
+      if (!currentUser) {
+        window.location.href = '/auth/login.html';
+        return;
+      }
+
+      // Update header with user info
+      document.getElementById('username-display').textContent = currentUser.username;
+      document.getElementById('user-avatar').textContent = currentUser.username.substring(0, 2).toUpperCase();
+
+      // Show role-based navigation links
+      if (currentUser.role === 'problemsetter') {
+        document.getElementById('problemsetter-nav').style.display = 'flex';
+      } else if (currentUser.role === 'admin') {
+        document.getElementById('problemsetter-nav').style.display = 'flex';
+        document.getElementById('admin-nav').style.display = 'flex';
+      }
+
+      // Setup user dropdown
+      setupUserDropdown();
+
+      // Setup language switcher
+      setupLanguageSwitcher();
+
+      // Load submissions
+      await loadSubmissions();
+
+      // Setup filters
+      setupFilters();
+
+      // Setup modal
+      setupModal();
+
+      // Start auto-polling if there are pending submissions
+      startAutoPolling();
+    }
+
+    function setupUserDropdown() {
+      const trigger = document.getElementById('user-menu-trigger');
+      const dropdown = document.getElementById('user-dropdown');
+      const logoutBtn = document.getElementById('logout-btn');
+
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('active');
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.remove('active');
+        }
+      });
+
+      logoutBtn.addEventListener('click', function() {
+        Auth.logout();
+        window.location.href = '/auth/login.html';
+      });
+    }
+
+    function setupLanguageSwitcher() {
+      const currentLang = window.i18n?.currentLang || 'en';
+      const langSelector = document.getElementById('language-selector');
+      if (langSelector) {
+        langSelector.value = currentLang;
+        langSelector.addEventListener('change', (e) => {
+          if (window.i18n && window.i18n.setLanguage) {
+            window.i18n.setLanguage(e.target.value);
+            location.reload();
+          }
+        });
+      }
+    }
+
+    /**
+     * Start auto-polling for pending submissions
+     */
+    function startAutoPolling() {
+      // Clear existing interval
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+      }
+
+      // Check if there are any PENDING submissions
+      const hasPending = allSubmissions.some(s => s.verdict === 'PENDING');
+
+      if (hasPending) {
+        console.log('📡 Auto-polling started (PENDING submissions detected)');
+
+        pollingInterval = setInterval(async () => {
+          await loadSubmissions(true); // Silent reload
+
+          // Stop polling if no more pending
+          const stillHasPending = allSubmissions.some(s => s.verdict === 'PENDING');
+          if (!stillHasPending) {
+            console.log('✅ Auto-polling stopped (no more PENDING submissions)');
+            clearInterval(pollingInterval);
+            pollingInterval = null;
+          }
+        }, 3000); // Poll every 3 seconds
+      }
+    }
+
+    /**
+     * Stop auto-polling
+     */
+    function stopAutoPolling() {
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+      }
+    }
+
+    /**
+     * Load submissions from API
+     * @param {boolean} silent - If true, don't show loading spinner (for polling)
+     */
+    async function loadSubmissions(silent = false) {
+      const loadingState = document.getElementById('loading-state');
+      const emptyState = document.getElementById('empty-state');
+
+      if (!silent) {
+        loadingState.style.display = 'block';
+        emptyState.style.display = 'none';
+      }
+
+      try {
+        // Load ALL submissions from all users (public judge submissions)
+        allSubmissions = await API.getSubmissions({ all: true });
+
+        // Load problems to get titles
+        const problems = await API.getProblems();
+        const problemMap = {};
+        problems.forEach(p => {
+          const lang = window.i18n?.currentLang || 'en';
+          problemMap[p.id] = lang === 'es' ? p.title_es : p.title_en;
+        });
+
+        // Add problem titles to submissions
+        allSubmissions = allSubmissions.map(sub => ({
+          ...sub,
+          problem_title: problemMap[sub.problem_id] || `Problem #${sub.problem_id}`
+        }));
+
+        filteredSubmissions = [...allSubmissions];
+
+        renderSubmissions();
+        updateStats();
+        populateProblemFilter();
+      } catch (error) {
+        console.error('Error loading submissions:', error);
+        if (!silent) {
+          Notifications.error('Failed to load submissions');
+        }
+      } finally {
+        if (!silent) {
+          loadingState.style.display = 'none';
+        }
+      }
+    }
+
+    /**
+     * Render submissions table
+     */
+    function renderSubmissions() {
+      const tbody = document.getElementById('submissions-tbody');
+      const emptyState = document.getElementById('empty-state');
+
+      if (filteredSubmissions.length === 0) {
+        tbody.innerHTML = '';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+
+      tbody.innerHTML = filteredSubmissions.map(sub => {
+        const verdictColors = {
+          AC: 'var(--success-green)',
+          WA: '#ff4444',
+          TLE: '#ffaa00',
+          MLE: '#4488ff',
+          RE: '#ff4444',
+          IE: '#aa44ff',
+          PENDING: '#ffaa00'
+        };
+
+        const timeAgo = getTimeAgo(new Date(sub.submitted_at));
+
+        const badgeStyle = 'display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.875rem; font-weight: 600;';
+
+        const verdictBadge = `<span style="${badgeStyle} background: ${verdictColors[sub.verdict]}; color: #000;">${sub.verdict}</span>`;
+
+        return `
+          <tr onclick="showSubmissionDetail(${sub.id})" style="cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.2s;" onmouseover="this.style.background='var(--bg-tertiary)'" onmouseout="this.style.background=''">
+            <td style="padding: 12px; color: var(--text-primary);"><strong>#${sub.id}</strong></td>
+            <td style="padding: 12px; color: var(--text-primary);">
+              <a href="/user/profile.html?user=${sub.username}" onclick="event.stopPropagation()" style="color: var(--accent-orange); text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                ${sub.username || 'Unknown'}
+              </a>
+            </td>
+            <td style="padding: 12px; color: var(--text-primary);">
+              <a href="/problems/detail.html?number=${sub.problem_id}" onclick="event.stopPropagation()" style="color: var(--accent-orange); text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                <strong>${sub.problem_id}</strong> - ${sub.problem_title || 'Unknown'}
+              </a>
+            </td>
+            <td style="padding: 12px;">
+              <span style="${badgeStyle} background: var(--bg-tertiary); color: var(--text-primary);">
+                ${sub.language === 'python' ? 'Python 3.11' : sub.language}
+              </span>
+            </td>
+            <td style="padding: 12px;">${verdictBadge}</td>
+            <td style="padding: 12px; color: var(--text-secondary);">${sub.execution_time ? `${sub.execution_time}ms` : '-'}</td>
+            <td style="padding: 12px; color: var(--text-secondary);">${sub.memory_used ? `${(sub.memory_used / 1024).toFixed(1)} MB` : '-'}</td>
+            <td style="padding: 12px; color: var(--text-secondary); font-size: var(--fs-sm);">${timeAgo}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    /**
+     * Update statistics
+     */
+    function updateStats() {
+      const total = allSubmissions.length;
+      const accepted = allSubmissions.filter(s => s.verdict === 'AC').length;
+      const rate = total > 0 ? ((accepted / total) * 100).toFixed(1) : 0;
+
+      document.getElementById('total-submissions').textContent = total;
+      document.getElementById('accepted-count').textContent = accepted;
+      document.getElementById('acceptance-rate').textContent = `${rate}%`;
+    }
+
+    /**
+     * Populate problem filter dropdown
+     */
+    function populateProblemFilter() {
+      const problemFilter = document.getElementById('problem-filter');
+
+      // Get unique problems
+      const problems = [...new Set(allSubmissions.map(s => ({
+        id: s.problem_id,
+        title: s.problem_title
+      })).filter(p => p.title))];
+
+      // Remove duplicates by problem_id
+      const uniqueProblems = problems.filter((p, index, self) =>
+        index === self.findIndex(t => t.id === p.id)
+      );
+
+      // Add options
+      uniqueProblems.forEach(problem => {
+        const option = document.createElement('option');
+        option.value = problem.id;
+        option.textContent = problem.title;
+        problemFilter.appendChild(option);
+      });
+    }
+
+    /**
+     * Setup filters
+     */
+    function setupFilters() {
+      const verdictFilter = document.getElementById('verdict-filter');
+      const problemFilter = document.getElementById('problem-filter');
+      const resetBtn = document.getElementById('reset-filters');
+
+      verdictFilter.addEventListener('change', applyFilters);
+      problemFilter.addEventListener('change', applyFilters);
+      resetBtn.addEventListener('click', resetFilters);
+    }
+
+    /**
+     * Apply filters
+     */
+    function applyFilters() {
+      const verdictFilter = document.getElementById('verdict-filter').value;
+      const problemFilter = document.getElementById('problem-filter').value;
+
+      filteredSubmissions = allSubmissions.filter(sub => {
+        const verdictMatch = verdictFilter === 'all' || sub.verdict === verdictFilter;
+        const problemMatch = problemFilter === 'all' || sub.problem_id === parseInt(problemFilter);
+        return verdictMatch && problemMatch;
+      });
+
+      renderSubmissions();
+    }
+
+    /**
+     * Reset filters
+     */
+    function resetFilters() {
+      document.getElementById('verdict-filter').value = 'all';
+      document.getElementById('problem-filter').value = 'all';
+      filteredSubmissions = [...allSubmissions];
+      renderSubmissions();
+    }
+
+    /**
+     * Setup modal
+     */
+    function setupModal() {
+      const closeBtn = document.getElementById('close-modal');
+      const closeBtnFooter = document.getElementById('close-modal-btn');
+
+      closeBtn.addEventListener('click', closeModal);
+      closeBtnFooter.addEventListener('click', closeModal);
+    }
+
+    /**
+     * Show submission detail modal
+     */
+    async function showSubmissionDetail(submissionId) {
+      try {
+        const submission = await API.getSubmission(submissionId);
+
+        // DEBUG: Log the submission data
+        console.log('📊 Submission data:', submission);
+        console.log('📝 Source code:', submission.source_code);
+        console.log('📝 Source code type:', typeof submission.source_code);
+        console.log('📝 Source code length:', submission.source_code?.length);
+
+        // Get problem title from allSubmissions (which has it already)
+        const submissionWithTitle = allSubmissions.find(s => s.id === submissionId);
+        const problemTitle = submissionWithTitle?.problem_title || `Problem #${submission.problem_id}`;
+
+        // Populate modal data
+        document.getElementById('modal-submission-id').textContent = `#${submission.id}`;
+        document.getElementById('modal-problem').textContent = problemTitle;
+
+        // Verdict badge with test case info
+        const verdictColors = {
+          AC: 'var(--success-green)',
+          WA: '#ff4444',
+          TLE: '#ffaa00',
+          MLE: '#4488ff',
+          RE: '#ff4444',
+          IE: '#aa44ff',
+          PENDING: '#ffaa00'
+        };
+
+        // Get failed test case number for non-AC/PENDING verdicts
+        let verdictText = submission.verdict;
+        if (submission.verdict !== 'AC' && submission.verdict !== 'PENDING' && submission.test_results) {
+          try {
+            // Parse test_results if it's a string
+            const testResults = typeof submission.test_results === 'string'
+              ? JSON.parse(submission.test_results)
+              : submission.test_results;
+
+            // Find first failed test case
+            if (testResults && testResults.cases && Array.isArray(testResults.cases)) {
+              const failedTest = testResults.cases.find(tc => tc.verdict !== 'AC');
+              if (failedTest && failedTest.case_number) {
+                verdictText = `${submission.verdict} (Test ${failedTest.case_number})`;
+              }
+            }
+          } catch (e) {
+            console.error('Error parsing test_results for verdict:', e);
+          }
+        }
+
+        const badgeStyle = 'display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.875rem; font-weight: 600;';
+        document.getElementById('modal-verdict').innerHTML = `
+          <span style="${badgeStyle} background: ${verdictColors[submission.verdict]}; color: #000;">
+            ${verdictText}
+          </span>
+        `;
+
+        document.getElementById('modal-time').textContent = submission.execution_time ? `${submission.execution_time}ms` : '-';
+        document.getElementById('modal-memory').textContent = submission.memory_used ? `${(submission.memory_used / 1024).toFixed(1)} MB` : '-';
+        document.getElementById('modal-submitted').textContent = new Date(submission.submitted_at).toLocaleString();
+
+        // Render test results
+        renderTestResults(submission.test_results || []);
+
+        // Check if user can copy (own submission OR admin)
+        const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+        const isOwnSubmission = submission.user_id === currentUser.id;
+        const isAdmin = currentUser.role === 'admin';
+        const canCopy = isOwnSubmission || isAdmin;
+
+        // Initialize Monaco Editor for code viewing
+        await initModalEditor(submission.source_code, submission.language, canCopy);
+
+        // Show modal
+        document.getElementById('submission-modal').style.display = 'flex';
+      } catch (error) {
+        console.error('Error loading submission detail:', error);
+        Notifications.error('Failed to load submission details');
+      }
+    }
+
+    /**
+     * Render test results
+     */
+    function renderTestResults(testResults) {
+      const container = document.getElementById('test-results-container');
+
+      // Parse testResults if it's a JSON string
+      if (typeof testResults === 'string') {
+        try {
+          testResults = JSON.parse(testResults);
+        } catch (e) {
+          console.error('Error parsing test_results:', e);
+          testResults = {};
+        }
+      }
+
+      // Get cases array from test_results structure
+      const cases = testResults?.cases || [];
+
+      // Ensure cases is an array
+      if (!Array.isArray(cases) || cases.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-secondary);">No test results available</p>';
+        return;
+      }
+
+      container.innerHTML = `
+        <div style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead style="background: var(--bg-tertiary);">
+              <tr>
+                <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--border-color);">Test Case</th>
+                <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--border-color);">Verdict</th>
+                <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--border-color);">Time</th>
+                <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--border-color);">Memory</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${cases.map(result => {
+                const verdictColors = {
+                  AC: 'var(--success-green)',
+                  WA: '#ff4444',
+                  TLE: '#ffaa00',
+                  MLE: '#4488ff',
+                  RE: '#ff4444',
+                  IE: '#aa44ff'
+                };
+                const badgeStyle = 'display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 0.75rem; font-weight: 600;';
+
+                return `
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 8px;"><strong>Test ${result.case_number}</strong></td>
+                    <td style="padding: 8px;">
+                      <span style="${badgeStyle} background: ${verdictColors[result.verdict] || '#888'}; color: #000;">
+                        ${result.verdict}
+                      </span>
+                    </td>
+                    <td style="padding: 8px; color: var(--text-secondary);">${result.time_ms}ms</td>
+                    <td style="padding: 8px; color: var(--text-secondary);">${(result.memory_kb / 1024).toFixed(1)} MB</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    /**
+     * Initialize Monaco Editor in modal
+     * @param {string} code - Source code to display
+     * @param {string} language - Programming language
+     * @param {boolean} canCopy - Whether user can copy (own submission OR admin)
+     */
+    async function initModalEditor(code, language, canCopy = false) {
+      return new Promise((resolve) => {
+        require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs' } });
+
+        require(['vs/editor/editor.main'], function () {
+          // Dispose previous editor if exists
+          if (modalEditor) {
+            modalEditor.dispose();
+          }
+
+          const container = document.getElementById('modal-code-editor');
+
+          // Apply CSS to prevent text selection if user cannot copy
+          if (!canCopy) {
+            container.style.userSelect = 'none';
+            container.style.webkitUserSelect = 'none';
+            container.style.mozUserSelect = 'none';
+            container.style.msUserSelect = 'none';
+          } else {
+            container.style.userSelect = 'text';
+            container.style.webkitUserSelect = 'text';
+            container.style.mozUserSelect = 'text';
+            container.style.msUserSelect = 'text';
+          }
+
+          modalEditor = monaco.editor.create(container, {
+            value: code || '// No code available',
+            language: language || 'python',
+            theme: 'vs-dark',
+            readOnly: true,
+            domReadOnly: !canCopy, // Make DOM completely readonly if cannot copy
+            minimap: { enabled: false },
+            scrollBeyondLastLine: false,
+            fontSize: 14,
+            lineNumbers: 'on',
+            automaticLayout: true,
+            // Disable selection features if cannot copy
+            selectionHighlight: canCopy,
+            occurrencesHighlight: canCopy,
+            renderLineHighlight: canCopy ? 'all' : 'none',
+            selectionClipboard: canCopy,
+            quickSuggestions: false,
+            contextmenu: canCopy
+          });
+
+          // Prevent copy/paste if user cannot copy
+          if (!canCopy) {
+            // Remove all copy/cut/paste actions from Monaco
+            const actionsToRemove = [
+              'editor.action.clipboardCopyAction',
+              'editor.action.clipboardCutAction',
+              'editor.action.clipboardPasteAction',
+              'editor.action.selectAll'
+            ];
+
+            actionsToRemove.forEach(actionId => {
+              try {
+                modalEditor._actions.delete(actionId);
+              } catch (e) {
+                // Action might not exist
+              }
+            });
+
+            // Disable browser context menu
+            container.addEventListener('contextmenu', (e) => {
+              e.preventDefault();
+              Notifications.warning('Cannot copy code from other users\' submissions');
+              return false;
+            });
+
+            // Intercept all keyboard events for copy/cut/selectAll
+            modalEditor.onKeyDown((e) => {
+              // Ctrl+C, Ctrl+X, Ctrl+A (Cmd on Mac)
+              const isCopy = (e.ctrlKey || e.metaKey) && e.keyCode === monaco.KeyCode.KeyC;
+              const isCut = (e.ctrlKey || e.metaKey) && e.keyCode === monaco.KeyCode.KeyX;
+              const isSelectAll = (e.ctrlKey || e.metaKey) && e.keyCode === monaco.KeyCode.KeyA;
+
+              if (isCopy || isCut || isSelectAll) {
+                e.preventDefault();
+                e.stopPropagation();
+                Notifications.warning('Cannot copy code from other users\' submissions');
+              }
+            });
+
+            // Prevent selection changes
+            modalEditor.onDidChangeCursorSelection((e) => {
+              if (!e.selection.isEmpty()) {
+                // Clear selection
+                modalEditor.setSelection({
+                  startLineNumber: e.selection.endLineNumber,
+                  startColumn: e.selection.endColumn,
+                  endLineNumber: e.selection.endLineNumber,
+                  endColumn: e.selection.endColumn
+                });
+              }
+            });
+          }
+
+          resolve();
+        });
+      });
+    }
+
+    /**
+     * Close modal
+     */
+    function closeModal() {
+      document.getElementById('submission-modal').style.display = 'none';
+
+      // Dispose editor
+      if (modalEditor) {
+        modalEditor.dispose();
+        modalEditor = null;
+      }
+    }
+
+    /**
+     * Get time ago string
+     */
+    function getTimeAgo(date) {
+      const seconds = Math.floor((new Date() - date) / 1000);
+
+      if (seconds < 60) return `${seconds}s ago`;
+      if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+      if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+      return `${Math.floor(seconds / 86400)}d ago`;
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+
+    </main>
+  </div>
+</body>
+</html>

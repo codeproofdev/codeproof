@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Problems - CodeProof</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/styles-minimal-dark.css">
+  <style>
+    /* Problems table specific styles */
+    .problems-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .problems-table thead {
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .problems-table th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition-fast);
+    }
+
+    .problems-table th:hover {
+      color: var(--text-primary);
+    }
+
+    .problems-table th.sortable::after {
+      content: '⇅';
+      margin-left: 8px;
+      opacity: 0.3;
+      font-size: 0.8em;
+    }
+
+    .problems-table th.sortable.asc::after {
+      content: '↑';
+      opacity: 1;
+      color: var(--accent-orange);
+    }
+
+    .problems-table th.sortable.desc::after {
+      content: '↓';
+      opacity: 1;
+      color: var(--accent-orange);
+    }
+
+    .problems-table tbody tr {
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .problems-table tbody tr:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .problems-table tbody tr.solved {
+      opacity: 0.7;
+    }
+
+    .problems-table td {
+      padding: 14px 16px;
+      font-size: var(--fs-base);
+      color: var(--text-primary);
+    }
+
+    .problem-id {
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      font-size: var(--fs-sm);
+    }
+
+    .problem-title {
+      font-weight: 700;
+    }
+
+    .problem-points {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-orange);
+    }
+
+    .solved-check {
+      color: var(--success-green);
+      margin-left: 8px;
+    }
+
+    /* Filters section */
+    .filters-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-md);
+    }
+
+    .filter-label {
+      display: block;
+      font-size: var(--fs-xs);
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: var(--spacing-xs);
+      font-weight: 600;
+    }
+
+    .filter-input, .filter-select {
+      width: 100%;
+      padding: 8px 12px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font-ui);
+      font-size: var(--fs-base);
+      transition: var(--transition-fast);
+    }
+
+    .filter-input:focus, .filter-select:focus {
+      outline: none;
+      border-color: var(--accent-orange);
+    }
+
+    .filter-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .filter-count {
+      margin-top: var(--spacing-md);
+      font-size: var(--fs-sm);
+      color: var(--text-secondary);
+    }
+
+    .filter-count strong {
+      color: var(--accent-orange);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      width: 40px;
+      height: 40px;
+      margin: 3rem auto;
+      border: 3px solid var(--bg-tertiary);
+      border-top-color: var(--accent-orange);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .filter-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .filter-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .empty-state-icon svg {
+      width: 64px;
+      height: 64px;
+      stroke-width: 1.5;
+      color: var(--text-secondary);
+      margin: 0 auto 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Notification Container -->
+  <div id="notification-container" class="notification-container"></div>
+
+  <!-- IDE Container -->
+  <div class="ide-container">
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <span>₿</span>
+          <span>CodeProof</span>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="nav-links">
+          <a href="/user/dashboard.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+          <a href="/problems/list.html" class="nav-link active">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="4"/>
+            </svg>
+            <span>Problems</span>
+          </a>
+          <a href="/submissions/list.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <span>Submissions</span>
+          </a>
+          <a href="/ranking/leaderboard.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+              <path d="M4 22h16"/>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+            </svg>
+            <span>Ranking</span>
+          </a>
+          <a href="/blocks/explorer.html" class="nav-link">
+            <span>₿</span>
+            <span>Blockchain</span>
+          </a>
+          <a href="/problemsetter/dashboard.html" class="nav-link" id="problemsetter-nav" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+            </svg>
+            <span>Problemsetter</span>
+          </a>
+          <a href="/admin/panel.html" class="nav-link" id="admin-nav" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span>Admin</span>
+          </a>
+        </nav>
+
+        <div class="user-info">
+          <select id="language-selector" class="select select-sm">
+            <option value="en">🇬🇧 EN</option>
+            <option value="es">🇪🇸 ES</option>
+          </select>
+          <div class="user-menu">
+            <div class="user-menu-trigger" id="user-menu-trigger">
+              <span id="username-display">Loading...</span>
+              <div class="user-avatar" id="user-avatar">?</div>
+            </div>
+            <div class="user-dropdown" id="user-dropdown">
+              <a href="/user/profile.html" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>My Profile</span>
+              </a>
+              <a href="/user/settings.html" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <span>Settings</span>
+              </a>
+              <div class="user-dropdown-item" id="logout-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" x2="9" y1="12" y2="12"/>
+                </svg>
+                <span>Logout</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Tabs Bar -->
+      <div class="tabs-bar">
+        <div class="tab active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="12" r="4"/>
+          </svg>
+          <span data-i18n="problems.title">Problems</span>
+        </div>
+      </div>
+
+      <!-- Content Grid -->
+      <div class="content-grid">
+
+        <!-- Main Content Area -->
+        <section class="editor-area">
+
+          <!-- Page Title -->
+          <h1 class="problem-title" data-i18n="problems.title">Problems</h1>
+          <p class="text-muted mb-3" data-i18n="problems.subtitle">
+            Solve Bitcoin-themed coding challenges and earn points
+          </p>
+
+          <!-- Filters Section -->
+          <div class="filters-section">
+            <div class="filter-grid">
+              <!-- Search -->
+              <div>
+                <label class="filter-label" data-i18n="problems.filters.search">Search by title</label>
+                <input type="text" id="filter-search" class="filter-input" placeholder="Type to search...">
+              </div>
+
+              <!-- Category -->
+              <div>
+                <label class="filter-label">Category</label>
+                <select id="filter-category" class="filter-select">
+                  <option value="all">All</option>
+                  <!-- Categories will be populated by JS -->
+                </select>
+              </div>
+
+              <!-- Subcategory -->
+              <div>
+                <label class="filter-label">Subcategory</label>
+                <select id="filter-subcategory" class="filter-select">
+                  <option value="all">All</option>
+                  <!-- Subcategories will be populated by JS -->
+                </select>
+              </div>
+
+              <!-- Status -->
+              <div>
+                <label class="filter-label" data-i18n="problems.filters.status">Status</label>
+                <select id="filter-status" class="filter-select">
+                  <option value="all" data-i18n="problems.filters.all">All</option>
+                  <option value="solved" data-i18n="problems.filters.solved">Solved</option>
+                  <option value="unsolved" data-i18n="problems.filters.unsolved">Unsolved</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Results count -->
+            <div class="filter-count">
+              <span data-i18n="problems.filters.showing">Showing</span>
+              <strong id="filtered-count">0</strong>
+              <span data-i18n="problems.filters.of">of</span>
+              <strong id="total-count">0</strong>
+              <span data-i18n="problems.filters.problems">problems</span>
+            </div>
+          </div>
+
+          <!-- Problems Table -->
+          <div style="margin-top: var(--spacing-lg);">
+            <table class="problems-table">
+              <thead>
+                <tr>
+                  <th class="sortable asc" data-sort="number">ID</th>
+                  <th class="sortable" data-sort="title" data-i18n="problems.table.title">Title</th>
+                  <th class="sortable" data-sort="points" data-i18n="problems.table.points">Points</th>
+                  <th class="sortable" data-sort="solved" data-i18n="problems.table.solved">Solved</th>
+                  <th class="sortable" data-sort="status" data-i18n="problems.table.status">Status</th>
+                </tr>
+              </thead>
+              <tbody id="problems-table-body">
+                <tr>
+                  <td colspan="6">
+                    <div class="spinner"></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty State -->
+          <div id="empty-state" class="empty-state" style="display: none;">
+            <div class="empty-state-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="12" r="4"/>
+              </svg>
+            </div>
+            <h3 class="text-lg mb-1" data-i18n="problems.empty.title">No problems yet</h3>
+            <p data-i18n="problems.empty.description">Check back soon for new challenges</p>
+          </div>
+
+        </section>
+
+        <!-- Stats Sidebar -->
+        <aside class="stats-sidebar">
+
+          <div class="stats-header">Your Progress</div>
+
+          <div class="stat-block">
+            <div class="stat-label">Solved</div>
+            <div class="stat-value" id="stat-solved">0</div>
+          </div>
+
+          <div class="stat-block">
+            <div class="stat-label">Total Score</div>
+            <div class="stat-value" id="stat-score">0</div>
+          </div>
+
+          <div class="stat-block">
+            <div class="stat-label">Rank</div>
+            <div class="stat-value" id="stat-rank">#-</div>
+          </div>
+
+        </aside>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/i18n.js"></script>
+  <script src="/js/components/notifications.js"></script>
+  <script src="/js/auth.js"></script>
+
+  <script>
+    // Global state
+    let allProblems = [];
+    let solvedProblems = new Set();
+    let currentUser = null;
+    let sortBy = 'id';
+    let sortOrder = 'asc';
+    let allCategories = [];
+    let allSubcategories = [];
+    let categorySubcategoryMap = {}; // Map category_id -> [subcategory_ids]
+
+    // Page initialization
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check authentication
+      currentUser = Auth.getCurrentUser();
+      if (!currentUser) {
+        window.location.href = '/auth/login.html';
+        return;
+      }
+
+      // Update header with user info
+      document.getElementById('username-display').textContent = currentUser.username;
+      document.getElementById('user-avatar').textContent = currentUser.username.substring(0, 2).toUpperCase();
+
+      // Show role-based navigation links
+      if (currentUser.role === 'problemsetter') {
+        document.getElementById('problemsetter-nav').style.display = 'flex';
+      } else if (currentUser.role === 'admin') {
+        document.getElementById('problemsetter-nav').style.display = 'flex';
+        document.getElementById('admin-nav').style.display = 'flex';
+      }
+
+      // Setup navigation
+      setupNavigation();
+
+      // Load problems
+      await loadProblems();
+
+      // Setup filter listeners
+      setupFilters();
+
+      // Setup sorting listeners
+      setupSorting();
+
+      // Setup language switcher
+      setupLanguageSwitcher();
+
+      // Setup user dropdown menu
+      setupUserDropdown();
+    });
+
+    function setupNavigation() {
+      // Navigation is now handled by HTML links
+      // No additional JS needed
+    }
+
+    function setupLanguageSwitcher() {
+      // Set initial language
+      const currentLang = window.i18n.currentLang || 'en';
+      const langSelector = document.getElementById('language-selector');
+      if (langSelector) {
+        langSelector.value = currentLang;
+        langSelector.addEventListener('change', (e) => {
+          if (window.i18n && window.i18n.setLanguage) {
+            window.i18n.setLanguage(e.target.value);
+
+            // Save current selections
+            const categorySelect = document.getElementById('filter-category');
+            const subcategorySelect = document.getElementById('filter-subcategory');
+            const savedCategoryValue = categorySelect.value;
+            const savedSubcategoryValue = subcategorySelect.value;
+
+            // Repopulate dropdowns with translated names
+            populateCategoryDropdown();
+            populateSubcategoryDropdown(savedCategoryValue === 'all' ? null : savedCategoryValue);
+
+            // Restore selections
+            categorySelect.value = savedCategoryValue;
+            subcategorySelect.value = savedSubcategoryValue;
+
+            // Reload problems to show translated titles
+            applyFilters();
+          }
+        });
+      }
+    }
+
+    function setupUserDropdown() {
+      const trigger = document.getElementById('user-menu-trigger');
+      const dropdown = document.getElementById('user-dropdown');
+      const logoutBtn = document.getElementById('logout-btn');
+
+      // Toggle dropdown on click
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('active');
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.remove('active');
+        }
+      });
+
+      // Handle logout
+      logoutBtn.addEventListener('click', function() {
+        Auth.logout();
+        window.location.href = '/auth/login.html';
+      });
+    }
+
+    async function loadProblems() {
+      try {
+        const problems = await API.getProblems();
+
+        // Filter only approved problems (exclude pending and rejected)
+        const approvedProblems = problems.filter(p => p.status === 'approved');
+
+        const emptyState = document.getElementById('empty-state');
+        const tbody = document.getElementById('problems-table-body');
+
+        if (approvedProblems.length === 0) {
+          tbody.closest('.problems-table').style.display = 'none';
+          emptyState.style.display = 'block';
+          return;
+        }
+
+        // Get user submissions to check which problems are solved
+        const submissions = await API.getSubmissions();
+        solvedProblems = new Set(
+          submissions
+            .filter(s => s.user_id === currentUser.id && s.verdict === 'AC')
+            .map(s => s.problem_id)
+        );
+
+        // Store only approved problems globally
+        allProblems = approvedProblems;
+
+        // Extract and populate categories and subcategories
+        extractCategoriesAndSubcategories();
+
+        // Sort initially by ID (ascending)
+        sortProblems();
+
+        // Update total count (only approved problems)
+        document.getElementById('total-count').textContent = approvedProblems.length;
+
+        // Update user stats
+        updateUserStats();
+
+        // Render all problems initially
+        renderProblems(allProblems);
+
+      } catch (error) {
+        console.error('Error loading problems:', error);
+        Notifications.show('Error loading problems', 'error');
+      }
+    }
+
+    function extractCategoriesAndSubcategories() {
+      const categoriesMap = new Map();
+      const subcategoriesMap = new Map();
+      categorySubcategoryMap = {};
+
+      // Extract unique categories and subcategories from all problems
+      allProblems.forEach(problem => {
+        // Process categories
+        if (problem.categories && Array.isArray(problem.categories)) {
+          problem.categories.forEach(cat => {
+            if (!categoriesMap.has(cat.id)) {
+              categoriesMap.set(cat.id, cat);
+              categorySubcategoryMap[cat.id] = [];
+            }
+          });
+        }
+
+        // Process subcategories
+        if (problem.subcategories && Array.isArray(problem.subcategories)) {
+          problem.subcategories.forEach(subcat => {
+            if (!subcategoriesMap.has(subcat.id)) {
+              subcategoriesMap.set(subcat.id, subcat);
+            }
+
+            // Map subcategory to its parent category
+            if (subcat.category_id && categorySubcategoryMap[subcat.category_id]) {
+              if (!categorySubcategoryMap[subcat.category_id].includes(subcat.id)) {
+                categorySubcategoryMap[subcat.category_id].push(subcat.id);
+              }
+            }
+          });
+        }
+      });
+
+      allCategories = Array.from(categoriesMap.values());
+      allSubcategories = Array.from(subcategoriesMap.values());
+
+      // Populate category and subcategory dropdowns
+      populateCategoryDropdown();
+      populateSubcategoryDropdown();
+    }
+
+    function populateCategoryDropdown() {
+      const categorySelect = document.getElementById('filter-category');
+      const lang = window.i18n.currentLang || 'en';
+
+      // Clear existing options except "All"
+      categorySelect.innerHTML = '<option value="all">All</option>';
+
+      // Sort categories by name
+      const sortedCategories = [...allCategories].sort((a, b) => {
+        const nameA = (lang === 'es' ? a.name_es : a.name_en).toLowerCase();
+        const nameB = (lang === 'es' ? b.name_es : b.name_en).toLowerCase();
+        return nameA.localeCompare(nameB);
+      });
+
+      sortedCategories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat.id;
+        option.textContent = lang === 'es' ? cat.name_es : cat.name_en;
+        categorySelect.appendChild(option);
+      });
+    }
+
+    function populateSubcategoryDropdown(categoryId = null) {
+      const subcategorySelect = document.getElementById('filter-subcategory');
+      const lang = window.i18n.currentLang || 'en';
+
+      // Clear existing options except "All"
+      subcategorySelect.innerHTML = '<option value="all">All</option>';
+
+      // Filter subcategories based on selected category
+      let subcategoriesToShow = allSubcategories;
+      if (categoryId && categoryId !== 'all') {
+        const subcatIds = categorySubcategoryMap[categoryId] || [];
+        subcategoriesToShow = allSubcategories.filter(subcat => subcatIds.includes(subcat.id));
+      }
+
+      // Sort subcategories by name
+      const sortedSubcategories = [...subcategoriesToShow].sort((a, b) => {
+        const nameA = (lang === 'es' ? a.name_es : a.name_en).toLowerCase();
+        const nameB = (lang === 'es' ? b.name_es : b.name_en).toLowerCase();
+        return nameA.localeCompare(nameB);
+      });
+
+      sortedSubcategories.forEach(subcat => {
+        const option = document.createElement('option');
+        option.value = subcat.id;
+        option.textContent = lang === 'es' ? subcat.name_es : subcat.name_en;
+        option.dataset.categoryId = subcat.category_id; // Store parent category ID
+        subcategorySelect.appendChild(option);
+      });
+    }
+
+    function updateUserStats() {
+      document.getElementById('stat-solved').textContent = solvedProblems.size;
+      document.getElementById('stat-score').textContent = (currentUser.total_score || 0).toFixed(2);
+      document.getElementById('stat-rank').textContent = currentUser.rank ? `#${currentUser.rank}` : '#-';
+    }
+
+
+    function renderProblems(problems) {
+      const tbody = document.getElementById('problems-table-body');
+      const lang = window.i18n.currentLang || 'en';
+
+      if (problems.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center text-muted" style="padding: 2rem;">
+              <span data-i18n="problems.filters.noResults">No problems match your filters</span>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = problems.map(problem => {
+        const isSolved = solvedProblems.has(problem.id);
+        const title = lang === 'es' ? problem.title_es : problem.title_en;
+
+        return `
+          <tr class="${isSolved ? 'solved' : ''}"
+              onclick="window.location.href='detail.html?id=${problem.id}'">
+            <td class="problem-id"><strong>${problem.id}</strong></td>
+            <td class="problem-title">
+              ${title}
+              ${isSolved ? '<span class="solved-check">✓</span>' : ''}
+            </td>
+            <td class="problem-points">${problem.current_points.toFixed(1)}</td>
+            <td class="text-muted" style="font-size: var(--fs-sm);">${problem.solved_count} ${lang === 'es' ? 'usuarios' : 'users'}</td>
+            <td>
+              ${isSolved
+                ? '<span class="tag easy" style="border-color: var(--success-green); color: var(--success-green);">AC</span>'
+                : '<span class="text-muted" style="font-size: var(--fs-sm);">Unsolved</span>'
+              }
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('filtered-count').textContent = problems.length;
+    }
+
+    function setupFilters() {
+      const searchInput = document.getElementById('filter-search');
+      const categorySelect = document.getElementById('filter-category');
+      const subcategorySelect = document.getElementById('filter-subcategory');
+      const statusSelect = document.getElementById('filter-status');
+
+      searchInput.addEventListener('input', applyFilters);
+      statusSelect.addEventListener('change', applyFilters);
+
+      // Category filter with special logic
+      categorySelect.addEventListener('change', () => {
+        const selectedCategoryId = categorySelect.value;
+
+        // Update subcategory dropdown based on selected category
+        populateSubcategoryDropdown(selectedCategoryId === 'all' ? null : selectedCategoryId);
+
+        // Apply filters
+        applyFilters();
+      });
+
+      // Subcategory filter with special logic
+      subcategorySelect.addEventListener('change', () => {
+        const selectedSubcategoryId = subcategorySelect.value;
+        const categorySelect = document.getElementById('filter-category');
+
+        // If a subcategory is selected and category is "all",
+        // automatically change category to the corresponding one
+        if (selectedSubcategoryId !== 'all' && categorySelect.value === 'all') {
+          const selectedOption = subcategorySelect.options[subcategorySelect.selectedIndex];
+          const parentCategoryId = selectedOption.dataset.categoryId;
+
+          if (parentCategoryId) {
+            categorySelect.value = parentCategoryId;
+            // Update subcategory dropdown to show only subcategories of this category
+            populateSubcategoryDropdown(parentCategoryId);
+            // Re-select the subcategory after repopulating
+            subcategorySelect.value = selectedSubcategoryId;
+          }
+        }
+
+        // Apply filters
+        applyFilters();
+      });
+    }
+
+    function applyFilters() {
+      const searchTerm = document.getElementById('filter-search').value.toLowerCase().trim();
+      const categoryFilter = document.getElementById('filter-category').value;
+      const subcategoryFilter = document.getElementById('filter-subcategory').value;
+      const statusFilter = document.getElementById('filter-status').value;
+      const lang = window.i18n.currentLang || 'en';
+
+      let filtered = allProblems.filter(problem => {
+        // Search filter
+        if (searchTerm) {
+          const titleEn = problem.title_en.toLowerCase();
+          const titleEs = problem.title_es.toLowerCase();
+          if (!titleEn.includes(searchTerm) && !titleEs.includes(searchTerm)) {
+            return false;
+          }
+        }
+
+        // Category filter
+        if (categoryFilter !== 'all') {
+          const problemCategoryIds = (problem.categories || []).map(cat => cat.id.toString());
+          if (!problemCategoryIds.includes(categoryFilter)) {
+            return false;
+          }
+        }
+
+        // Subcategory filter
+        if (subcategoryFilter !== 'all') {
+          const problemSubcategoryIds = (problem.subcategories || []).map(subcat => subcat.id.toString());
+          if (!problemSubcategoryIds.includes(subcategoryFilter)) {
+            return false;
+          }
+        }
+
+        // Status filter
+        if (statusFilter !== 'all') {
+          const isSolved = solvedProblems.has(problem.id);
+          if (statusFilter === 'solved' && !isSolved) {
+            return false;
+          }
+          if (statusFilter === 'unsolved' && isSolved) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+
+      renderProblems(filtered);
+    }
+
+    function setupSorting() {
+      const headers = document.querySelectorAll('.sortable');
+
+      headers.forEach(header => {
+        header.addEventListener('click', () => {
+          const newSortBy = header.dataset.sort;
+
+          if (sortBy === newSortBy) {
+            sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+          } else {
+            sortBy = newSortBy;
+            sortOrder = 'asc';
+          }
+
+          headers.forEach(h => h.classList.remove('asc', 'desc'));
+          header.classList.add(sortOrder);
+
+          sortProblems();
+          applyFilters();
+        });
+      });
+    }
+
+    function sortProblems() {
+      const lang = window.i18n.currentLang || 'en';
+
+      allProblems.sort((a, b) => {
+        let valA, valB;
+
+        switch (sortBy) {
+          case 'id':
+            valA = a.id;
+            valB = b.id;
+            break;
+          case 'title':
+            valA = (lang === 'es' ? a.title_es : a.title_en).toLowerCase();
+            valB = (lang === 'es' ? b.title_es : b.title_en).toLowerCase();
+            break;
+          case 'points':
+            valA = a.current_points;
+            valB = b.current_points;
+            break;
+          case 'solved':
+            valA = a.solved_count;
+            valB = b.solved_count;
+            break;
+          case 'status':
+            valA = solvedProblems.has(a.id) ? 1 : 0;
+            valB = solvedProblems.has(b.id) ? 1 : 0;
+            break;
+          default:
+            valA = a.id;
+            valB = b.id;
+        }
+
+        if (sortOrder === 'asc') {
+          return valA > valB ? 1 : valA < valB ? -1 : 0;
+        } else {
+          return valA < valB ? 1 : valA > valB ? -1 : 0;
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

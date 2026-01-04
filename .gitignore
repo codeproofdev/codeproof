@@ -303,14 +303,14 @@ data/exports/
 
 # Problem packages
 *.zip
-problems/
+/problems/
 !backend/app/tests/fixtures/*.zip  # Keep test fixtures
 
 # =============================================================================
 
 # Submission storage
 storage/
-submissions/
+/submissions/
 !storage/.gitkeep
 
 # Temporary files
